@@ -1,0 +1,86 @@
+<styles>
+	<style id="default">
+		<param key="bg.color" value="0xa0000000" />
+		<param key="fg.color" value="0xfff0f0f0" />
+		<param key="border.color" value="0xff808080" />
+		<param key="scroll.color" value="0xfff0f0f0" />
+		<param key="focus.bg.color" value="0x00000000" />
+		<param key="focus.fg.color" value="0xfff0f0f0" />
+		<param key="focus.border.color" value="0xfff0f0f0" />
+		<param key="focus.scroll.color" value="0xfff0f0f0" />
+		<param key="disable.bg.color" value="0x00000000" />
+		<param key="disable.fg.color" value="0xfff0f0f0" />
+		<param key="disable.border.color" value="0xff808080" />
+		<param key="disable.scroll.color" value="0xff808080" />
+	</style>
+	<style id="cold">
+		<param key="bg.color" value="0xa0000000" />
+		<param key="fg.color" value="0xfff0f0f0" />
+		<param key="border.color" value="0xff808080" />
+		<param key="scroll.color" value="0xfff0f0f0" />
+		<param key="focus.bg.color" value="0x00000000" />
+		<param key="focus.fg.color" value="0xfff0f0f0" />
+		<param key="focus.border.color" value="0xfff0f0f0" />
+		<param key="focus.scroll.color" value="0xfff0f0f0" />
+		<param key="disable.bg.color" value="0x00000000" />
+		<param key="disable.fg.color" value="0xfff0f0f0" />
+		<param key="disable.border.color" value="0xff808080" />
+		<param key="disable.scroll.color" value="0xff808080" />
+	</style>
+	<style id="warm">
+		<param key="bg.color" value="0xa0000000" />
+		<param key="fg.color" value="0xfff0f0f0" />
+		<param key="border.color" value="0xff808080" />
+		<param key="scroll.color" value="0xfff0f0f0" />
+		<param key="focus.bg.color" value="0x00000000" />
+		<param key="focus.fg.color" value="0xfff0f0f0" />
+		<param key="focus.border.color" value="0xfff0f0f0" />
+		<param key="focus.scroll.color" value="0xfff0f0f0" />
+		<param key="disable.bg.color" value="0x00000000" />
+		<param key="disable.fg.color" value="0xfff0f0f0" />
+		<param key="disable.border.color" value="0xff808080" />
+		<param key="disable.scroll.color" value="0xff808080" />
+	</style>
+	<style id="black">
+		<param key="bg.color" value="0xa0000000" />
+		<param key="fg.color" value="0xfff0f0f0" />
+		<param key="border.color" value="0xff808080" />
+		<param key="scroll.color" value="0xfff0f0f0" />
+		<param key="focus.bg.color" value="0x00000000" />
+		<param key="focus.fg.color" value="0xfff0f0f0" />
+		<param key="focus.border.color" value="0xfff0f0f0" />
+		<param key="focus.scroll.color" value="0xfff0f0f0" />
+		<param key="disable.bg.color" value="0x00000000" />
+		<param key="disable.fg.color" value="0xfff0f0f0" />
+		<param key="disable.border.color" value="0xff808080" />
+		<param key="disable.scroll.color" value="0xff808080" />
+	</style>
+	<style id="olive">
+		<param key="bg.color" value="0xa0000000" />
+		<param key="fg.color" value="0xfff0f0f0" />
+		<param key="border.color" value="0xff808080" />
+		<param key="scroll.color" value="0xfff0f0f0" />
+		<param key="focus.bg.color" value="0x00000000" />
+		<param key="focus.fg.color" value="0xfff0f0f0" />
+		<param key="focus.border.color" value="0xfff0f0f0" />
+		<param key="focus.scroll.color" value="0xfff0f0f0" />
+		<param key="disable.bg.color" value="0x00000000" />
+		<param key="disable.fg.color" value="0xfff0f0f0" />
+		<param key="disable.border.color" value="0xff808080" />
+		<param key="disable.scroll.color" value="0xff808080" />
+	</style>
+	<style id="silver">
+		<param key="bg.color" value="0xa0000000" />
+		<param key="fg.color" value="0xfff0f0f0" />
+		<param key="border.color" value="0xff808080" />
+		<param key="scroll.color" value="0xfff0f0f0" />
+		<param key="focus.bg.color" value="0x00000000" />
+		<param key="focus.fg.color" value="0xfff0f0f0" />
+		<param key="focus.border.color" value="0xfff0f0f0" />
+		<param key="focus.scroll.color" value="0xfff0f0f0" />
+		<param key="disable.bg.color" value="0x00000000" />
+		<param key="disable.fg.color" value="0xfff0f0f0" />
+		<param key="disable.border.color" value="0xff808080" />
+		<param key="disable.scroll.color" value="0xff808080" />
+	</style>
+</styles>
