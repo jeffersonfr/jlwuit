@@ -1,0 +1,31 @@
+all: $(EXE)
+
+SRCS	+= $(addprefix src/,$(OBJS))
+
+$(EXE): $(SRCS)
+	@$(CC) $(CCFLAGS) -o $(EXE) $(SRCS) $(LDFLAGS)
+	@mkdir -p $(BINDIR) $(BINDIR) && mv $(EXE) $(BINDIR)
+
+.cpp.o: $<  
+	@$(CC) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
+
+strip:
+	@$(ECHO) "Strip $(EXE)...  $(OK)"
+	@$(STRIP) $(BINDIR)/$(EXE)
+
+doc:
+	@mkdir -p $(DOCDIR) 
+
+install:
+	@$(ECHO) "in $(PREFIX)/jlwuit/$(MODULE) ... "
+	@mkdir -p $(PREFIX)/jlwuit && install -o root -m 755 $(BINDIR)/$(EXE) $(PREFIX)/jlwuit &> /dev/null
+
+uninstall:
+	@$(ECHO) -n "Uninstalling $(MODULE)"
+	@rm $(INSTALL_DIR)/$(EXE)
+
+clean:
+	@rm -rf $(SRCS) *~ 2> /dev/null
+	@find -iname "*.o" -exec rm {} \;;
+	@rm -rf $(EXE) $(BINDIR) $(LIBDIR) $(DOCDIR) 2> /dev/null
+

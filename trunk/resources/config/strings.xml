@@ -1,0 +1,8 @@
+<strings>
+	<language id="pt-br">
+		<param key="gui.title" value="Titulo Portugues" />
+	</language>
+	<language id="en">
+		<param key="gui.title" value="English Title" />
+	</language>
+</strings>

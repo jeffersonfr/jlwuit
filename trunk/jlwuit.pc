@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: @module@
+Description: Lwuit for C++.
+Version: @version@
+Requires: @requires@
+URL: http://sourceforge.net/projects/jlwuit
+Libs: -L${libdir} -ljlwuit
+Cflags: @cflags@ -I${includedir}/jlwuit/apps -I${includedir}/jlwuit/lwuit -I${includedir}/jlwuit/media -I${includedir}/jlwuit/ipc -I${includedir}/jlwuit/prefs -I${includedir}/jlwuit/usb -I${includedir}/jlwuit/util

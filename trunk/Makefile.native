@@ -1,0 +1,53 @@
+PLATFORMS	= \
+						linux \
+
+ifeq ($(PLATFORM), linux)
+
+CCFLAGS	+= \
+					 -DLWUIT_LINUX_IMPLEMENTATION \
+
+CCFLAGS	+= \
+					 -Inative/linux/lwuit/$(INCDIR) \
+					 -Inative/linux/media/$(INCDIR) \
+					 -Inative/linux/ipc/$(INCDIR) \
+
+NATIVE_LWUIT 	+= \
+					 backgroundlayerimpl.o\
+					 deviceimpl.o\
+					 eventmanagerimpl.o\
+					 fontimpl.o\
+					 graphiclayerimpl.o\
+					 systemlayerimpl.o\
+					 graphicsimpl.o\
+					 imageimpl.o\
+					 layerimpl.o\
+					 layersetupimpl.o\
+					 linuximplementation.o\
+					 screenimpl.o\
+					 videolayerimpl.o\
+
+NATIVE_MEDIA 	+= \
+					 isdtvplayer.o\
+
+NATIVE_IPC		+= \
+
+OBJS		+= $(addprefix native/linux/lwuit/, $(NATIVE_LWUIT))
+OBJS		+= $(addprefix native/linux/media/, $(NATIVE_MEDIA))
+OBJS		+= $(addprefix native/linux/ipc/, $(NATIVE_IPC))
+
+endif
+
+all:
+	@echo "Please do"
+	@echo "   make PLATFORM"
+	@echo "where PLATFORM is one of these:"
+	@echo "   $(PLATFORMS)"
+	@echo
+	@echo "See INSTALL for complete instructions."
+
+linux:
+	@$(MAKE) lib PLATFORM=linux
+
+debug:
+	@echo "not implemented ... :)"
+

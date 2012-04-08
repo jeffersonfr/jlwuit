@@ -1,0 +1,12 @@
+<system>
+	<config>
+		<param key="x" value="0" />
+		<param key="y" value="0" />
+		<param key="width" value="1920" />
+		<param key="height" value="1080" />
+		<param key="scalex" value="1920" />
+		<param key="scaley" value="1080" />
+		<param key="channel" value="0" />
+		<param key="language" value="pt-br" />
+	</config>
+</system>
