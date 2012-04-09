@@ -43,11 +43,8 @@ Scene::~Scene()
 {
 	Implementation::GetInstance()->UnregisterScene(this);
 	
-	_timer.RemoveSchedule(this);
 	jthread::TimerTask::Cancel();
 
-	jthread::AutoLock lock(&_input_mutex);
-	
 	_dialogs.clear();
 	
 	if (_activity != NULL) {
@@ -58,8 +55,6 @@ Scene::~Scene()
 
 void Scene::Run() 
 {
-	jthread::AutoLock lock(&_input_mutex);
-
 	if (Animated() == true) {
 		Repaint();
 	}
