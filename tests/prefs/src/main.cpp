@@ -28,7 +28,7 @@ void dump_element(jlwuit::Element *element)
 {
 	std::cout << "  <" << element->GetName();
 
-	std::map<std::string, std::string> attributes = element->GetAttributes();
+	std::map<std::string, std::string> attributes = element->GetAttributes()->GetParameters();
 	std::map<std::string, std::string> parameters = element->GetParameters();
 
 	for (std::map<std::string, std::string>::iterator j=attributes.begin(); j!=attributes.end(); j++) {
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 	dump_document(doc);
 
 	init_channel(doc->GetElementByIndex(0)->GetIntegerParam("channel"));
-	init_language(doc->GetElementByIndex(0)->GetLiteralParam("language"));
+	init_language(doc->GetElementByIndex(0)->GetTextParam("language"));
 
 	return 0;
 }

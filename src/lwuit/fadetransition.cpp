@@ -17,62 +17,55 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "attributes.h"
-
-#include <sstream>
-
-#include <fcntl.h>
+#include "fadetransition.h"
 
 namespace jlwuit {
 
-Attributes::Attributes(std::string id, std::string type)
+FadeTransition::FadeTransition(Component *cmp)
 {
-	SetTextParam("application.id", id);
-	SetTextParam("application.type", type);
+	_alpha = 0xff;
+	_component = cmp;
 }
 
-Attributes::~Attributes()
+FadeTransition::~FadeTransition()
 {
 }
 
-std::string Attributes::GetType()
+bool FadeTransition::IsRunning()
 {
-	return GetTextParam("application.type");
+	return (_alpha > 0);
 }
 
-std::string Attributes::GetIdentifier()
+bool FadeTransition::Animated()
 {
-	return GetTextParam("application.id");
+	_alpha = _alpha - 0x10;
+
+	if (_alpha < 0) {
+		_alpha = 0;
+	}
 }
 
-std::string Attributes::GetName()
+void FadeTransition::Start()
 {
-	return GetTextParam("application.name");
+	_alpha = 0xff;
 }
 
-std::string Attributes::GetClassPath()
+void FadeTransition::Stop()
 {
-	return GetTextParam("application.classpath");
+	_alpha = 0x00;
 }
 
-std::string Attributes::GetBaseDirectory()
+void FadeTransition::Paint(Graphics *g)
 {
-	return GetTextParam("application.basedirectory");
-}
+	Image *buffer = Image::CreateImage(1920, 1080);
 
-std::string Attributes::GetMainDocument()
-{
-	return GetTextParam("application.maindocument");
-}
+	_c1->Paint(buffer->GetGraphics());
+	
+	g->SetBlittingFlags(jlwuit::LBF_COLORALPHA);
+	g->SetColor(Color(0x00, 0x00, 0x00, _alpha));
+	g->DrawImage(buffer, _c1->GetX(), _c1->GetY());
 
-std::string Attributes::GetIcon()
-{
-	return GetTextParam("application.icon");
-}
-
-std::string Attributes::GetInformation()
-{
-	return GetTextParam("application.information");
+	delete buffer;
 }
 
 }

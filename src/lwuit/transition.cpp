@@ -21,11 +21,30 @@
 
 namespace jlwuit {
 
-Transition::Transition()
+Transition::Transition():
+	Animation()
 {
 }
 
 Transition::~Transition()
+{
+}
+
+bool Transition::IsRunning()
+{
+	return false;
+}
+
+bool Transition::Animated()
+{
+	return false;
+}
+
+void Transition::Start()
+{
+}
+
+void Transition::Stop()
 {
 }
 

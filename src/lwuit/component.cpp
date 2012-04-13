@@ -653,11 +653,6 @@ Component * Component::GetDownComponent()
 	return _down;
 }
 
-bool Component::Animated()
-{
-	return false;
-}
-
 void Component::RequestFocus()
 {
 	if (_has_focus == false) {

@@ -433,7 +433,7 @@ class Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void DrawString(std::string text, int xp, int yp, int wp, int hp, lwuit_horizontal_align_t halign, lwuit_vertical_align_t valign);
+		virtual void DrawString(std::string text, int xp, int yp, int wp, int hp, lwuit_horizontal_align_t halign = LHA_CENTER, lwuit_vertical_align_t valign = LVA_CENTER);
 
 		/**
 		 * \brief

@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 			jcommon::StringTokenizer tokens(std::string(argv[i]), "=", jcommon::JTT_STRING);
 
 			if (tokens.GetSize() > 1) {
-				method.SetLiteralParam(tokens.GetToken(0), tokens.GetToken(1));
+				method.SetTextParam(tokens.GetToken(0), tokens.GetToken(1));
 			}
 		}
 

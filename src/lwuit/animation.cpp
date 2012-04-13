@@ -17,62 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "attributes.h"
-
-#include <sstream>
-
-#include <fcntl.h>
+#include "transition.h"
 
 namespace jlwuit {
 
-Attributes::Attributes(std::string id, std::string type)
-{
-	SetTextParam("application.id", id);
-	SetTextParam("application.type", type);
-}
-
-Attributes::~Attributes()
+Animation::Animation()
 {
 }
 
-std::string Attributes::GetType()
+Animation::~Animation()
 {
-	return GetTextParam("application.type");
 }
 
-std::string Attributes::GetIdentifier()
+bool Animation::Animated()
 {
-	return GetTextParam("application.id");
+	return false;
 }
 
-std::string Attributes::GetName()
+void Animation::SetAnimationDelay(int delay)
 {
-	return GetTextParam("application.name");
 }
 
-std::string Attributes::GetClassPath()
+int Animation::GetAnimationDelay()
 {
-	return GetTextParam("application.classpath");
-}
-
-std::string Attributes::GetBaseDirectory()
-{
-	return GetTextParam("application.basedirectory");
-}
-
-std::string Attributes::GetMainDocument()
-{
-	return GetTextParam("application.maindocument");
-}
-
-std::string Attributes::GetIcon()
-{
-	return GetTextParam("application.icon");
-}
-
-std::string Attributes::GetInformation()
-{
-	return GetTextParam("application.information");
+	return -1;
 }
 
 }

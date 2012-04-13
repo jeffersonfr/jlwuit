@@ -17,62 +17,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "attributes.h"
-
-#include <sstream>
-
-#include <fcntl.h>
+#include "slidetransition.h"
 
 namespace jlwuit {
 
-Attributes::Attributes(std::string id, std::string type)
+SlideTransition::SlideTransition(Component *cmp)
 {
-	SetTextParam("application.id", id);
-	SetTextParam("application.type", type);
+	_alpha = 0xff;
+	_component = cmp;
 }
 
-Attributes::~Attributes()
+SlideTransition::~SlideTransition()
 {
 }
 
-std::string Attributes::GetType()
+bool SlideTransition::IsRunning()
 {
-	return GetTextParam("application.type");
+	return false;
 }
 
-std::string Attributes::GetIdentifier()
+bool SlideTransition::Animated()
 {
-	return GetTextParam("application.id");
 }
 
-std::string Attributes::GetName()
+void SlideTransition::Start()
 {
-	return GetTextParam("application.name");
 }
 
-std::string Attributes::GetClassPath()
+void SlideTransition::Stop()
 {
-	return GetTextParam("application.classpath");
 }
 
-std::string Attributes::GetBaseDirectory()
+void SlideTransition::Paint(Graphics *g)
 {
-	return GetTextParam("application.basedirectory");
-}
+	Image *buffer = Image::CreateImage(1920, 1080);
 
-std::string Attributes::GetMainDocument()
-{
-	return GetTextParam("application.maindocument");
-}
+	_c1->Paint(buffer->GetGraphics());
+	g->DrawImage(buffer, _c1->GetX(), _c1->GetY());
 
-std::string Attributes::GetIcon()
-{
-	return GetTextParam("application.icon");
-}
-
-std::string Attributes::GetInformation()
-{
-	return GetTextParam("application.information");
+	delete buffer;
 }
 
 }

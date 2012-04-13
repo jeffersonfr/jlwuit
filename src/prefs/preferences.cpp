@@ -62,7 +62,7 @@ Document * Preferences::Create(std::string prefs)
 				*value = attr->Value();
 
 			if (key != NULL && value != NULL) {
-				element->SetLiteralAttribute(key, value);
+				element->GetAttributes()->SetTextParam(key, value);
 			}
 
 			attr = attr->Next();
@@ -76,7 +76,7 @@ Document * Preferences::Create(std::string prefs)
 					*value = psg->Attribute("value");
 
 				if (key != NULL && value != NULL) {
-					element->SetLiteralParam(key, value);
+					element->SetTextParam(key, value);
 				}
 			}
 		
@@ -108,7 +108,7 @@ void Preferences::Store(Document *document)
 
 		o << "  <" << element->GetName();
 
-		std::map<std::string, std::string> attributes = element->GetAttributes();
+		std::map<std::string, std::string> attributes = element->GetAttributes()->GetParameters();
 		std::map<std::string, std::string> parameters = element->GetParameters();
 
 		for (std::map<std::string, std::string>::iterator j=attributes.begin(); j!=attributes.end(); j++) {

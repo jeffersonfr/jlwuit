@@ -109,7 +109,13 @@ class Scene : public Component, public UserEventListener, public jthread::TimerT
 		 * \brief
 		 *
 		 */
-		virtual void SetAnimationDelay(int delay);
+		virtual void SetAnimationDelay(int ms);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetAnimationDelay();
 
 		/**
 		 * \brief
