@@ -42,7 +42,7 @@ void Response::Initialize(std::string str)
 		jcommon::StringTokenizer param(params.GetToken(i), "=", jcommon::JTT_STRING);
 
 		if (param.GetSize() > 1) {
-			SetLiteralParam(param.GetToken(0), param.GetToken(1));
+			SetTextParam(param.GetToken(0), param.GetToken(1));
 		}
 	}
 }
@@ -51,7 +51,7 @@ std::string Response::what()
 {
 	std::ostringstream o;
 
-	for (std::map<std::string, std::string>::iterator i=_params.begin(); i!=_params.end(); i++) {
+	for (std::map<std::string, std::string>::iterator i=GetParameters().begin(); i!=GetParameters().end(); i++) {
 		o << i->first << "=" << i->second << ";";
 	}
 

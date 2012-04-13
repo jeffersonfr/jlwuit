@@ -30,29 +30,45 @@ Dialog::Dialog(Scene *scene)
 	}
 
 	_scene = scene;
-
-	_scene->RegisterDialog(this);
+	_timeout = -1;
 }
 
 Dialog::~Dialog()
 {
 	_scene->UnregisterDialog(this);
+	
+	jthread::TimerTask::Cancel();
 }
 
 void Dialog::SetTimeout(int ms)
 {
+	_timeout = ms;
 }
 
 void Dialog::Show()
 {
+	_scene->RegisterDialog(this);
+
 	SetVisible(true);
+	
 	_scene->Repaint();
+	
+	_timer.RemoveSchedule(this);
+	_timer.Schedule(this, _timeout*1000LL, true);
 }
 
 void Dialog::Hide()
 {
+	_timer.RemoveSchedule(this);
+
 	SetVisible(false);
+	
 	_scene->Repaint();
+}
+
+void Dialog::Run() 
+{
+	Hide();
 }
 
 }

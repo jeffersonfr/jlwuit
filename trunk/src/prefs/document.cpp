@@ -54,7 +54,7 @@ void Document::RemoveElementByID(std::string id)
 	for (std::vector<Element *>::iterator i=_elements.begin(); i!=_elements.end(); i++) {
 		Element *element = (*i);
 
-		if (element->GetLiteralAttribute("id") == id) {
+		if (element->GetAttributes()->GetTextParam("id") == id) {
 			_elements.erase(i);
 
 			delete element;
@@ -87,7 +87,7 @@ Element * Document::GetElementByID(std::string id)
 	for (std::vector<Element *>::iterator i=_elements.begin(); i!=_elements.end(); i++) {
 		Element *element = (*i);
 
-		if (element->GetLiteralAttribute("id") == id) {
+		if (element->GetAttributes()->GetTextParam("id") == id) {
 			return element;
 		}
 	}

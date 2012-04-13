@@ -24,6 +24,7 @@
 #include "userevent.h"
 #include "font.h"
 #include "layout.h"
+#include "animation.h"
 
 #include "jthread.h"
 
@@ -73,12 +74,13 @@ class Component;
 class Style;
 class Layout;
 
-class Component {
+class Component : public Animation {
 
 	protected:
 		std::vector<Component *> _components;
 		jthread::Mutex _container_mutex;
 		Component *_focus;
+		Style *_style;
 		Layout *_layout;
 		struct lwuit_margin_t _margins;
 		struct lwuit_size_t _scale;
@@ -88,7 +90,9 @@ class Component {
 			*_right,
 			*_up,
 			*_down;
-		Style *_style;
+		struct lwuit_point_t _location;
+		struct lwuit_size_t _size,
+			_preferred_size;
 		std::string _name,
 			_uiid;
 		bool _has_focus,
@@ -97,9 +101,6 @@ class Component {
 			_enabled,
 			_is_valid,
 			_is_cycle_root;
-		struct lwuit_point_t _location;
-		struct lwuit_size_t _size,
-			_preferred_size;
 		lwuit_component_alignment_t _alignment_x,
 			_alignment_y;
 		lwuit_component_orientation_t _orientation;
@@ -410,12 +411,6 @@ class Component {
 		 *
 		 */
 		virtual Component * GetDownComponent();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool Animated();
 
 		/**
 		 * \brief

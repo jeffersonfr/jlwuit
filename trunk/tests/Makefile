@@ -1,13 +1,14 @@
 include ../Makefile.defs
 
 MODULES = \
+			apps \
 			dlg \
 		  gui \
 			ipc \
 		  layers \
 			msg \
 			prefs \
-		  robots \
+			slide \
 
 all:
 	@for i in $(MODULES); do \

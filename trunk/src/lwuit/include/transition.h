@@ -20,6 +20,7 @@
 #ifndef LWUIT_TRANSITION_H
 #define LWUIT_TRANSITION_H
 
+#include "animation.h"
 #include "graphics.h"
 
 namespace jlwuit {
@@ -29,7 +30,7 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Transition {
+class Transition : public Animation {
 
 	protected:
 		/**
@@ -45,6 +46,30 @@ class Transition {
 		 */
 		virtual ~Transition();
 		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsRunning();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Animated();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Start();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Stop();
+
 		/**
 		 * \brief
 		 *

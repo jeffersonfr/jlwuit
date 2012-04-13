@@ -39,7 +39,7 @@ std::map<std::string, std::string> & ParamMapper::GetParameters()
 	return _params;
 }
 
-std::string ParamMapper::GetLiteralParam(std::string key, std::string value)
+std::string ParamMapper::GetTextParam(std::string key, std::string value)
 {
 	if (_params.find(key) != _params.end()) {
 		return _params[key];
@@ -101,7 +101,7 @@ double ParamMapper::GetDecimalParam(std::string key, double value)
 	return value;
 }
 
-void ParamMapper::SetLiteralParam(std::string key, std::string value)
+void ParamMapper::SetTextParam(std::string key, std::string value)
 {
 	_params[key] = value;
 }
@@ -153,7 +153,7 @@ void ParamMapper::Copy(ParamMapper *mapper)
 	std::map<std::string, std::string> params = mapper->GetParameters();
 
 	for (std::map<std::string, std::string>::iterator i=params.begin(); i!=params.end(); i++) {
-		SetLiteralParam(i->first, i->second);
+		SetTextParam(i->first, i->second);
 	}
 }
 

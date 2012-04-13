@@ -17,62 +17,71 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "attributes.h"
+#ifndef LWUIT_FADETRANSITION_H
+#define LWUIT_FADETRANSITION_H
 
-#include <sstream>
-
-#include <fcntl.h>
+#include "component.h"
 
 namespace jlwuit {
 
-Attributes::Attributes(std::string id, std::string type)
-{
-	SetTextParam("application.id", id);
-	SetTextParam("application.type", type);
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class FadeTransition {
+
+	private:
+		/** \brief */
+		Component *_component;
+		/** \brief */
+		int _alpha;
+
+	public:
+		/**
+		 * \brief
+		 *
+		 */
+		FadeTransition(Component *cmp);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual ~FadeTransition();
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsRunning();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Animated();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Start();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Stop();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Paint(Graphics *g);
+
+};
+
 }
 
-Attributes::~Attributes()
-{
-}
-
-std::string Attributes::GetType()
-{
-	return GetTextParam("application.type");
-}
-
-std::string Attributes::GetIdentifier()
-{
-	return GetTextParam("application.id");
-}
-
-std::string Attributes::GetName()
-{
-	return GetTextParam("application.name");
-}
-
-std::string Attributes::GetClassPath()
-{
-	return GetTextParam("application.classpath");
-}
-
-std::string Attributes::GetBaseDirectory()
-{
-	return GetTextParam("application.basedirectory");
-}
-
-std::string Attributes::GetMainDocument()
-{
-	return GetTextParam("application.maindocument");
-}
-
-std::string Attributes::GetIcon()
-{
-	return GetTextParam("application.icon");
-}
-
-std::string Attributes::GetInformation()
-{
-	return GetTextParam("application.information");
-}
-
-}
+#endif

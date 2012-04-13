@@ -20,39 +20,53 @@
 #ifndef LWUIT_TOAST_H
 #define LWUIT_TOAST_H
 
+#include "dialog.h"
 #include "defines.h"
+#include "font.h"
 
 #include <string>
 
 namespace jlwuit {
+
+class Scene;
 
 /**
  * \brief
  *
  * \author Jeff Ferr
  */
-class Toast {
+class Toast : public Dialog {
 
 	private:
 		/** \brief */
-		std::string _id;
+		std::vector<std::string> _lines;
+		/** \brief */
+		Font *_font;
 		/** \brief */
 		std::string _message;
 		/** \brief */
-		std::string _icon;
-		/** \brief */
-		lwuit_horizontal_align_t _halign;
-		/** \brief */
-		lwuit_vertical_align_t _valign;
-		/** \brief */
-		int _timeout;
+		lwuit_gravity_t _gravity;
+
+	private:
+		
+		/**
+		 * \brief
+		 *
+		 */
+		void InitRowString(std::vector<std::string> *lines, std::string text, int width);
+
+		/**
+		 * \brief
+		 *
+		 */
+		static void ReleaseScene(Scene *scene);
 
 	protected:
 		/**
 		 * \brief
 		 *
 		 */
-		Toast(std::string id);
+		Toast(Scene *scene);
 
 	public:
 		/**
@@ -65,7 +79,7 @@ class Toast {
 		 * \brief
 		 *
 		 */
-		static Toast * Create(std::string msg);
+		static Toast * Create(Scene *scene);
 
 		/**
 		 * \brief
@@ -77,25 +91,13 @@ class Toast {
 		 * \brief
 		 *
 		 */
-		virtual Toast * SetIcon(std::string icon);
+		virtual Toast * SetGravity(lwuit_gravity_t gravity);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual Toast * SetHorizontalAlign(lwuit_horizontal_align_t align);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Toast * SetVerticalAlign(lwuit_vertical_align_t align);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Toast * SetTimeout(int ms);
+		virtual Toast * SetGravity(std::string gravity);
 
 		/**
 		 * \brief
@@ -107,7 +109,7 @@ class Toast {
 		 * \brief
 		 *
 		 */
-		virtual void Hide();
+		virtual void Paint(Graphics *g);
 
 };
 

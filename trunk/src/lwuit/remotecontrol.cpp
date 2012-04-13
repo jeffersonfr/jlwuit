@@ -17,62 +17,71 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "attributes.h"
-
-#include <sstream>
-
-#include <fcntl.h>
+#include "remotecontrol.h"
 
 namespace jlwuit {
 
-Attributes::Attributes(std::string id, std::string type)
-{
-	SetTextParam("application.id", id);
-	SetTextParam("application.type", type);
-}
-
-Attributes::~Attributes()
+RemoteControl::RemoteControl()
 {
 }
 
-std::string Attributes::GetType()
+RemoteControl::~RemoteControl()
 {
-	return GetTextParam("application.type");
 }
 
-std::string Attributes::GetIdentifier()
+bool RemoteControl::IsSupported(lwuit_key_symbol_t symbol)
 {
-	return GetTextParam("application.id");
-}
+	switch (symbol) {
+		case LKS_EXIT:
+		case LKS_ENTER:
+		case LKS_CANCEL:
 
-std::string Attributes::GetName()
-{
-	return GetTextParam("application.name");
-}
+		case LKS_0:
+		case LKS_1:
+		case LKS_2:
+		case LKS_3:
+		case LKS_4:
+		case LKS_5:
+		case LKS_6:
+		case LKS_7:
+		case LKS_8:
+		case LKS_9:
 
-std::string Attributes::GetClassPath()
-{
-	return GetTextParam("application.classpath");
-}
+		case LKS_CURSOR_LEFT:
+		case LKS_CURSOR_RIGHT:
+		case LKS_CURSOR_UP:
+		case LKS_CURSOR_DOWN:
 
-std::string Attributes::GetBaseDirectory()
-{
-	return GetTextParam("application.basedirectory");
-}
+		case LKS_RED:
+		case LKS_GREEN:
+		case LKS_YELLOW:
+		case LKS_BLUE:
 
-std::string Attributes::GetMainDocument()
-{
-	return GetTextParam("application.maindocument");
-}
+		case LKS_POWER:
+		case LKS_MENU:
+		case LKS_FILE:
+		case LKS_INFO:
+		case LKS_BACK:
+		case LKS_GUIDE:
+		case LKS_MUTE:
 
-std::string Attributes::GetIcon()
-{
-	return GetTextParam("application.icon");
-}
+		case LKS_CHANNEL_UP:
+		case LKS_CHANNEL_DOWN:
 
-std::string Attributes::GetInformation()
-{
-	return GetTextParam("application.information");
+		case LKS_VOLUME_UP:
+		case LKS_VOLUME_DOWN:
+
+		case LKS_PLAY:
+		case LKS_STOP:
+		case LKS_EJECT:
+		case LKS_REWIND:
+		case LKS_RECORD:
+			return true;
+		default:
+			break;
+	};
+
+	return false;
 }
 
 }

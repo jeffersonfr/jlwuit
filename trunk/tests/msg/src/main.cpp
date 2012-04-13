@@ -25,21 +25,57 @@
 
 class MessageTest : public jlwuit::Scene {
 
+	private:
+		int _state;
+
 	public:
 		MessageTest():
 			jlwuit::Scene(0, 0, 1920, 1080)
 		{
-			jlwuit::Toast::Create("info1")
-				->SetMessage("Information Test")
-				->SetHorizontalAlign(jlwuit::LHA_CENTER)
-				->SetVerticalAlign(jlwuit::LVA_CENTER)
-				->Show();
+			_state = -1;
+
+			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 		}
 
 		virtual ~MessageTest()
 		{
 		}
 
+		virtual bool Animated()
+		{
+			if (_state == 0) {
+				// top
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + Left")->SetGravity("top left")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + HCenter")->SetGravity("top hcenter")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + Right")->SetGravity("top right")->Show();
+
+				// center
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Left | VCenter")->SetGravity("left vcenter")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: HCenter + VCenter")->SetGravity("hcenter vcenter")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Right + VCenter")->SetGravity("right vcenter")->Show(); 
+
+				// bottom
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + Left")->SetGravity("bottom left")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + HCenter (default)")->Show(); 
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + Right")->SetGravity("bottom right")->Show();
+			} else if (_state == 5) {
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + HFill")->SetGravity("top hfill")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Center + HFill")->SetGravity("vcenter hfill")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + HFill")->SetGravity("bottom hfill")->Show();
+			} else if (_state == 10) {
+				jlwuit::Toast::Create(this)->SetMessage(
+					"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt " \
+					"ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " \
+					"laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in " \
+					"voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " \
+					"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+				)->SetGravity("vcenter hfill")->Show();
+			} 
+
+			_state = _state + 1;
+			
+			return false;
+		}
 };
 
 int main()

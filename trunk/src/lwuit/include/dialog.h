@@ -21,6 +21,7 @@
 #define LWUIT_DIALOG_H
 
 #include "scene.h"
+#include "jtimer.h"
 
 #include <string>
 
@@ -31,11 +32,15 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Dialog : public Component {
+class Dialog : public Component, public jthread::TimerTask {
 
 	private:
 		/** \brief */
 		Scene *_scene;
+		/** \brief */
+		jthread::Timer _timer;
+		/** \brief */
+		int _timeout;
 
 	public:
 		/**
@@ -67,6 +72,12 @@ class Dialog : public Component {
 		 *
 		 */
 		virtual void Hide();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Run();
 
 };
 

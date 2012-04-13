@@ -27,17 +27,16 @@ namespace jlwuit {
 
 class ParamMapper {
 
-	protected:
+	private:
 		std::map<std::string, std::string> _params;
 
-	protected:
+	public:
 		/**
 		 * \Constructor.
 		 *
 		 */
 		ParamMapper();
 
-	public:
 		/**
 		 * \brief Destructor.
 		 *
@@ -54,7 +53,7 @@ class ParamMapper {
 		 * \brief 
 		 *
 		 */
-		virtual std::string GetLiteralParam(std::string key, std::string value = "");
+		virtual std::string GetTextParam(std::string key, std::string value = "");
 
 		/**
 		 * \brief 
@@ -78,7 +77,7 @@ class ParamMapper {
 		 * \brief 
 		 *
 		 */
-		virtual void SetLiteralParam(std::string key, std::string value);
+		virtual void SetTextParam(std::string key, std::string value);
 
 		/**
 		 * \brief 

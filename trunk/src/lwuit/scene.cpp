@@ -30,12 +30,11 @@ namespace jlwuit {
 Scene::Scene(int x, int y, int width, int height):
 	Component(x, y, width, height)
 {
-	_timer.Schedule(this, (uint64_t)0LL, 1000000LL, true);
-	
 	_activity = NULL;
 
+	SetAnimationDelay(1000);
 	SetVisible(false);
-
+	
 	Implementation::GetInstance()->RegisterScene(this);
 }
 
@@ -149,7 +148,6 @@ void Scene::PaintDialogs(Graphics *g)
 			}
 		}
 	}
-
 }
 
 void Scene::Paint(Graphics *g)
@@ -159,18 +157,28 @@ void Scene::Paint(Graphics *g)
 	PaintDialogs(g);
 }
 
-void Scene::SetAnimationDelay(int delay)
+void Scene::SetAnimationDelay(int ms)
 {
-	SetDelay(delay);
+	jthread::TimerTask::SetDelay(ms*1000LL);
+}
+
+int Scene::GetAnimationDelay()
+{
+	return jthread::TimerTask::GetDelay();
 }
 
 void Scene::Show()
 {
 	SetVisible(true);
+
+	_timer.Schedule(this, (uint64_t)0LL, (uint64_t)GetAnimationDelay(), true);
 }
 
 void Scene::Hide()
 {
+	jthread::TimerTask::Cancel();
+	_timer.RemoveSchedule(this);
+
 	SetVisible(false);
 }
 

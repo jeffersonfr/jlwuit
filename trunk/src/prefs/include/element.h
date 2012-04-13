@@ -31,7 +31,7 @@ class Element : public ParamMapper {
 
 	private:
 		/** \brief Comment */
-		std::map<std::string, std::string> _attributes;
+		ParamMapper _attributes;
 		/** \brief Comment */
 		std::string _name;
 
@@ -58,55 +58,7 @@ class Element : public ParamMapper {
 		 * \brief 
 		 *
 		 */
-		virtual std::map<std::string, std::string> & GetAttributes();
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual std::string GetLiteralAttribute(std::string key, std::string value = "");
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual bool GetBooleanAttribute(std::string key, bool value = false);
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual int64_t GetIntegerAttribute(std::string key, int64_t value = 0LL);
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual double GetDecimalAttribute(std::string key, double value = 0.0);
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual void SetLiteralAttribute(std::string key, std::string value);
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual void SetBooleanAttribute(std::string key, bool value);
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual void SetIntegerAttribute(std::string key, int64_t value);
-
-		/**
-		 * \brief 
-		 *
-		 */
-		virtual void SetDecimalAttribute(std::string key, double value);
+		virtual ParamMapper * GetAttributes();
 
 };
 

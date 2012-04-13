@@ -16,6 +16,7 @@ CCFLAGS		+= \
 						-Isrc/ipc/$(INCDIR) \
 						-Isrc/prefs/$(INCDIR) \
 						-Isrc/usb/$(INCDIR) \
+						-Isrc/http/$(INCDIR) \
 						-Isrc/util/$(INCDIR) \
 						-I/usr/local/include \
 						`pkg-config --cflags jlibcpp` \
@@ -36,6 +37,7 @@ SRC_APPS	= \
 						proxy.o\
 
 SRC_LWUIT	= \
+						animation.o\
 						borderlayout.o\
 						capabilities.o\
 						color.o\
@@ -52,10 +54,13 @@ SRC_LWUIT	= \
 						gridlayout.o\
 						image.o\
 						implementation.o\
+						keyboard.o\
 						layer.o\
 						layersetup.o\
 						layout.o\
 						lookandfeel.o\
+						mouse.o\
+						remotecontrol.o\
 						rootcontainer.o\
 						scene.o\
 						screen.o\
@@ -98,6 +103,11 @@ SRC_USB		= \
 						usbstatusevent.o\
 						usbstatuslistener.o\
 
+SRC_HTTP	= \
+						httprequest.o\
+						httpresponse.o\
+						httpstatuschanged.o\
+
 SRC_UTIL	= \
 						parammapper.o\
 
@@ -108,6 +118,7 @@ OBJS			= \
 						$(addprefix src/ipc/, $(SRC_IPC)) \
 						$(addprefix src/prefs/, $(SRC_PREFS)) \
 						$(addprefix src/usb/, $(SRC_USB)) \
+						$(addprefix src/http/, $(SRC_HTTP)) \
 						$(addprefix src/util/, $(SRC_UTIL)) \
 
 .PHONY: all strip tests doc install uninstall clean $(PLATFORMS)
@@ -137,7 +148,7 @@ install: uninstall
 	@install -d -o nobody -m 755 $(PREFIX)/$(MODULE)/sounds && install -o nobody -m 644 resources/sounds/* $(PREFIX)/$(MODULE)/sounds
 	@$(ECHO) "Installing include files in $(PREFIX)/include/$(MODULE) $(OK)" && mkdir -p $(PREFIX)/include/$(MODULE)
 	@install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)
-	@for i in apps lwuit media ipc prefs usb util; do \
+	@for i in apps lwuit media ipc prefs usb http util; do \
 		install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)/$$i && install -o nobody -m 644 src/$$i/include/* $(PREFIX)/include/$(MODULE)/$$i ; \
 	done
 	@$(ECHO) "Installing $(EXE) in $(PREFIX)/lib/lib$(MODULE).so $(OK)"

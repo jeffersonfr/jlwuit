@@ -95,6 +95,23 @@ enum lwuit_vertical_align_t {
  * \brief
  *
  */
+enum lwuit_gravity_t {
+	LGR_START			= 0x0001,
+	LGR_END				= 0x0002,
+	LGR_LEFT			= 0x0004,
+	LGR_RIGHT			= 0x0008,
+	LGR_TOP				= 0x0010,
+	LGR_BOTTOM		= 0x0020,
+	LGR_HFILL			= 0x0040,
+	LGR_VFILL			= 0x0080,
+	LGR_HCENTER		= 0x0100,
+	LGR_VCENTER		= 0x0200,
+};
+
+/**
+ * \brief
+ *
+ */
 struct lwuit_point_t {
 	int x;
 	int y;

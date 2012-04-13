@@ -17,62 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "attributes.h"
+#ifndef LWUIT_MOUSE_H
+#define LWUIT_MOUSE_H
 
-#include <sstream>
-
-#include <fcntl.h>
+#include "userevent.h"
 
 namespace jlwuit {
 
-Attributes::Attributes(std::string id, std::string type)
-{
-	SetTextParam("application.id", id);
-	SetTextParam("application.type", type);
-}
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class Mouse {
 
-Attributes::~Attributes()
-{
-}
+	private:
+		/**
+		 * \brief
+		 *
+		 */
+		Mouse();
 
-std::string Attributes::GetType()
-{
-	return GetTextParam("application.type");
-}
+	public:
+		/**
+		 * \brief
+		 *
+		 */
+		virtual ~Mouse();
 
-std::string Attributes::GetIdentifier()
-{
-	return GetTextParam("application.id");
-}
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsSupported(lwuit_mouse_button_t symbol);
 
-std::string Attributes::GetName()
-{
-	return GetTextParam("application.name");
-}
-
-std::string Attributes::GetClassPath()
-{
-	return GetTextParam("application.classpath");
-}
-
-std::string Attributes::GetBaseDirectory()
-{
-	return GetTextParam("application.basedirectory");
-}
-
-std::string Attributes::GetMainDocument()
-{
-	return GetTextParam("application.maindocument");
-}
-
-std::string Attributes::GetIcon()
-{
-	return GetTextParam("application.icon");
-}
-
-std::string Attributes::GetInformation()
-{
-	return GetTextParam("application.information");
-}
+};
 
 }
+
+#endif
