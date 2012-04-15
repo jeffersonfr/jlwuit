@@ -52,6 +52,8 @@ Toast::~Toast()
 
 void Toast::InitRowString(std::vector<std::string> *lines, std::string text, int width)
 {
+	lines->clear();
+
 	if (width < 0) {
 		lines->push_back(text);
 
@@ -182,6 +184,17 @@ void Toast::Show()
 	int x = GAPX,
 			y = GAPY;
 
+	if (_gravity & LGR_HFILL) {
+			w = bounds.width-2*GAPX;
+	}
+
+	if (_gravity & LGR_VFILL) {
+		w = (bounds.width-2*GAPX)/2;
+		h = bounds.height-2*GAPY;
+	
+		InitRowString(&_lines, _message, w);
+	}
+
 	if (_gravity & LGR_RIGHT) {
 		x = bounds.width-w-GAPX;
 	}
@@ -191,21 +204,13 @@ void Toast::Show()
 	}
 
 	if (_gravity & LGR_HCENTER) {
-			x = (bounds.width-w)/2;
+		x = (bounds.width-w)/2;
 	}
 
 	if (_gravity & LGR_VCENTER) {
 		y = (bounds.height-h)/2;
 	}
 	
-	if (_gravity & LGR_HFILL) {
-			w = bounds.width-2*GAPX;
-	}
-
-	if (_gravity & LGR_VFILL) {
-		h = bounds.height-2*GAPY;
-	}
-
 	SetBounds(x, y, w, h);
 
 	Dialog::Show();

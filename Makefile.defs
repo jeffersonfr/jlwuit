@@ -1,7 +1,8 @@
 HOST			= 
 
 AR				= $(HOST)ar
-CC				= $(HOST)g++
+CC				= $(HOST)gcc
+CXX				= $(HOST)g++
 RANLIB		= $(HOST)ranlib
 JAVA			= $(HOST)javac
 
@@ -21,14 +22,14 @@ PREFIX		= /usr/local
 
 CCFLAGS		+= \
 						-g -ggdb \
-						-Wall -rdynamic -fpic -funroll-loops -O2 -std=c++0x \
+						-Wall -rdynamic -fpic -funroll-loops -O2 \
 
 ARFLAGS		+= \
 						-rc \
 
 CCFLAGS		+= \
-						-I$(INCDIR) \
 						$(DEFINES) \
+						-I$(INCDIR) \
 
 ECHO			= echo -e
 

@@ -11,6 +11,8 @@ CCFLAGS		+= \
 
 CCFLAGS		+= \
 						-Isrc/apps/$(INCDIR) \
+						-Isrc/db/$(INCDIR) \
+						-Isrc/image/$(INCDIR) \
 						-Isrc/lwuit/$(INCDIR) \
 						-Isrc/media/$(INCDIR) \
 						-Isrc/ipc/$(INCDIR) \
@@ -36,6 +38,14 @@ SRC_APPS	= \
 						nativeproxy.o\
 						proxy.o\
 
+SRC_DB		= \
+
+
+SRC_IMAGE	= \
+						bwimagefilter.o\
+						filter.o\
+						filtergroup.o\
+
 SRC_LWUIT	= \
 						animation.o\
 						borderlayout.o\
@@ -53,6 +63,7 @@ SRC_LWUIT	= \
 						gridbaglayout.o\
 						gridlayout.o\
 						image.o\
+						indexedimage.o\
 						implementation.o\
 						keyboard.o\
 						layer.o\
@@ -113,6 +124,8 @@ SRC_UTIL	= \
 
 OBJS			= \
 						$(addprefix src/apps/, $(SRC_APPS)) \
+						$(addprefix src/db/, $(SRC_DB)) \
+						$(addprefix src/image/, $(SRC_IMAGE)) \
 						$(addprefix src/lwuit/, $(SRC_LWUIT)) \
 						$(addprefix src/media/, $(SRC_MEDIA)) \
 						$(addprefix src/ipc/, $(SRC_IPC)) \
@@ -126,9 +139,12 @@ OBJS			= \
 include Makefile.native
 
 lib: $(OBJS)
-	@$(CC) $(CCFLAGS) -o $(EXE) $(OBJS)  $(LDFLAGS); $(ECHO) "generate $(EXE) ...  $(OK)" ; mkdir -p $(LIBDIR) && mv $(EXE) $(LIBDIR)
+	@$(CXX) $(CCFLAGS) -o $(EXE) $(OBJS)  $(LDFLAGS); $(ECHO) "generate $(EXE) ...  $(OK)" ; mkdir -p $(LIBDIR) && mv $(EXE) $(LIBDIR)
 
 .cpp.o: $<
+	@$(CXX) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
+
+.c.o: $<
 	@$(CC) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
 
 strip:
@@ -148,7 +164,7 @@ install: uninstall
 	@install -d -o nobody -m 755 $(PREFIX)/$(MODULE)/sounds && install -o nobody -m 644 resources/sounds/* $(PREFIX)/$(MODULE)/sounds
 	@$(ECHO) "Installing include files in $(PREFIX)/include/$(MODULE) $(OK)" && mkdir -p $(PREFIX)/include/$(MODULE)
 	@install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)
-	@for i in apps lwuit media ipc prefs usb http util; do \
+	@for i in apps db image lwuit media ipc prefs usb http util; do \
 		install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)/$$i && install -o nobody -m 644 src/$$i/include/* $(PREFIX)/include/$(MODULE)/$$i ; \
 	done
 	@$(ECHO) "Installing $(EXE) in $(PREFIX)/lib/lib$(MODULE).so $(OK)"

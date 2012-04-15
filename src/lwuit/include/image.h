@@ -52,19 +52,19 @@ class Image {
 		 * \brief
 		 *
 		 */
-		static bool GetImageSize(std::string img, int *width, int *height);
+		static bool GetImageSize(std::string img, int *wp, int *hp);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		static Image * CreateImage(int width, int height, lwuit_pixelformat_t pixelformat = LPF_ARGB);
+		static Image * CreateImage(int wp, int hp, lwuit_pixelformat_t pixelformat = LPF_ARGB);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		static Image * CreateImage(uint32_t *data, int width, int height);
+		static Image * CreateImage(uint32_t *data, int wp, int hp);
 
 		/**
 		 * \brief
@@ -94,13 +94,13 @@ class Image {
 		 * \brief
 		 *
 		 */
-		virtual Image * Scaled(int width, int height);
+		virtual Image * Scaled(int wp, int hp);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual Image * SubImage(int x, int y, int width, int height);
+		virtual Image * SubImage(int xp, int yp, int wp, int hp);
 
 		/**
 		 * \brief

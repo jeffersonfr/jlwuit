@@ -31,6 +31,8 @@ Dialog::Dialog(Scene *scene)
 
 	_scene = scene;
 	_timeout = -1;
+	
+	_scene->RegisterDialog(this);
 }
 
 Dialog::~Dialog()
@@ -47,8 +49,6 @@ void Dialog::SetTimeout(int ms)
 
 void Dialog::Show()
 {
-	_scene->RegisterDialog(this);
-
 	SetVisible(true);
 	
 	_scene->Repaint();

@@ -3,7 +3,8 @@ include ../Makefile.defs
 MODULES = \
 			apps \
 			dlg \
-		  gui \
+			filter \
+			gui \
 			ipc \
 		  layers \
 			msg \
