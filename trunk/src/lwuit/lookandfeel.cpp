@@ -92,7 +92,7 @@ void LookAndFeel::AddReference(std::map<std::string, struct lwuit_reference_t *>
 		struct lwuit_reference_t *t = new struct lwuit_reference_t;
 
 		t->reference = reference;
-		t->count = 0;
+		t->count = 1;
 
 		(*resources)[resource_id] = t;
 	} else {

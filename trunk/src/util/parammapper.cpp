@@ -24,6 +24,9 @@
 
 #include <sstream>
 
+#include <stdlib.h>
+#include <stdio.h>
+
 namespace jlwuit {
 
 ParamMapper::ParamMapper()

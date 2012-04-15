@@ -88,6 +88,8 @@ void Scene::RegisterDialog(Dialog *dialog)
 		return;
 	}
 
+	jthread::AutoLock lock(&_dialogs_mutex);
+
 	std::vector<Dialog *>::iterator i = std::find(_dialogs.begin(), _dialogs.end(), dialog);
 
 	if (i == _dialogs.end()) {
@@ -100,6 +102,8 @@ void Scene::UnregisterDialog(Dialog *dialog)
 	if (dialog == NULL) {
 		return;
 	}
+
+	jthread::AutoLock lock(&_dialogs_mutex);
 
 	std::vector<Dialog *>::iterator i = std::find(_dialogs.begin(), _dialogs.end(), dialog);
 
@@ -164,14 +168,14 @@ void Scene::SetAnimationDelay(int ms)
 
 int Scene::GetAnimationDelay()
 {
-	return jthread::TimerTask::GetDelay();
+	return jthread::TimerTask::GetDelay()/1000LL;
 }
 
 void Scene::Show()
 {
 	SetVisible(true);
 
-	_timer.Schedule(this, (uint64_t)0LL, (uint64_t)GetAnimationDelay(), true);
+	_timer.Schedule(this, (uint64_t)0LL, GetAnimationDelay()*1000LL, true);
 }
 
 void Scene::Hide()

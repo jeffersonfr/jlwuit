@@ -50,14 +50,14 @@ Graphics * ImageImpl::GetGraphics()
 	return _graphics;
 }
 
-Image * ImageImpl::Scaled(int width, int height)
+Image * ImageImpl::Scaled(int wp, int hp)
 {
-	return new ImageImpl(_native_image->Scaled(width, height));
+	return new ImageImpl(_native_image->Scaled(wp, hp));
 }
 
-Image * ImageImpl::SubImage(int x, int y, int width, int height)
+Image * ImageImpl::SubImage(int xp, int yp, int wp, int hp)
 {
-	return new ImageImpl(_native_image->SubImage(x, y, width, height));
+	return new ImageImpl(_native_image->SubImage(xp, yp, wp, hp));
 }
 
 void ImageImpl::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)

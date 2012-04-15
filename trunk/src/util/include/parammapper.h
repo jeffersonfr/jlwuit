@@ -23,6 +23,8 @@
 #include <string>
 #include <map>
 
+#include <stdint.h>
+
 namespace jlwuit {
 
 class ParamMapper {

@@ -30,19 +30,19 @@ Image::~Image()
 {
 }
 
-bool Image::GetImageSize(std::string img, int *width, int *height)
+bool Image::GetImageSize(std::string img, int *wp, int *hp)
 {
-	return Implementation::GetInstance()->GetImageSize(img, width, height);
+	return Implementation::GetInstance()->GetImageSize(img, wp, hp);
 }
 
-Image * Image::CreateImage(int width, int height, lwuit_pixelformat_t pixelformat)
+Image * Image::CreateImage(int wp, int hp, lwuit_pixelformat_t pixelformat)
 {
-	return Implementation::GetInstance()->CreateImage(width, height, pixelformat);
+	return Implementation::GetInstance()->CreateImage(wp, hp, pixelformat);
 }
 
-Image * Image::CreateImage(uint32_t *data, int width, int height)
+Image * Image::CreateImage(uint32_t *data, int wp, int hp)
 {
-	return Implementation::GetInstance()->CreateImage(data, width, height);
+	return Implementation::GetInstance()->CreateImage(data, wp, hp);
 }
 
 Image * Image::CreateImage(uint8_t *data, int size)
@@ -65,12 +65,12 @@ Graphics * Image::GetGraphics()
 	return NULL;
 }
 
-Image * Image::Scaled(int width, int height)
+Image * Image::Scaled(int wp, int hp)
 {
 	return NULL;
 }
 
-Image * Image::SubImage(int x, int y, int width, int height)
+Image * Image::SubImage(int xp, int yp, int wp, int hp)
 {
 	return NULL;
 }

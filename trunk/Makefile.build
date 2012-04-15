@@ -3,11 +3,14 @@ all: $(EXE)
 SRCS	+= $(addprefix src/,$(OBJS))
 
 $(EXE): $(SRCS)
-	@$(CC) $(CCFLAGS) -o $(EXE) $(SRCS) $(LDFLAGS)
+	@$(CXX) $(CCFLAGS) -o $(EXE) $(SRCS) $(LDFLAGS)
 	@mkdir -p $(BINDIR) $(BINDIR) && mv $(EXE) $(BINDIR)
 
 .cpp.o: $<  
-	@$(CC) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
+	@$(CXX) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
+
+.c.o: $<  
+	$(CC) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
 
 strip:
 	@$(ECHO) "Strip $(EXE)...  $(OK)"

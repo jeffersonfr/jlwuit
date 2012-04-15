@@ -57,10 +57,6 @@ Calc::Calc(int x, int y):
 Calc::~Calc() 
 {
 	jthread::AutoLock lock(&_mutex);
-	
-	jlwuit::LookAndFeel::ReleaseFont("small");
-	jlwuit::LookAndFeel::ReleaseFont("medium");
-	jlwuit::LookAndFeel::ReleaseFont("large");
 }
 
 void Calc::Process(std::string type)
