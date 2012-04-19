@@ -17,31 +17,43 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_BWIMAGEFILTER_H
-#define LWUIT_BWIMAGEFILTER_H
+#ifndef LWUIT_ALPHAIMAGEFILTER_H
+#define LWUIT_ALPHAIMAGEFILTER_H
 
 #include "filter.h"
 
 namespace jlwuit {
 
-class BWImageFilter : public Filter {
+class AlphaImageFilter : public Filter {
 
 	private:
 		/** \brief */
-		bool _use_alpha;
+		uint8_t _alpha;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		BWImageFilter(bool use_alpha = true);
+		AlphaImageFilter(uint8_t alpha = 0xff);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual ~BWImageFilter();
+		virtual ~AlphaImageFilter();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetAlpha(uint8_t alpha);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual uint8_t GetAlpha();
 
 		/**
 		 * \brief

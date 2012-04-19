@@ -17,40 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_BWIMAGEFILTER_H
-#define LWUIT_BWIMAGEFILTER_H
-
-#include "filter.h"
+#include "grayimagefilter.h"
 
 namespace jlwuit {
 
-class BWImageFilter : public Filter {
-
-	private:
-		/** \brief */
-		bool _use_alpha;
-
-	public:
-		/**
-		 * \brief
-		 *
-		 */
-		BWImageFilter(bool use_alpha = true);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual ~BWImageFilter();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool Transform(uint8_t *data, int size);
-
-};
-
+GrayImageFilter::GrayImageFilter()
+{
 }
 
-#endif
+GrayImageFilter::~GrayImageFilter()
+{
+}
+
+bool GrayImageFilter::Transform(uint8_t *data, int size)
+{
+	for (int i=0; i<size; i+=4) {
+		uint8_t a = data[i+3],
+						r = data[i+2],
+						g = data[i+1],
+						b = data[i+0];
+		int color = (r * 0.30 + g * 0.59 + b * 0.11);
+		
+		if (color > 0xff) {
+			color = 0xff;
+		}
+
+		data[i+3] = a;
+		data[i+2] = color;
+		data[i+1] = color;
+		data[i+0] = color;
+	}
+
+	return true;
+}
+
+}
