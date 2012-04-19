@@ -21,8 +21,9 @@
 
 namespace jlwuit {
 
-BWImageFilter::BWImageFilter()
+BWImageFilter::BWImageFilter(bool use_alpha)
 {
+	_use_alpha = use_alpha;
 }
 
 BWImageFilter::~BWImageFilter()
@@ -38,7 +39,7 @@ bool BWImageFilter::Transform(uint8_t *data, int size)
 						b = data[i+0];
 		uint8_t color = ((r * 0.30 + g * 0.59 + b * 0.11) > 0x80) ? 0xff : 0x00;
 
-		data[i+3] = a;
+		data[i+3] = (_use_alpha == true) ? a : 0xff;
 		data[i+2] = color;
 		data[i+1] = color;
 		data[i+0] = color;

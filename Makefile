@@ -42,9 +42,23 @@ SRC_DB		= \
 
 
 SRC_IMAGE	= \
+						blurimagefilter.o\
+						brightnessimagefilter.o\
 						bwimagefilter.o\
+						channelimagefilter.o\
+						contrastimagefilter.o\
 						filter.o\
 						filtergroup.o\
+						gammaimagefilter.o\
+						gheimagefilter.o\
+						goldenimagefilter.o\
+						grayimagefilter.o\
+						heimagefilter.o\
+						lheimagefilter.o\
+						metalicimagefilter.o\
+						negativeimagefilter.o\
+						sharpimagefilter.o\
+						silverimagefilter.o\
 
 SRC_LWUIT	= \
 						animation.o\

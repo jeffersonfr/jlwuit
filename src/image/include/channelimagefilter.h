@@ -17,31 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_BWIMAGEFILTER_H
-#define LWUIT_BWIMAGEFILTER_H
+#ifndef LWUIT_CHANNELIMAGEFILTER_H
+#define LWUIT_CHANNELIMAGEFILTER_H
 
 #include "filter.h"
 
 namespace jlwuit {
 
-class BWImageFilter : public Filter {
+class ChannelImageFilter : public Filter {
 
 	private:
 		/** \brief */
-		bool _use_alpha;
+		uint8_t _rmask;
+		/** \brief */
+		uint8_t _gmask;
+		/** \brief */
+		uint8_t _bmask;
+		/** \brief */
+		uint8_t _amask;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		BWImageFilter(bool use_alpha = true);
+		ChannelImageFilter(uint8_t rmask = 0xff, uint8_t gmask = 0xff, uint8_t bmask = 0xff, uint8_t amask = 0xff);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual ~BWImageFilter();
+		virtual ~ChannelImageFilter();
 
 		/**
 		 * \brief
