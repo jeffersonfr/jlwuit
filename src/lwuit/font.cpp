@@ -30,9 +30,9 @@ Font::~Font()
 {
 }
 
-Font * Font::CreateFont(std::string name, lwuit_font_attributes_t attributes, int height)
+Font * Font::CreateFont(std::string name, lwuit_font_attributes_t attributes, int size)
 {
-	return Implementation::GetInstance()->CreateFont(name, attributes, height);
+	return Implementation::GetInstance()->CreateFont(name, attributes, size);
 }
 
 bool Font::SetEncoding(std::string code)
@@ -50,7 +50,7 @@ std::string Font::GetName()
 	return "";
 }
 
-int Font::GetHeight()
+int Font::GetSize()
 {
 	return -1;
 }
@@ -96,7 +96,7 @@ struct lwuit_region_t Font::GetGlyphExtends(int symbol)
 
 std::string Font::TruncateString(std::string text, std::string extension, int width)
 {
-	return "";
+	return text;
 }
 
 }

@@ -21,7 +21,6 @@
 #define LWUIT_SCENE_H
 
 #include "component.h"
-#include "usereventlistener.h"
 #include "lookandfeel.h"
 
 #include "jtimer.h"
@@ -37,7 +36,7 @@ class Dialog;
  *
  * \author Jeff Ferr
  */
-class Scene : public Component, public UserEventListener, public jthread::TimerTask {
+class Scene : public Component, public jthread::TimerTask {
 
 	friend class Dialog;
 

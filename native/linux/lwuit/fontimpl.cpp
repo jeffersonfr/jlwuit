@@ -21,12 +21,12 @@
 
 namespace jlwuit {
 
-FontImpl::FontImpl(std::string name, lwuit_font_attributes_t attributes, int height):
+FontImpl::FontImpl(std::string name, lwuit_font_attributes_t attributes, int size):
 	Font()
 {
 	_attributes = attributes;
 
-	_native_font = jgui::Font::CreateFont(name, jgui::JFA_NORMAL, height);
+	_native_font = jgui::Font::CreateFont(name, jgui::JFA_NORMAL, size);
 }
 
 FontImpl::~FontImpl()
@@ -48,9 +48,9 @@ std::string FontImpl::GetName()
 	return _native_font->GetName();
 }
 
-int FontImpl::GetHeight()
+int FontImpl::GetSize()
 {
-	return _native_font->GetHeight();
+	return _native_font->GetSize();
 }
 
 int FontImpl::GetAscender()

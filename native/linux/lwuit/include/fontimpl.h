@@ -44,7 +44,7 @@ class FontImpl : public Font {
 		 * \brief
 		 *
 		 */
-		FontImpl(std::string name, lwuit_font_attributes_t attributes, int height);
+		FontImpl(std::string name, lwuit_font_attributes_t attributes, int size);
 
 		/**
 		 * \brief
@@ -74,7 +74,7 @@ class FontImpl : public Font {
 		 * \brief
 		 *
 		 */
-		virtual int GetHeight();
+		virtual int GetSize();
 		
 		/**
 		 * \brief

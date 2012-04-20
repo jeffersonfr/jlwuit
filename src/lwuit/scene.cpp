@@ -25,6 +25,24 @@
 
 #include <algorithm>
 
+#define DISPATCH_KEY_EVENT(method) 			\
+	Component *focus = GetFocusOwner();		\
+																				\
+	if (focus != NULL) {									\
+		return focus->method(event);				\
+	}																			\
+
+#define DISPATCH_MOUSE_EVENT(method) 																																		\
+	jthread::AutoLock lock(&_container_mutex); 																														\
+																																																				\
+	for (std::vector<Component *>::reverse_iterator i=_components.rbegin(); i!=_components.rend(); i++) {	\
+		Component *cmp = (*i);																																							\
+																																																				\
+		if (cmp->IsVisible() == true && cmp->IsEnabled() == true && cmp->Intersect(event->GetX(), event->GetY())) {	\
+			return cmp->method(event);																																				\
+		}																																																		\
+	}																																																			\
+
 namespace jlwuit {
 
 Scene::Scene(int x, int y, int width, int height):
@@ -43,6 +61,8 @@ Scene::~Scene()
 	Implementation::GetInstance()->UnregisterScene(this);
 	
 	jthread::TimerTask::Cancel();
+
+	jthread::AutoLock lock(&_container_mutex); 																														\
 
 	_dialogs.clear();
 	
@@ -122,8 +142,8 @@ void Scene::PaintDialogs(Graphics *g)
 		Dialog *c = (*i);
 
 		if (c->IsVisible() == true) {
-			int cx = c->GetX()-_scroll.x,
-					cy = c->GetY()-_scroll.y,
+			int cx = c->GetX(),
+					cy = c->GetY(),
 					cw = c->GetWidth(),
 					ch = c->GetHeight();
 
@@ -213,8 +233,9 @@ bool Scene::OnKeyDown(UserEvent *event)
 		if (_activity->OnKeyDown(event) == true) {
 			return true;
 		}
-		
 	}
+
+	DISPATCH_KEY_EVENT(OnKeyDown);
 
 	return false;
 }
@@ -227,6 +248,8 @@ bool Scene::OnKeyPress(UserEvent *event)
 		}
 	}
 
+	DISPATCH_KEY_EVENT(OnKeyPress);
+
 	return false;
 }
 
@@ -237,6 +260,8 @@ bool Scene::OnKeyUp(UserEvent *event)
 			return true;
 		}
 	}
+
+	DISPATCH_KEY_EVENT(OnKeyUp);
 
 	return false;
 }
@@ -249,6 +274,8 @@ bool Scene::OnKeyLongPress(UserEvent *event)
 		}
 	}
 
+	DISPATCH_KEY_EVENT(OnKeyLongPress);
+
 	return false;
 }
 
@@ -259,6 +286,8 @@ bool Scene::OnMousePress(UserEvent *event)
 			return true;
 		}
 	}
+	
+	DISPATCH_MOUSE_EVENT(OnMousePress)
 
 	return false;
 }
@@ -271,6 +300,8 @@ bool Scene::OnMouseRelease(UserEvent *event)
 		}
 	}
 
+	DISPATCH_MOUSE_EVENT(OnMouseRelease)
+
 	return false;
 }
 
@@ -282,15 +313,46 @@ bool Scene::OnMouseClick(UserEvent *event)
 		}
 	}
 
+	DISPATCH_MOUSE_EVENT(OnMouseClick)
+
 	return false;
 }
 
+Component *_component = NULL;
 bool Scene::OnMouseMove(UserEvent *event)
 {
 	if (_activity != NULL) {
 		if (_activity->OnMouseMove(event) == true) {
 			return true;
 		}
+	}
+
+	jthread::AutoLock lock(&_container_mutex); 																														\
+
+	Component *cmp = NULL;
+
+	for (std::vector<Component *>::reverse_iterator i=_components.rbegin(); i!=_components.rend(); i++) {	
+		if ((*i)->Intersect(event->GetX(), event->GetY()) == true) {
+			cmp = (*i);
+
+			break;
+		}
+	}
+
+	if (_component != cmp) {
+		if (_component != NULL) {
+			_component->OnMouseOut(event);
+		}
+
+		if (cmp != NULL) {
+			cmp->OnMouseOver(event);
+		}
+
+		_component = cmp;
+	}
+		
+	if (cmp != NULL && cmp->IsVisible() == true && cmp->IsEnabled() == true && cmp->Intersect(event->GetX(), event->GetY())) {
+		return cmp->OnMouseMove(event);
 	}
 
 	return false;
@@ -303,6 +365,8 @@ bool Scene::OnMouseWheel(UserEvent *event)
 			return true;
 		}
 	}
+
+	DISPATCH_MOUSE_EVENT(OnMouseWheel)
 
 	return false;
 }

@@ -81,12 +81,12 @@ double GraphicsImpl::Rotate()
 
 void GraphicsImpl::ClipRect(int xp, int yp, int wp, int hp)
 {
-	// _native_graphics->ClipRect(xp, yp, wp, hp);
+	_native_graphics->ClipRect(xp, yp, wp, hp);
 }
 
 void GraphicsImpl::SetClip(int xp, int yp, int wp, int hp)
 {
-	// _native_graphics->SetClip(xp, yp, wp, hp);
+	_native_graphics->SetClip(xp, yp, wp, hp);
 }
 
 lwuit_region_t GraphicsImpl::GetClip()
