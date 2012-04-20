@@ -29,6 +29,11 @@ UserEventListener::~UserEventListener()
 {
 }
 
+bool UserEventListener::IsMatch(UserEvent *event)
+{
+	return false;
+}
+
 bool UserEventListener::OnKeyDown(UserEvent *event)
 {
 	return false;
@@ -59,12 +64,27 @@ bool UserEventListener::OnMouseRelease(UserEvent *event)
 	return false;
 }
 
+bool UserEventListener::OnMouseLongPress(UserEvent *event)
+{
+	return false;
+}
+
 bool UserEventListener::OnMouseClick(UserEvent *event)
 {
 	return false;
 }
 
 bool UserEventListener::OnMouseMove(UserEvent *event)
+{
+	return false;
+}
+
+bool UserEventListener::OnMouseOver(UserEvent *event)
+{
+	return false;
+}
+
+bool UserEventListener::OnMouseOut(UserEvent *event)
 {
 	return false;
 }

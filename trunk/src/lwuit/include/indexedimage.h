@@ -59,7 +59,13 @@ class IndexedImage : public Image {
 		 * \brief
 		 *
 		 */
-		std::vector<int> & GetPalette();
+		virtual Image * GetDrawable();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual std::vector<int> & GetPalette();
 
 		/**
 		 * \brief

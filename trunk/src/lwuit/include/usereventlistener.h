@@ -49,6 +49,12 @@ class UserEventListener {
 		 * \brief
 		 *
 		 */
+		virtual bool IsMatch(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual bool OnKeyDown(UserEvent *event);
 
 		/**
@@ -85,6 +91,12 @@ class UserEventListener {
 		 * \brief
 		 *
 		 */
+		virtual bool OnMouseLongPress(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual bool OnMouseClick(UserEvent *event);
 
 		/**
@@ -92,6 +104,18 @@ class UserEventListener {
 		 *
 		 */
 		virtual bool OnMouseMove(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseOver(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseOut(UserEvent *event);
 
 		/**
 		 * \brief

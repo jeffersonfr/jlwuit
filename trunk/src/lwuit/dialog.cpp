@@ -54,7 +54,10 @@ void Dialog::Show()
 	_scene->Repaint();
 	
 	_timer.RemoveSchedule(this);
-	_timer.Schedule(this, _timeout*1000LL, true);
+
+	if (_timeout > 0) {
+		_timer.Schedule(this, _timeout*1000LL, true);
+	}
 }
 
 void Dialog::Hide()

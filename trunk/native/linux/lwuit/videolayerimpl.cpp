@@ -19,7 +19,6 @@
  ***************************************************************************/
 #include "videolayerimpl.h"
 #include "imageimpl.h"
-
 #include "jgfxhandler.h"
 #include "jautolock.h"
 
@@ -55,6 +54,8 @@ void VideoLayerImpl::Callback(void *ctx)
 
 void VideoLayerImpl::SetFile(std::string file)
 {
+	jthread::AutoLock lock(&_mutex);
+
 	_file = file;
 
 	IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
@@ -133,8 +134,7 @@ void VideoLayerImpl::Paint(jgui::Graphics *g)
 	struct lwuit_region_t region = GetLayerSetup()->GetBounds();
 
 	g->DrawImage(_buffer, 0, 0, region.width, region.height);
-
-	g->Flip();
+	// CHANGE:: g->Flip();
 }
 
 };

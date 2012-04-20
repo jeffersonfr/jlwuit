@@ -513,10 +513,6 @@ void EventManagerImpl::KeyPressed(jgui::KeyEvent *event)
 
 void EventManagerImpl::MousePressed(jgui::MouseEvent *event)
 {
-	if (event->GetClickCount() == 1) {
-		DispatchUserEvent(new UserEvent(LWT_MOUSE_CLICK, TranslateMouseButton(event->GetButton()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
-	}
-
 	DispatchUserEvent(new UserEvent(LWT_MOUSE_PRESS, TranslateMouseButton(event->GetButton()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
 }
 

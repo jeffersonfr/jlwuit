@@ -51,7 +51,7 @@ class Font {
 		 * \brief
 		 *
 		 */
-		static Font * CreateFont(std::string name, lwuit_font_attributes_t attr, int height);
+		static Font * CreateFont(std::string name, lwuit_font_attributes_t attr, int size);
 		
 		/**
 		 * \brief
@@ -75,7 +75,7 @@ class Font {
 		 * \brief
 		 *
 		 */
-		virtual int GetHeight();
+		virtual int GetSize();
 		
 		/**
 		 * \brief

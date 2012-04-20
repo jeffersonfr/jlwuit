@@ -54,8 +54,6 @@ Component::Component(int x, int y, int width, int height)
 	_size.height = height;
 
 	_orientation = LCO_LEFT_TO_RIGHT;
-	_scroll.x = 0;
-	_scroll.y = 0;
 	
 	_is_cycle_root = false;
 	_is_valid = true;
@@ -69,8 +67,7 @@ Component::Component(int x, int y, int width, int height)
 	_margins.top = 0;
 	_margins.bottom = 0;
 
-	_style = new Style();
-
+	_style = new Style(); 
 	_style->Copy(LookAndFeel::GetInstance()->GetDefaultStyle());
 }
 
@@ -251,32 +248,6 @@ void Component::Move(lwuit_point_t location)
 	Move(location.x, location.y);
 }
 
-bool Component::IsScrollableX()
-{
-	return false;
-}
-
-bool Component::IsScrollableY()
-{
-	return false;
-}
-
-void Component::SetScrollableX(bool scrollable)
-{
-}
-
-void Component::SetScrollableY(bool scrollable)
-{
-}
-
-void Component::SetScrollable(bool scrollable)
-{
-}
-
-void Component::SetSmoothScrolling(bool smooth)
-{
-}
-
 bool Component::IsCyclicFocus()
 {
 	return false;
@@ -286,47 +257,12 @@ void Component::SetCyclicFocus(bool b)
 {
 }
 
-bool Component::IsSmoothScrolling()
-{
-	return false;
-}
-
-bool Component::IsScrollable()
-{
-	return false;
-}
-
-bool Component::IsScrollVisible()
-{
-	return false;
-}
-
 lwuit_point_t Component::GetAbsoluteLocation()
 {
 	lwuit_point_t t;
 	
 	t.x = 0;
 	t.y = 0;
-
-	return t;
-}
-
-lwuit_point_t Component::GetScrollLocation()
-{
-	lwuit_point_t t;
-	
-	t.x = 0;
-	t.y = 0;
-
-	return t;
-}
-
-lwuit_size_t Component::GetScrollDimension()
-{
-	lwuit_size_t t;
-
-	t.width = 0;
-	t.height = 0;
 
 	return t;
 }
@@ -341,54 +277,6 @@ lwuit_region_t Component::GetVisibleBounds()
 	t.height = 0;
 
 	return t;
-}
-
-void Component::SetScrollX(int x)
-{
-}
-
-void Component::SetScrollY(int y)
-{
-}
-
-void Component::SetScrollLocation(lwuit_point_t t)
-{
-}
-
-int Component::GetScrollSize()
-{
-	return 10;
-}
-
-void Component::SetScrollSize(int size)
-{
-}
-
-int Component::GetScrollGap()
-{
-	return 0;
-}
-
-void Component::SetScrollGap(int gap)
-{
-}
-
-int Component::GetMinorScrollIncrement()
-{
-	return 0;
-}
-
-int Component::GetMajorScrollIncrement()
-{
-	return 0;
-}
-
-void Component::SetMinorScrollIncrement(int increment)
-{
-}
-
-void Component::SetMajorScrollIncrement(int increment)
-{
 }
 
 void Component::SetNavigationEnabled(bool b)
@@ -706,36 +594,6 @@ void Component::SetVisible(bool b)
 	Repaint();
 }
 
-/*
-Component * Component::GetTargetComponent(Component *target, int x, int y, int *dx, int *dy)
-{
-	for (std::vector<Component *>::reverse_iterator i=target->GetComponents().rbegin(); i!=target->GetComponents().rend(); i++) {
-		Component *c = (*i);
-
-		int x1 = c->GetX(),
-				y1 = c->GetY();
-
-		if (c->Intersect(x, y) == true) {
-			if (dynamic_cast<Component *>(c) != NULL) {
-				return GetTargetComponent((Component *)c, x-x1, y-y1, dx, dy);
-			}
-
-			if ((void *)dx != NULL) {
-				*dx = x;
-			}
-
-			if ((void *)dy != NULL) {
-				*dy = y;
-			}
-
-			return c;
-		}
-	}
-
-	return target;
-}
-*/
-
 Layout * Component::GetLayout()
 {
 	return _layout;
@@ -758,6 +616,70 @@ void Component::DoLayout()
 	Repaint();
 }
 
+bool Component::Intersect(int x, int y)
+{
+	if ((x>_location.x && x<(_location.x+_size.width)) && (y>_location.y && y<(_location.y+_size.height))) {
+		return true;
+	}
+
+	return false;
+}
+
+bool Component::OnKeyDown(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnKeyPress(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnKeyUp(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnKeyLongPress(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMousePress(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMouseRelease(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMouseClick(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMouseWheel(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMouseMove(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMouseOver(UserEvent *event)
+{
+	return false;
+}
+
+bool Component::OnMouseOut(UserEvent *event)
+{
+	return false;
+}
+
 void Component::Paint(Graphics *g)
 {
 	jthread::AutoLock lock(&_container_mutex);
@@ -777,8 +699,8 @@ void Component::Paint(Graphics *g)
 		Component *c = (*i);
 
 		if (c->IsVisible() == true && c->IsValid() == false) {
-			int cx = c->GetX()-_scroll.x,
-					cy = c->GetY()-_scroll.y,
+			int cx = c->GetX(),
+					cy = c->GetY(),
 					cw = c->GetWidth(),
 					ch = c->GetHeight();
 
@@ -800,9 +722,7 @@ void Component::Paint(Graphics *g)
 
 			if (cw > 0 && ch > 0) {
 				g->Translate(cx, cy);
-				g->SetClip(0, 0, cw-1, ch-1);
 				c->Paint(g);
-				g->ReleaseClip();
 				g->Translate(-cx, -cy);
 			}
 
@@ -1189,10 +1109,6 @@ void Component::SetFocusCycleRoot(bool b)
 Component * Component::GetFocusCycleRootAncestor()
 {
 	return NULL;
-}
-
-void Component::PaintScrollbars(Graphics *g)
-{
 }
 
 }

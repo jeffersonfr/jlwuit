@@ -25,6 +25,7 @@
 #include "font.h"
 #include "layout.h"
 #include "animation.h"
+#include "usereventlistener.h"
 
 #include "jthread.h"
 
@@ -74,7 +75,7 @@ class Component;
 class Style;
 class Layout;
 
-class Component : public Animation {
+class Component : public UserEventListener, public Animation {
 
 	protected:
 		std::vector<Component *> _components;
@@ -84,7 +85,6 @@ class Component : public Animation {
 		Layout *_layout;
 		struct lwuit_margin_t _margins;
 		struct lwuit_size_t _scale;
-		struct lwuit_point_t _scroll;
 		Component *_parent;
 		Component *_left, 
 			*_right,
@@ -219,6 +219,78 @@ class Component : public Animation {
 		 *
 		 */
 		virtual lwuit_component_orientation_t GetComponentOrientation();
+
+		/**
+		 * \brief
+		 *
+		 */
+		bool Intersect(int x, int y);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnKeyDown(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnKeyPress(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnKeyUp(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnKeyLongPress(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMousePress(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseRelease(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseClick(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseMove(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseOver(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseOut(UserEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool OnMouseWheel(UserEvent *event);
 
 		/**
 		 * \brief
@@ -578,42 +650,6 @@ class Component : public Animation {
 		 * \brief
 		 *
 		 */
-		virtual bool IsScrollableX();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool IsScrollableY();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollableX(bool scrollable);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollableY(bool scrollable);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollable(bool scrollable);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetSmoothScrolling(bool smooth);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual bool IsCyclicFocus();
 
 		/**
@@ -626,109 +662,13 @@ class Component : public Animation {
 		 * \brief
 		 *
 		 */
-		virtual bool IsSmoothScrolling();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool IsScrollable();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool IsScrollVisible();
-		
-		/**
-		 * \brief
-		 *
-		 */
 		virtual lwuit_point_t GetAbsoluteLocation();
 		
 		/**
 		 * \brief
 		 *
 		 */
-		virtual lwuit_point_t GetScrollLocation();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_size_t GetScrollDimension();
-		
-		/**
-		 * \brief
-		 *
-		 */
 		virtual lwuit_region_t GetVisibleBounds();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollX(int x);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollY(int y);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollLocation(lwuit_point_t t);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetScrollSize();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollSize(int size);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetScrollGap();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScrollGap(int gap);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetMinorScrollIncrement();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetMajorScrollIncrement();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetMinorScrollIncrement(int increment);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetMajorScrollIncrement(int increment);
 		
 		/**
 		 * \brief
@@ -873,12 +813,6 @@ class Component : public Animation {
 		 *
 		 */
 		virtual Component * GetFocusCycleRootAncestor();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void PaintScrollbars(Graphics *g);
 
 };
 
