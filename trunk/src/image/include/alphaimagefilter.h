@@ -24,18 +24,23 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class AlphaImageFilter : public Filter {
 
 	private:
 		/** \brief */
-		uint8_t _alpha;
+		double _alpha;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		AlphaImageFilter(uint8_t alpha = 0xff);
+		AlphaImageFilter(double alpha = 0xff);
 
 		/**
 		 * \brief
@@ -47,19 +52,19 @@ class AlphaImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual void SetAlpha(uint8_t alpha);
+		virtual void SetAlpha(double alpha);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual uint8_t GetAlpha();
+		virtual double GetAlpha();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

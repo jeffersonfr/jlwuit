@@ -23,13 +23,24 @@ namespace jlwuit {
 
 Filter::Filter()
 {
+	_is_enabled = true;
 }
 
 Filter::~Filter()
 {
 }
 
-bool Filter::Transform(uint8_t *data, int size)
+bool Filter::IsEnabled()
+{
+	return _is_enabled;
+}
+
+void Filter::SetEnabled(bool enabled)
+{
+	_is_enabled = enabled;
+}
+
+bool Filter::Transform(uint8_t *data, int width, int height)
 {
 	return false;
 }

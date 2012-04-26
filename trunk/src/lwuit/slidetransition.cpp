@@ -18,13 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "slidetransition.h"
+#include "image.h"
 
 namespace jlwuit {
 
-SlideTransition::SlideTransition(Component *cmp)
+SlideTransition::SlideTransition()
 {
-	_alpha = 0xff;
-	_component = cmp;
 }
 
 SlideTransition::~SlideTransition()
@@ -38,6 +37,7 @@ bool SlideTransition::IsRunning()
 
 bool SlideTransition::Animated()
 {
+	return false;
 }
 
 void SlideTransition::Start()
@@ -48,12 +48,12 @@ void SlideTransition::Stop()
 {
 }
 
-void SlideTransition::Paint(Graphics *g)
+void SlideTransition::Paint(Component *cmp, Graphics *g)
 {
-	Image *buffer = Image::CreateImage(1920, 1080);
+	Image *buffer = Image::CreateImage(cmp->GetWidth(), cmp->GetHeight());
 
-	_c1->Paint(buffer->GetGraphics());
-	g->DrawImage(buffer, _c1->GetX(), _c1->GetY());
+	cmp->Paint(buffer->GetGraphics());
+	g->DrawImage(buffer, cmp->GetX(), cmp->GetY());
 
 	delete buffer;
 }

@@ -32,13 +32,7 @@ FilterGroup::~FilterGroup()
 {
 	jthread::AutoLock lock(&_mutex);
 
-	while (_filters.size() > 0) {
-		Filter *filter = (*_filters.begin());
-
-		_filters.erase(_filters.begin());
-
-		delete filter;
-	}
+	_filters.clear();
 }
 
 void FilterGroup::AddFilter(Filter *codec)
@@ -68,12 +62,12 @@ void FilterGroup::RemoveAllFilters()
 	_filters.clear();
 }
 
-bool FilterGroup::Transform(uint8_t *data, int size)
+bool FilterGroup::Transform(uint8_t *data, int width, int height)
 {
 	jthread::AutoLock lock(&_mutex);
 
 	for (std::vector<Filter *>::iterator i=_filters.begin(); i!=_filters.end(); i++) {
-		(*i)->Transform(data, size);
+		(*i)->Transform(data, width, height);
 	}
 
 	return true;

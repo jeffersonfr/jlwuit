@@ -24,16 +24,25 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class LHEImageFilter : public Filter {
 
 	private:
+		/** \brief */
+		int _factor;
+		/** \brief */
+		int _domain;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		LHEImageFilter();
+		LHEImageFilter(int factor = 1);
 
 		/**
 		 * \brief
@@ -45,7 +54,31 @@ class LHEImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual void SetFactor(int factor);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetFactor();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetDomain(int domain);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetDomain();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

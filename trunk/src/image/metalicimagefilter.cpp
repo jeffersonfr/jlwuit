@@ -19,28 +19,54 @@
  ***************************************************************************/
 #include "metalicimagefilter.h"
 
+#include <stdlib.h>
+#include <math.h>
+
 namespace jlwuit {
 
-MetalicImageFilter::MetalicImageFilter()
+MetalicImageFilter::MetalicImageFilter(double period)
 {
+	_period = period;
 }
 
 MetalicImageFilter::~MetalicImageFilter()
 {
 }
 
-bool MetalicImageFilter::Transform(uint8_t *data, int size)
+void MetalicImageFilter::SetPeriod(double period)
 {
+	_period = period;
+}
+
+double MetalicImageFilter::GetPeriod()
+{
+	return _period;
+}
+
+bool MetalicImageFilter::Transform(uint8_t *data, int width, int height)
+{
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	double k = _period/256.0;
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
 						g = data[i+1],
 						b = data[i+0];
+		uint8_t _y = PIXEL(0.299*r + 0.587*g + 0.114*b),
+						_i = PIXEL(0.596*r - 0.274*g - 0.322*b),
+						_q = PIXEL(0.211*r - 0.523*g + 0.312*b);
+
+    _y = PIXEL(abs((int)(255*sin((double)(3.1415*_y)*k))));
 
 		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
+		data[i+2] = PIXEL(_y + 0.956*_i + 0.621*_q);
+		data[i+1] = PIXEL(_y - 0.272*_i - 0.647*_q);
+		data[i+0] = PIXEL(_y - 1.105*_i + 1.702*_q);
 	}
 
 	return true;

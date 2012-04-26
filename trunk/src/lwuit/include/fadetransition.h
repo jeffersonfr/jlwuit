@@ -20,7 +20,7 @@
 #ifndef LWUIT_FADETRANSITION_H
 #define LWUIT_FADETRANSITION_H
 
-#include "component.h"
+#include "transition.h"
 
 namespace jlwuit {
 
@@ -29,11 +29,9 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class FadeTransition {
+class FadeTransition : public Transition {
 
 	private:
-		/** \brief */
-		Component *_component;
 		/** \brief */
 		int _alpha;
 
@@ -42,7 +40,7 @@ class FadeTransition {
 		 * \brief
 		 *
 		 */
-		FadeTransition(Component *cmp);
+		FadeTransition();
 
 		/**
 		 * \brief
@@ -78,7 +76,7 @@ class FadeTransition {
 		 * \brief
 		 *
 		 */
-		virtual void Paint(Graphics *g);
+		virtual void Paint(Component *cmp, Graphics *g);
 
 };
 

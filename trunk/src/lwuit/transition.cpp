@@ -48,7 +48,7 @@ void Transition::Stop()
 {
 }
 
-void Transition::Paint(Graphics *g)
+void Transition::Paint(Component *cmp, Graphics *g)
 {
 }
 

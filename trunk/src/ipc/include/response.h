@@ -27,6 +27,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class Response : public ParamMapper {
 
 	public:

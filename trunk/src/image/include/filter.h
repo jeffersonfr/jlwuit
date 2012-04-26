@@ -22,13 +22,20 @@
 
 #include <stdint.h>
 
+#define PIXEL(x) (((int)(x))<0x00?0x00:((int)(x))>0xff?0xff:((int)(x)))
+
 namespace jlwuit {
 
 /**
  * \brief
  *
+ * \author Jeff Ferr
  */
 class Filter {
+
+	private:
+		/** \brief */
+		bool _is_enabled;
 
 	protected:
 		/**
@@ -48,7 +55,19 @@ class Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual bool IsEnabled();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetEnabled(bool enabled);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

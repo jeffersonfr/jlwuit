@@ -18,13 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "fadetransition.h"
+#include "image.h"
 
 namespace jlwuit {
 
-FadeTransition::FadeTransition(Component *cmp)
+FadeTransition::FadeTransition()
 {
 	_alpha = 0xff;
-	_component = cmp;
 }
 
 FadeTransition::~FadeTransition()
@@ -40,9 +40,11 @@ bool FadeTransition::Animated()
 {
 	_alpha = _alpha - 0x10;
 
-	if (_alpha < 0) {
-		_alpha = 0;
+	if (_alpha >= 0) {
+		return true;
 	}
+
+	return false;
 }
 
 void FadeTransition::Start()
@@ -55,15 +57,15 @@ void FadeTransition::Stop()
 	_alpha = 0x00;
 }
 
-void FadeTransition::Paint(Graphics *g)
+void FadeTransition::Paint(Component *cmp, Graphics *g)
 {
-	Image *buffer = Image::CreateImage(1920, 1080);
+	Image *buffer = Image::CreateImage(cmp->GetWidth(), cmp->GetHeight());
 
-	_c1->Paint(buffer->GetGraphics());
+	cmp->Paint(buffer->GetGraphics());
 	
 	g->SetBlittingFlags(jlwuit::LBF_COLORALPHA);
 	g->SetColor(Color(0x00, 0x00, 0x00, _alpha));
-	g->DrawImage(buffer, _c1->GetX(), _c1->GetY());
+	g->DrawImage(buffer, cmp->GetX(), cmp->GetY());
 
 	delete buffer;
 }

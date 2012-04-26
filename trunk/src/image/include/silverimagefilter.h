@@ -24,16 +24,23 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class SilverImageFilter : public Filter {
 
 	private:
+		/** \brief */
+		double _period;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		SilverImageFilter();
+		SilverImageFilter(double period = 2.0);
 
 		/**
 		 * \brief
@@ -45,7 +52,19 @@ class SilverImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		void SetPeriod(double period);
+
+		/**
+		 * \brief
+		 *
+		 */
+		double GetPeriod();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

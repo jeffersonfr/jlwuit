@@ -24,6 +24,11 @@ namespace jlwuit {
 
 class HTTPResponse;
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class HTTPStatusChanged {
 
 	protected:

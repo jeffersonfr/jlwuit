@@ -24,16 +24,23 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class GammaImageFilter : public Filter {
 
 	private:
+		/** \brief */
+		double _factor;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		GammaImageFilter();
+		GammaImageFilter(double factor = 1.0);
 
 		/**
 		 * \brief
@@ -45,7 +52,19 @@ class GammaImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual void SetFactor(double factor);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual double GetFactor();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

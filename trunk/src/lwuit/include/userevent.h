@@ -22,6 +22,10 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_userevent_type_t {
 	LWT_KEY_DOWN,
 	LWT_KEY_UP,
@@ -232,6 +236,10 @@ enum lwuit_key_symbol_t {
 	LKS_RECORD,
 };
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_mouse_event_t {
 	LME_UNKNOWN,
 	LME_PRESSED,
@@ -260,15 +268,25 @@ enum lwuit_mouse_button_t {
 class UserEvent {
 
 	private:
-		double _vx,
-			_vy;
-		int _code,
-			_x,
-			_y,
-			_click_count;
+		/** \brief */
+		double _vx;
+		/** \brief */
+		double _vy;
+		/** \brief */
+		int _code;
+		/** \brief */
+		int	_x;
+		/** \brief */
+		int	_y;
+		/** \brief */
+		int	_click_count;
+		/** \brief */
 		lwuit_userevent_type_t _type;
+		/** \brief */
 		lwuit_key_symbol_t _symbol;
+		/** \brief */
 		lwuit_key_modifiers_t _modifiers;
+		/** \brief */
 		lwuit_mouse_button_t _button;
 
 	public:

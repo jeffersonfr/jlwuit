@@ -24,6 +24,10 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_audio_config_mode_t {
 	LACM_HDMI_PCM,
 	LACM_HDMI_PCM_2CH,
@@ -31,6 +35,11 @@ enum lwuit_audio_config_mode_t {
 	LACM_HDMI_PCM_6CH
 };
 	
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class AudioConfigurationControl : public Control {
 
 	public:

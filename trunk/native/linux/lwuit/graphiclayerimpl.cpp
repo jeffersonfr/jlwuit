@@ -41,7 +41,7 @@ class RootContainerImpl : public RootContainer {
 };
 
 GraphicLayerImpl::GraphicLayerImpl():
-	LayerImpl("graphics", 1920, 1080)
+	LayerImpl("graphics", DEFAULT_SCALE_WIDTH, DEFAULT_SCALE_HEIGHT)
 {
 	_refresh = false;
 

@@ -202,7 +202,9 @@ Image * LinuxImplementation::CreateImage(uint8_t *data, int size)
 Image * LinuxImplementation::CreateImage(std::string file)
 {
 	try {
-		return new ImageImpl(jgui::Image::CreateImage(file));
+		jgui::Image *image = jgui::Image::CreateImage(file);
+
+		return new ImageImpl(image);
 	} catch (Exception &e) {
 	}
 

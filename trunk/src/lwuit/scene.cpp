@@ -193,14 +193,15 @@ int Scene::GetAnimationDelay()
 
 void Scene::Show()
 {
-	SetVisible(true);
-
 	_timer.Schedule(this, (uint64_t)0LL, GetAnimationDelay()*1000LL, true);
+	
+	SetVisible(true);
 }
 
 void Scene::Hide()
 {
 	jthread::TimerTask::Cancel();
+
 	_timer.RemoveSchedule(this);
 
 	SetVisible(false);

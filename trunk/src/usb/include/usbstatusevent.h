@@ -26,11 +26,20 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_usbevent_type_t {
 	LET_ENTRY_USB,
 	LET_REMOVE_USB
 };
 	
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class USBStatusEvent {
 
 	private:

@@ -24,16 +24,23 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class SharpImageFilter : public Filter {
 
 	private:
+		/** \brief */
+		int _factor;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		SharpImageFilter();
+		SharpImageFilter(int factor = 1);
 
 		/**
 		 * \brief
@@ -45,7 +52,19 @@ class SharpImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual void SetFactor(int factor);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetFactor();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

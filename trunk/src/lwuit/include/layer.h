@@ -26,9 +26,15 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class Layer {
 
 	private:
+		/** \brief */
 		std::string _id;
 
 	public:

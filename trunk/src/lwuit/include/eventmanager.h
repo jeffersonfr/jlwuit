@@ -28,9 +28,15 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class EventManager {
 
 	protected:
+		/** \brief */
 		std::vector<UserEventListener *> _user_listeners;
 
 	protected:

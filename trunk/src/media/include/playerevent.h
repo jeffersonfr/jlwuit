@@ -34,6 +34,11 @@ enum lwuit_player_event_t {
 	LPE_FINISHED
 };
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class PlayerEvent { // : public Event {
 
 	private:

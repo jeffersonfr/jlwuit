@@ -30,6 +30,10 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_gridbaglayout_constraints_t {
 	// column or row (<code>gridwidth</code>, <code>gridheight</code>), or that this component be 
 	// placed next to the previously added component (<code>gridx</code>, <code>gridy</code>). 
@@ -137,6 +141,10 @@ enum lwuit_gridbaglayout_constraints_t {
 	LGC_BELOW_BASELINE_TRAILING = 0x900
 };
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_gridbaglayout_style_t {
 	LGS_EMPIRICMULTIPLIER,
   // This field is no int64_ter used to reserve arrays and keeped for backward compatibility. Previously, this 

@@ -32,7 +32,6 @@ namespace jlwuit {
 /**
  * \brief
  *
- * \author Jeff Ferr
  */
 enum lwuit_borderlayout_align_t {
 	BLA_UNKNOWN,

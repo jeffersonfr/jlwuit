@@ -25,6 +25,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class RemoteCallListener {
 
 	protected:

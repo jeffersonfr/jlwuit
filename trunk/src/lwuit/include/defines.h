@@ -20,6 +20,8 @@
 #ifndef LWUIT_UTILITY_H
 #define LWUIT_UTILITY_H
 
+#include <stdint.h>
+
 namespace jlwuit {
 
 enum lwuit_pixelformat_t {

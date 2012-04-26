@@ -93,8 +93,8 @@ void BackgroundLayerImpl::Paint(jgui::Graphics *g)
 	// INFO:: clear video region
 	jlwuit::Layer *layer = jlwuit::Device::GetDefaultScreen()->GetLayerByID("video");
 	lwuit_region_t vrect = layer->GetLayerSetup()->GetBounds();
-	lwuit_size_t vscale = layer->GetLayerSetup()->GetWorkingScreenSize(),
-		bscale = GetLayerSetup()->GetWorkingScreenSize();
+	lwuit_size_t vscale = layer->GetLayerSetup()->GetScreenSize(),
+		bscale = GetLayerSetup()->GetScreenSize();
 
 	double sx = (double)bscale.width/(double)vscale.width,
 		sy = (double)bscale.height/(double)bscale.height;
@@ -103,8 +103,7 @@ void BackgroundLayerImpl::Paint(jgui::Graphics *g)
 		rw = (int)(vrect.width*sx),
 		rh = (int)(vrect.height*sy);
 
-	g->Clear(rx,ry, rw, rh);
-	// g->Clear(vrect.x, vrect.y, vrect.width, vrect.height);
+	g->Clear(rx, ry, rw, rh);
 }
 
 }

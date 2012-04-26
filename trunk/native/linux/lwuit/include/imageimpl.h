@@ -39,8 +39,6 @@ class ImageImpl : public Image {
 	public:
 		jgui::Image *_native_image;
 		Graphics *_graphics;
-		struct lwuit_size_t _size;
-		lwuit_pixelformat_t _pixelformat;
 		
 	public:
 		/**

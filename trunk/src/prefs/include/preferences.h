@@ -27,7 +27,12 @@
 
 namespace jlwuit {
 
-class Preferences{
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class Preferences {
 
 	private:
 		/**

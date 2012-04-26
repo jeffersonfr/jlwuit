@@ -20,7 +20,7 @@
 #ifndef LWUIT_SLIDETRANSITION_H
 #define LWUIT_SLIDETRANSITION_H
 
-#include "component.h"
+#include "transition.h"
 
 namespace jlwuit {
 
@@ -29,18 +29,14 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class SlideTransition {
-
-	private:
-		/** \brief */
-		Component *_component;
+class SlideTransition : public Transition {
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		SlideTransition(Component *cmp);
+		SlideTransition();
 
 		/**
 		 * \brief
@@ -76,7 +72,7 @@ class SlideTransition {
 		 * \brief
 		 *
 		 */
-		virtual void Paint(Graphics *g);
+		virtual void Paint(Component *cmp, Graphics *g);
 
 };
 

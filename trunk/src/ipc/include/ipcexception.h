@@ -35,20 +35,20 @@ namespace jlwuit {
  */
 class IPCException : public jcommon::RuntimeException{
 
-    private:
+	private:
 
-    public:
-        /**
-        * \brief Construtor.
-        *
-        */
-        IPCException(std::string);
-        
-        /**
-        * \brief Destrutor virtual.
-        *
-        */
-        virtual ~IPCException() throw();
+	public:
+		/**
+		 * \brief Construtor.
+		 *
+		 */
+		IPCException(std::string);
+
+		/**
+		 * \brief Destrutor virtual.
+		 *
+		 */
+		virtual ~IPCException() throw();
 
 };
 

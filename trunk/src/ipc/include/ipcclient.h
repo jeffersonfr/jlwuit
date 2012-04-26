@@ -25,9 +25,15 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class IPCClient {
 
 	private:
+		/** \brief */
 		std::string _id;
 
 	public:

@@ -21,7 +21,7 @@
 
 namespace jlwuit {
 
-AlphaImageFilter::AlphaImageFilter(uint8_t alpha)
+AlphaImageFilter::AlphaImageFilter(double alpha)
 {
 	_alpha = alpha;
 }
@@ -30,23 +30,39 @@ AlphaImageFilter::~AlphaImageFilter()
 {
 }
 
-void AlphaImageFilter::SetAlpha(uint8_t alpha)
+void AlphaImageFilter::SetAlpha(double alpha)
 {
 	_alpha = alpha;
 }
 
-uint8_t AlphaImageFilter::GetAlpha()
+double AlphaImageFilter::GetAlpha()
 {
 	return _alpha;
 }
 
-bool AlphaImageFilter::Transform(uint8_t *data, int size)
+bool AlphaImageFilter::Transform(uint8_t *data, int width, int height)
 {
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
 						g = data[i+1],
 						b = data[i+0];
+
+		a = (a*_alpha);
+
+		if (a < 0x00) {
+			a = 0x00;
+		}
+
+		if (a > 0xff) {
+			a = 0xff;
+		}
 
 		data[i+3] = a;
 		data[i+2] = r;

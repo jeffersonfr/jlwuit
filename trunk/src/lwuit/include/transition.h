@@ -21,7 +21,7 @@
 #define LWUIT_TRANSITION_H
 
 #include "animation.h"
-#include "graphics.h"
+#include "component.h"
 
 namespace jlwuit {
 
@@ -74,7 +74,7 @@ class Transition : public Animation {
 		 * \brief
 		 *
 		 */
-		virtual void Paint(Graphics *g);
+		virtual void Paint(Component *cmp, Graphics *g);
 
 };
 

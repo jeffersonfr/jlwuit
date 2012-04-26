@@ -29,8 +29,14 @@ NegativeImageFilter::~NegativeImageFilter()
 {
 }
 
-bool NegativeImageFilter::Transform(uint8_t *data, int size)
+bool NegativeImageFilter::Transform(uint8_t *data, int width, int height)
 {
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
@@ -38,9 +44,9 @@ bool NegativeImageFilter::Transform(uint8_t *data, int size)
 						b = data[i+0];
 
 		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
+		data[i+2] = ~r;
+		data[i+1] = ~g;
+		data[i+0] = ~b;
 	}
 
 	return true;

@@ -27,17 +27,32 @@ namespace jlwuit {
 /**
  * \brief Global Histogram Equalization
  *
+ * \author Jeff Ferr
  */
 class GHEImageFilter : public Filter {
 
 	private:
+		/** \brief */
+		int _domain;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		GHEImageFilter();
+		GHEImageFilter(int domain = 256);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetDomain(int domain);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetDomain();
 
 		/**
 		 * \brief
@@ -49,7 +64,7 @@ class GHEImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

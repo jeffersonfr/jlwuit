@@ -29,6 +29,11 @@ namespace jlwuit {
 
 class Preferences;
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class Document {
 
 	friend class Preferences;
