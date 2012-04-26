@@ -31,14 +31,18 @@ Style::Style()
 	SetIntegerParam("fg.color", 0xfff0f0f0);
 	SetIntegerParam("border.color", 0xff808080);
 	SetIntegerParam("scroll.color", 0xfff0f0f0);
-	SetIntegerParam("focus.bg.color", 0x00000000);
-	SetIntegerParam("focus.fg.color", 0xfff0f0f0);
-	SetIntegerParam("focus.border.color", 0xfff0f0f0);
+	SetIntegerParam("focus.bg.color", 0xa0a0a0a0);
+	SetIntegerParam("focus.fg.color", 0xff000000);
+	SetIntegerParam("focus.border.color", 0xff808080);
 	SetIntegerParam("focus.scroll.color", 0xfff0f0f0);
-	SetIntegerParam("disable.bg.color", 0x00000000);
-	SetIntegerParam("disable.fg.color", 0xfff0f0f0);
-	SetIntegerParam("disable.border.color", 0xff808080);
-	SetIntegerParam("disable.scroll.color", 0xff808080);
+	SetIntegerParam("selected.bg.color", 0xfff0f0f0);
+	SetIntegerParam("selected.fg.color", 0xff000000);
+	SetIntegerParam("selected.border.color", 0xff808080);
+	SetIntegerParam("selected.scroll.color", 0xfff0f0f0);
+	SetIntegerParam("disabled.bg.color", 0x00000000);
+	SetIntegerParam("disabled.fg.color", 0xfff0f0f0);
+	SetIntegerParam("disabled.border.color", 0xff808080);
+	SetIntegerParam("disabled.scroll.color", 0xff808080);
 
 	SetBackgroundImage(NULL);
 	SetScaleImage(true);

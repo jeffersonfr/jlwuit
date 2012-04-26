@@ -24,6 +24,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class LayerSetup {
 
 	private:
@@ -45,13 +50,13 @@ class LayerSetup {
 		 * \brief
 		 *
 		 */
-		virtual void SetWorkingScreenSize(int w, int h);
+		virtual void SetScreenSize(int w, int h);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void SetWorkingScreenSize(lwuit_size_t size);
+		virtual void SetScreenSize(lwuit_size_t size);
 
 		/**
 		 * \brief
@@ -99,7 +104,7 @@ class LayerSetup {
 		 * \brief
 		 *
 		 */
-		virtual lwuit_size_t GetWorkingScreenSize();
+		virtual lwuit_size_t GetScreenSize();
 
 		/**
 		 * \brief

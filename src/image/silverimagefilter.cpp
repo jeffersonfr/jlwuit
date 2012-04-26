@@ -19,28 +19,52 @@
  ***************************************************************************/
 #include "silverimagefilter.h"
 
+#include <stdlib.h>
+#include <math.h>
+
 namespace jlwuit {
 
-SilverImageFilter::SilverImageFilter()
+SilverImageFilter::SilverImageFilter(double period)
 {
+	_period = period;
 }
 
 SilverImageFilter::~SilverImageFilter()
 {
 }
 
-bool SilverImageFilter::Transform(uint8_t *data, int size)
+void SilverImageFilter::SetPeriod(double period)
 {
+	_period = period;
+}
+
+double SilverImageFilter::GetPeriod()
+{
+	return _period;
+}
+
+bool SilverImageFilter::Transform(uint8_t *data, int width, int height)
+{
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	double k = _period/256.0;
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
 						g = data[i+1],
 						b = data[i+0];
+		uint8_t c = PIXEL(r * 0.30 + g * 0.59 + b * 0.11);
+
+    c = PIXEL(abs((int)(0xff*sin((double)(M_PI*c)*k))));
 
 		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
+		data[i+2] = c;
+		data[i+1] = c;
+		data[i+0] = c;
 	}
 
 	return true;

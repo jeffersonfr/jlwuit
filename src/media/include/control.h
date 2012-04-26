@@ -24,6 +24,10 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_media_control_t {
 	LMC_VOLUME,
 	LMC_AUDIO_CONFIGURATION,
@@ -31,6 +35,11 @@ enum lwuit_media_control_t {
 	LMC_VIDEO_TRANSFORMATION
 };
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class Control {
 	
 	private:

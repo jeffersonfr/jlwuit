@@ -17,35 +17,54 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_BLURIMAGEFILTER_H
-#define LWUIT_BLURIMAGEFILTER_H
+#ifndef LWUIT_AVERAGEIMAGEFILTER_H
+#define LWUIT_AVERAGEIMAGEFILTER_H
 
 #include "filter.h"
 
 namespace jlwuit {
 
-class BlurImageFilter : public Filter {
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class AverageImageFilter : public Filter {
 
 	private:
+		/** \brief */
+		int _factor;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		BlurImageFilter();
+		AverageImageFilter(int factor = 1);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual ~BlurImageFilter();
+		virtual ~AverageImageFilter();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual void SetFactor(int factor);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetFactor();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

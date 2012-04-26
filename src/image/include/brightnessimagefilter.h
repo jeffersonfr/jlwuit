@@ -24,18 +24,23 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class BrightnessImageFilter : public Filter {
 
 	private:
 		/** \brief */
-		float _factor;
+		double _factor;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		BrightnessImageFilter(float factor = 1.0);
+		BrightnessImageFilter(double factor = 1.0);
 
 		/**
 		 * \brief
@@ -47,19 +52,19 @@ class BrightnessImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		void SetFactor(float factor);
+		void SetFactor(double factor);
 
 		/**
 		 * \brief
 		 *
 		 */
-		float GetFactor();
+		double GetFactor();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

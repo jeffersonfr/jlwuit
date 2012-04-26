@@ -23,6 +23,8 @@
 #include "mp3player.h"
 #include "mp4player.h"
 #include "photoslider.h"
+#include <spawn.h>
+#include <sys/wait.h>
 
 #include <stdio.h>
 

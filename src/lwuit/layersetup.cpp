@@ -29,11 +29,11 @@ LayerSetup::~LayerSetup()
 {
 }
 
-void LayerSetup::SetWorkingScreenSize(int w, int h)
+void LayerSetup::SetScreenSize(int w, int h)
 {
 }
 
-void LayerSetup::SetWorkingScreenSize(lwuit_size_t size)
+void LayerSetup::SetScreenSize(lwuit_size_t size)
 {
 }
 
@@ -65,7 +65,7 @@ void LayerSetup::SetSize(struct lwuit_size_t size)
 {
 }
 
-lwuit_size_t LayerSetup::GetWorkingScreenSize()
+lwuit_size_t LayerSetup::GetScreenSize()
 {
 	struct lwuit_size_t t;
 

@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "usereventlistener.h"
 
+#include <algorithm>
+
 namespace jlwuit {
 
 UserEventListener::UserEventListener()
@@ -27,6 +29,90 @@ UserEventListener::UserEventListener()
 
 UserEventListener::~UserEventListener()
 {
+}
+
+void UserEventListener::Add(lwuit_key_symbol_t key)
+{
+	if (std::find(_keys.begin(), _keys.end(), key) == _keys.end()) {
+		_keys.push_back(key);
+	}
+}
+
+void UserEventListener::AddAllNumerics()
+{
+	RemoveAllNumerics();
+
+	_keys.push_back(LKS_0);
+	_keys.push_back(LKS_1);
+	_keys.push_back(LKS_2);
+	_keys.push_back(LKS_3);
+	_keys.push_back(LKS_4);
+	_keys.push_back(LKS_5);
+	_keys.push_back(LKS_6);
+	_keys.push_back(LKS_7);
+	_keys.push_back(LKS_8);
+	_keys.push_back(LKS_9);
+}
+
+void UserEventListener::RemoveAllNumerics()
+{
+	// TODO::
+}
+
+void UserEventListener::AddAllArrows()
+{
+	RemoveAllArrows();
+
+	_keys.push_back(LKS_CURSOR_LEFT);
+	_keys.push_back(LKS_CURSOR_RIGHT);
+	_keys.push_back(LKS_CURSOR_UP);
+	_keys.push_back(LKS_CURSOR_DOWN);
+}
+
+void UserEventListener::RemoveAllArrows()
+{
+	// TODO::
+}
+
+void UserEventListener::AddAllColors()
+{
+	RemoveAllColors();
+
+	_keys.push_back(LKS_RED);
+	_keys.push_back(LKS_GREEN);
+	_keys.push_back(LKS_YELLOW);
+	_keys.push_back(LKS_BLUE);
+}
+
+void UserEventListener::RemoveAllColors()
+{
+	// TODO::
+}
+
+void UserEventListener::AddAllMultimedia()
+{
+	RemoveAllMultimedia();
+
+	_keys.push_back(LKS_PLAY);
+	_keys.push_back(LKS_STOP);
+	_keys.push_back(LKS_EJECT);
+	_keys.push_back(LKS_REWIND);
+	_keys.push_back(LKS_RECORD);
+}
+
+void UserEventListener::RemoveAllMultimedia()
+{
+	// TODO::
+}
+
+void UserEventListener::RemoveAll()
+{
+	_keys.clear();
+}
+
+std::vector<lwuit_key_symbol_t> & UserEventListener::GetKeys()
+{
+	return _keys;
 }
 
 bool UserEventListener::IsMatch(UserEvent *event)

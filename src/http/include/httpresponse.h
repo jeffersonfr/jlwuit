@@ -26,6 +26,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class HTTPResponse {
 
 	private:

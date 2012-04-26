@@ -26,11 +26,20 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_http_protocol_t {
 	LHP_GET,
 	LHP_POST
 };
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class HTTPRequest {
 
 	private:

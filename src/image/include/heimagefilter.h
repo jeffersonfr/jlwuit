@@ -24,6 +24,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class HEImageFilter : public Filter {
 
 	private:
@@ -45,7 +50,7 @@ class HEImageFilter : public Filter {
 		 * \brief
 		 *
 		 */
-		virtual bool Transform(uint8_t *data, int size);
+		virtual bool Transform(uint8_t *data, int width, int height);
 
 };
 

@@ -29,23 +29,25 @@ GrayImageFilter::~GrayImageFilter()
 {
 }
 
-bool GrayImageFilter::Transform(uint8_t *data, int size)
+bool GrayImageFilter::Transform(uint8_t *data, int width, int height)
 {
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
 						g = data[i+1],
 						b = data[i+0];
-		int color = (r * 0.30 + g * 0.59 + b * 0.11);
+		uint8_t c = PIXEL(r * 0.30 + g * 0.59 + b * 0.11);
 		
-		if (color > 0xff) {
-			color = 0xff;
-		}
-
 		data[i+3] = a;
-		data[i+2] = color;
-		data[i+1] = color;
-		data[i+0] = color;
+		data[i+2] = c;
+		data[i+1] = c;
+		data[i+0] = c;
 	}
 
 	return true;

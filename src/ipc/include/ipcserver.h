@@ -27,9 +27,15 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class IPCServer {
 
 	private:
+		/** \brief */
 		jsocket::LocalServerSocket *_server;
 
 	public:

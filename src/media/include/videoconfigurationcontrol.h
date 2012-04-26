@@ -85,6 +85,11 @@ enum lwuit_hd_video_format_t {
 	LHVF_1080p
 };
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class VideoConfigurationControl : public Control {
 
 	public:

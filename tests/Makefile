@@ -3,6 +3,7 @@ include ../Makefile.defs
 MODULES = \
 			apps \
 			dlg \
+			dump \
 			filter \
 			gui \
 			ipc \

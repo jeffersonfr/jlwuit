@@ -25,11 +25,9 @@
 namespace jlwuit {
 
 VideoLayerImpl::VideoLayerImpl():
-	LayerImpl("video", 1920, 1080)
+	LayerImpl("video", DEFAULT_SCALE_WIDTH, DEFAULT_SCALE_HEIGHT)
 {
 	_provider = NULL;
-
-	_buffer = jgui::Image::CreateImage(GetLayerSetup()->GetWidth(), GetLayerSetup()->GetHeight());
 }
 
 VideoLayerImpl::~VideoLayerImpl()
@@ -70,9 +68,35 @@ void VideoLayerImpl::Play()
 	jthread::AutoLock lock(&_mutex);
 
 	if (_provider != NULL) {
-		IDirectFBSurface *surface = (IDirectFBSurface *)_buffer->GetGraphics()->GetNativeSurface();
+		DFBSurfaceDescription sdsc;
+		DFBWindowDescription desc;
 
-		_provider->PlayTo(_provider, surface, NULL, VideoLayerImpl::Callback, this);
+		desc.flags = (DFBWindowDescriptionFlags)(DWDESC_POSX | DWDESC_POSY | DWDESC_WIDTH | DWDESC_HEIGHT | DWDESC_STACKING);
+
+		_provider->GetSurfaceDescription(_provider, &sdsc);
+
+		if (sdsc.flags & DSDESC_CAPS) {
+			desc.flags = (DFBWindowDescriptionFlags)(desc.flags | DWDESC_SURFACE_CAPS);
+			desc.surface_caps = sdsc.caps;
+		}
+
+		desc.posx   = 0;
+		desc.posy   = 0;
+		desc.width  = sdsc.width;
+		desc.height = sdsc.height;
+		// desc.stacking = (DFBWindowStackingClass)stacking_id;
+
+		IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
+		IDirectFBDisplayLayer *layer;
+		IDirectFBWindow *window;
+
+		directfb->GetDisplayLayer(directfb, DLID_PRIMARY, &layer);
+		layer->CreateWindow(layer, &desc, &window);
+		window->SetOpacity(window, 0xff);
+
+		_window->SetNativeWindow(window);
+
+		_provider->PlayTo(_provider, (IDirectFBSurface *)_window->GetGraphics()->GetNativeSurface(), NULL, VideoLayerImpl::Callback, this);
 	}
 }
 
@@ -127,14 +151,6 @@ int64_t VideoLayerImpl::GetMediaTime()
 	}
 
 	return time*1000LL;
-}
-
-void VideoLayerImpl::Paint(jgui::Graphics *g)
-{
-	struct lwuit_region_t region = GetLayerSetup()->GetBounds();
-
-	g->DrawImage(_buffer, 0, 0, region.width, region.height);
-	// CHANGE:: g->Flip();
 }
 
 };

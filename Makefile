@@ -39,10 +39,17 @@ SRC_APPS	= \
 						proxy.o\
 
 SRC_DB		= \
+						sqlitecommand.o\
+						sqliteconnection.o\
+						sqlitedatareader.o\
+						sqlitedatatable.o\
+						sqliteexception.o\
+						sqliteparameter.o\
+						sqlitetransaction.o\
 
 
 SRC_IMAGE	= \
-						blurimagefilter.o\
+						averageimagefilter.o\
 						brightnessimagefilter.o\
 						bwimagefilter.o\
 						channelimagefilter.o\
@@ -54,6 +61,7 @@ SRC_IMAGE	= \
 						goldenimagefilter.o\
 						grayimagefilter.o\
 						heimagefilter.o\
+						imageio.o\
 						lheimagefilter.o\
 						metalicimagefilter.o\
 						negativeimagefilter.o\
@@ -71,6 +79,7 @@ SRC_LWUIT	= \
 						dialog.o\
 						eventmanager.o\
 						exception.o\
+						fadetransition.o\
 						flowlayout.o\
 						font.o\
 						graphics.o\
@@ -89,6 +98,7 @@ SRC_LWUIT	= \
 						rootcontainer.o\
 						scene.o\
 						screen.o\
+						slidetransition.o\
 						style.o\
 						styleevent.o\
 						stylelistener.o\

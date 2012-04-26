@@ -21,16 +21,36 @@
 
 namespace jlwuit {
 
-ContrastImageFilter::ContrastImageFilter()
+ContrastImageFilter::ContrastImageFilter(int factor)
 {
+	_factor = factor;
 }
 
 ContrastImageFilter::~ContrastImageFilter()
 {
 }
 
-bool ContrastImageFilter::Transform(uint8_t *data, int size)
+void ContrastImageFilter::SetFactor(int factor)
 {
+	_factor = factor;
+}
+
+int ContrastImageFilter::GetFactor()
+{
+	return _factor;
+}
+
+bool ContrastImageFilter::Transform(uint8_t *data, int width, int height)
+{
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+	int axis = 127,
+			param1 = axis*_factor,
+			param2 = axis-_factor;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
@@ -38,9 +58,9 @@ bool ContrastImageFilter::Transform(uint8_t *data, int size)
 						b = data[i+0];
 
 		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
+		data[i+2] = PIXEL((axis*r-param1)/param2);
+		data[i+1] = PIXEL((axis*g-param1)/param2);
+		data[i+0] = PIXEL((axis*b-param1)/param2);
 	}
 
 	return true;

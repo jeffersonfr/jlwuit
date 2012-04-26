@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "heimagefilter.h"
 
+#include <algorithm>
+
 namespace jlwuit {
 
 HEImageFilter::HEImageFilter()
@@ -29,8 +31,35 @@ HEImageFilter::~HEImageFilter()
 {
 }
 
-bool HEImageFilter::Transform(uint8_t *data, int size)
+bool HEImageFilter::Transform(uint8_t *data, int width, int height)
 {
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+	uint8_t min_r = 0xff,
+					min_g = 0xff,
+					min_b = 0xff;
+	uint8_t max_r = 0x00,
+					max_g = 0x00,
+					max_b = 0x00;
+
+	for (int i=0; i<size; i+=4) {
+		uint8_t a = data[i+3],
+						r = data[i+2],
+						g = data[i+1],
+						b = data[i+0];
+      
+		min_r = std::min(min_r, r);
+		min_g = std::min(min_g, g);
+		min_b = std::min(min_b, b);
+
+		max_r = std::max(max_r, r);
+		max_g = std::max(max_g, g);
+		max_b = std::max(max_b, b);
+	}
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
@@ -38,9 +67,9 @@ bool HEImageFilter::Transform(uint8_t *data, int size)
 						b = data[i+0];
 
 		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
+		data[i+2] = PIXEL(255.0*(r-min_r)/(max_r-min_r));
+		data[i+1] = PIXEL(255.0*(g-min_g)/(max_g-min_g));
+		data[i+0] = PIXEL(255.0*(b-min_b)/(max_b-min_b));
 	}
 
 	return true;

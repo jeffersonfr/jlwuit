@@ -65,7 +65,7 @@ class SceneTest : public jlwuit::Scene {
 				_boxes.push_back(box);
 			}
 		
-			SetAnimationDelay(1000);
+			SetAnimationDelay(100);
 		}
 
 		virtual ~SceneTest()

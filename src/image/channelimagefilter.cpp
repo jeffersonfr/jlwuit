@@ -33,8 +33,14 @@ ChannelImageFilter::~ChannelImageFilter()
 {
 }
 
-bool ChannelImageFilter::Transform(uint8_t *data, int size)
+bool ChannelImageFilter::Transform(uint8_t *data, int width, int height)
 {
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		data[i+3] = data[i+3] & _amask;
 		data[i+2] = data[i+2] & _rmask;

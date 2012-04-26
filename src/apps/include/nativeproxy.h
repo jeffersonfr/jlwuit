@@ -28,6 +28,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class NativeProxy : public Proxy {
 
 	private:

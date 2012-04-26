@@ -22,6 +22,11 @@
 
 #include <stdint.h>
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class ApplicationLifeCycle {
 
 	protected:

@@ -27,9 +27,15 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class Method : public ParamMapper {
 
 	private:
+		/** \brief */
 		std::string _name;
 
 	public:

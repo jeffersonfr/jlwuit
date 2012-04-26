@@ -32,11 +32,8 @@ ImageImpl::ImageImpl(jgui::Image *image)
 	}
 
 	_native_image = image;
-	
-	_size.width = image->GetWidth();
-	_size.height = image->GetHeight();
-
-	_graphics = new GraphicsImpl(image->GetGraphics());
+	_native_image->GetGraphics()->SetWorkingScreenSize(DEFAULT_SCALE_WIDTH, DEFAULT_SCALE_HEIGHT);
+	_graphics = new GraphicsImpl(_native_image->GetGraphics());
 }
 
 ImageImpl::~ImageImpl()
@@ -72,7 +69,13 @@ lwuit_pixelformat_t ImageImpl::GetPixelFormat()
 
 struct lwuit_size_t ImageImpl::GetSize()
 {
-	return _size;
+	jgui::jsize_t jsize = _native_image->GetSize();
+	lwuit_size_t lsize;
+
+	lsize.width = jsize.width;
+	lsize.height = jsize.height;
+
+	return lsize;
 }
 
 }

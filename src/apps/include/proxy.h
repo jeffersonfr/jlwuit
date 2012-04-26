@@ -27,9 +27,15 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class Proxy {
 
 	private:
+		/** \brief */
 		jlwuit::Attributes *_attributes;
 
 	public:

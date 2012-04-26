@@ -135,8 +135,10 @@ jlwuit::Color LookAndFeel::GetColor(Style *style, std::string color_id)
 
 	if (_type == LST_FOCUS) {
 		prefix = "focus.";
+	} else if (_type == LST_SELECT) {
+		prefix = "selected.";
 	} else if (_type == LST_DISABLE) {
-		prefix = "disable.";
+		prefix = "disabled.";
 	}
 
 	if (style != NULL) {

@@ -32,7 +32,7 @@ class MessageTest : public jlwuit::Scene {
 		MessageTest():
 			jlwuit::Scene(0, 0, 1920, 1080)
 		{
-			_state = -1;
+			_state = -100;
 
 			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 		}
@@ -50,7 +50,7 @@ class MessageTest : public jlwuit::Scene {
 				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + Right")->SetGravity("top right")->Show();
 
 				// center
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Left | VCenter")->SetGravity("left vcenter")->Show();
+				jlwuit::Toast::Create(this)->SetMessage("Toast:: Left + VCenter")->SetGravity("left vcenter")->Show();
 				jlwuit::Toast::Create(this)->SetMessage("Toast:: HCenter + VCenter")->SetGravity("hcenter vcenter")->Show();
 				jlwuit::Toast::Create(this)->SetMessage("Toast:: Right + VCenter")->SetGravity("right vcenter")->Show(); 
 

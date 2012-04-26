@@ -17,33 +17,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "blurimagefilter.h"
+#include "sqliteexception.h"
+#include "sqliteconnection.h"
+#include "sqlite3.h"
 
 namespace jlwuit {
 
-BlurImageFilter::BlurImageFilter()
+SQLiteException::SQLiteException(std::string reason_):
+    RuntimeException(reason_)
+{
+	jcommon::Object::SetClassName("jcommon::SQLiteException");
+}
+
+SQLiteException::SQLiteException(const SQLiteConnection& c):
+    RuntimeException("SQLiteException: Connection[" + c._name + "]: " +  sqlite3_errmsg(c._db))
 {
 }
 
-BlurImageFilter::~BlurImageFilter()
+SQLiteException::~SQLiteException() throw()
 {
-}
-
-bool BlurImageFilter::Transform(uint8_t *data, int size)
-{
-	for (int i=0; i<size; i+=4) {
-		uint8_t a = data[i+3],
-						r = data[i+2],
-						g = data[i+1],
-						b = data[i+0];
-
-		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
-	}
-
-	return true;
 }
 
 }

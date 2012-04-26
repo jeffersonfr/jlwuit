@@ -24,6 +24,11 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
 class MediaException : public Exception {
 
 	public:

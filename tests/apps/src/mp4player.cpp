@@ -34,7 +34,7 @@
 #define TEXT_SIZE			80
 #define TEXT_SPAN			(TEXT_SIZE+GAPY)
 
-#define SCREEN_SAVER_TIMEOUT	10
+#define SCREEN_SAVER_TIMEOUT	60
 
 namespace jlwuit {
 
@@ -336,7 +336,7 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 		laf->DrawBorder(g, NULL, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 	}
 
-	for (int i=dindex; i<num_items && i<_videos.size(); i++) {
+	for (int i=dindex; i<num_items && i<(int)_videos.size(); i++) {
 		laf->DrawText(g, NULL, "medium", _videos[i+dindex], 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 	}
 

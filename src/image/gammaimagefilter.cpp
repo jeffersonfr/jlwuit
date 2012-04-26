@@ -21,16 +21,33 @@
 
 namespace jlwuit {
 
-GammaImageFilter::GammaImageFilter()
+GammaImageFilter::GammaImageFilter(double factor)
 {
+	_factor = factor;
 }
 
 GammaImageFilter::~GammaImageFilter()
 {
 }
 
-bool GammaImageFilter::Transform(uint8_t *data, int size)
+void GammaImageFilter::SetFactor(double factor)
 {
+	_factor = factor;
+}
+
+double GammaImageFilter::GetFactor()
+{
+	return _factor;
+}
+
+bool GammaImageFilter::Transform(uint8_t *data, int width, int height)
+{
+	if (IsEnabled() == false) {
+		return false;
+	}
+
+	int size = width*height*4;
+
 	for (int i=0; i<size; i+=4) {
 		uint8_t a = data[i+3],
 						r = data[i+2],
@@ -38,9 +55,9 @@ bool GammaImageFilter::Transform(uint8_t *data, int size)
 						b = data[i+0];
 
 		data[i+3] = a;
-		data[i+2] = r;
-		data[i+1] = g;
-		data[i+0] = b;
+		data[i+2] = PIXEL(r + _factor);
+		data[i+1] = PIXEL(g + _factor);
+		data[i+0] = PIXEL(b + _factor);
 	}
 
 	return true;

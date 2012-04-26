@@ -33,7 +33,6 @@ class VideoLayerImpl : public LayerImpl {
 	private:
 		IDirectFBVideoProvider *_provider;
 		jthread::Mutex _mutex;
-		jgui::Image *_buffer;
 		std::string _file;
 
 	private:
@@ -48,12 +47,6 @@ class VideoLayerImpl : public LayerImpl {
 		 *
 		 */
 		virtual void Initialize();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Paint(jgui::Graphics *g);
 
 	public:
 		/**

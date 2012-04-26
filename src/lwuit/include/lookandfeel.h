@@ -27,9 +27,14 @@
 
 namespace jlwuit {
 
+/**
+ * \brief
+ *
+ */
 enum lwuit_lookandfeel_status_t {
 	LST_NORMAL,
 	LST_FOCUS,
+	LST_SELECT,
 	LST_DISABLE
 };
 
