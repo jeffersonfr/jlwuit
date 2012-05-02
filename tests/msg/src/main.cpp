@@ -32,7 +32,7 @@ class MessageTest : public jlwuit::Scene {
 		MessageTest():
 			jlwuit::Scene(0, 0, 1920, 1080)
 		{
-			_state = -100;
+			_state = 0;
 
 			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 		}

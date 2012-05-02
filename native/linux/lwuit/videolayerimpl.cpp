@@ -82,9 +82,8 @@ void VideoLayerImpl::Play()
 
 		desc.posx   = 0;
 		desc.posy   = 0;
-		desc.width  = sdsc.width;
-		desc.height = sdsc.height;
-		// desc.stacking = (DFBWindowStackingClass)stacking_id;
+		desc.width  = jgui::GFXHandler::GetInstance()->GetScreenWidth();
+		desc.height = jgui::GFXHandler::GetInstance()->GetScreenHeight();
 
 		IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
 		IDirectFBDisplayLayer *layer;
