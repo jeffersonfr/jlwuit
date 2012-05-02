@@ -60,7 +60,6 @@ void GraphicsImpl::Translate(int x, int y)
 lwuit_point_t GraphicsImpl::Translate()
 {
 	jgui::jpoint_t jt = _native_graphics->Translate();
-
 	lwuit_point_t lt;
 
 	lt.x = jt.x;
@@ -92,7 +91,6 @@ void GraphicsImpl::SetClip(int xp, int yp, int wp, int hp)
 lwuit_region_t GraphicsImpl::GetClip()
 {
 	jgui::jregion_t jt = _native_graphics->GetClip();
-
 	lwuit_region_t lt;
 
 	lt.x = jt.x;
@@ -200,12 +198,7 @@ void GraphicsImpl::Clear(int xp, int yp, int wp, int hp)
 
 void GraphicsImpl::Sync()
 {
-	IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
-	IDirectFBSurface *surface = (IDirectFBSurface *)_native_graphics->GetNativeSurface();
-
-	directfb->WaitIdle(directfb);
-
-	surface->Flip(surface, NULL, (DFBSurfaceFlipFlags)(DSFLIP_WAITFORSYNC));
+	_native_graphics->Flip();
 }
 
 jlwuit::Font * GraphicsImpl::GetFont()

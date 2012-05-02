@@ -39,10 +39,10 @@ class SQLiteCommand {
 		std::string _commandText;
 
 	private:
-		void prepare(void);
-		bool step(void);
-		void reset(void);
-		void finalize(void);
+		virtual void Prepare(void);
+		virtual bool Step(void);
+		virtual void Reset(void);
+		virtual void Finalize(void);
 
 		SQLiteCommand & operator=(const SQLiteCommand& );
 
@@ -55,12 +55,12 @@ class SQLiteCommand {
 		SQLiteCommand(const SQLiteCommand& other);
 		~SQLiteCommand(void);
 
-		void setCommandText(const std::string& commandText);
-		SQLiteParameter createParameter(void);
-		int executeNonQuery(void);
-		int executeScalar(void);
-		const SQLiteDataReader executeReader(void);
-		void fill(SQLiteDataTable &dataTable);
+		virtual void SetCommandText(const std::string& commandText);
+		virtual SQLiteParameter CreateParameter(void);
+		virtual int ExecuteNonQuery(void);
+		virtual int ExecuteScalar(void);
+		virtual const SQLiteDataReader ExecuteReader(void);
+		virtual void Fill(SQLiteDataTable &dataTable);
 
 };
 

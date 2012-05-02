@@ -33,8 +33,8 @@ class SQLiteParameter {
 		bool _isAssigned;
 
 	private:
-		void assigned(void) const;
-		void verify(const int result);
+		virtual void Assigned(void) const;
+		virtual void Verify(const int result);
 
 		SQLiteParameter& operator=(const SQLiteParameter& );
 
@@ -43,16 +43,16 @@ class SQLiteParameter {
 		SQLiteParameter(const SQLiteParameter& other);
 		~SQLiteParameter(void);
 
-		void bind(const int index);
-		void bind(const int index, const int& value);
-		void bind(const int index, const long long& value);
-		void bind(const int index, const double& value);
-		void bind(const int index, const std::string& value);
-		void bind(const int index, const std::wstring& value);
-		void bind(const int index, const char* value);
-		void bind(const int index, const wchar_t* value);
-		void bind(const int index, const char* value, int size);
-		void bind(const int index, const void* value, int size);
+		virtual void Bind(const int index);
+		virtual void Bind(const int index, const int& value);
+		virtual void Bind(const int index, const long long& value);
+		virtual void Bind(const int index, const double& value);
+		virtual void Bind(const int index, const std::string& value);
+		virtual void Bind(const int index, const std::wstring& value);
+		virtual void Bind(const int index, const char* value);
+		virtual void Bind(const int index, const wchar_t* value);
+		virtual void Bind(const int index, const char* value, int size);
+		virtual void Bind(const int index, const void* value, int size);
 
 };
 

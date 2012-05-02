@@ -31,92 +31,98 @@ SQLiteDataReader::SQLiteDataReader(SQLiteCommand& command):
 	_fieldCount = sqlite3_column_count(_command._stmt);
 }
 
+SQLiteDataReader::SQLiteDataReader(const SQLiteDataReader *other):
+	_command(other->_command)
+{
+	_fieldCount = other->_fieldCount;
+}
+
 SQLiteDataReader::~SQLiteDataReader(void)
 {
-	close();
+	Close();
 }
 
-bool SQLiteDataReader::read(void) const
+bool SQLiteDataReader::Read(void) const
 {
-	return _command.step();
+	return _command.Step();
 }
 
-void SQLiteDataReader::close(void)
+void SQLiteDataReader::Close(void)
 {
 	_command.~SQLiteCommand();
 }
 
-int SQLiteDataReader::getFieldCount(void) const
+int SQLiteDataReader::GetFieldCount(void) const
 {
 	return _fieldCount;
 }
 
-std::string SQLiteDataReader::getFieldName(const int index) const
+std::string SQLiteDataReader::GetFieldName(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return sqlite3_column_name(_command._stmt, index);
 }
 
-SQLiteDbType SQLiteDataReader::getFieldDbType(const int index) const
+SQLiteDbType SQLiteDataReader::GetFieldType(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return (SQLiteDbType)sqlite3_column_type(_command._stmt, index);
 }
 
-std::string SQLiteDataReader::getDataTypeName(const int index) const
+std::string SQLiteDataReader::GetDataTypeName(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return sqlite3_column_decltype(_command._stmt, index);
 }
 
-bool SQLiteDataReader::isDbNull(const int index) const
+bool SQLiteDataReader::IsNull(const int index) const
 {
-	return getFieldDbType(index) == DT_NULL;
+	return GetFieldType(index) == DT_NULL;
 }
 
-int SQLiteDataReader::getInt32(const int index) const
+uint32_t SQLiteDataReader::GetInt32(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return sqlite3_column_int(_command._stmt, index);
 }
 
-long long SQLiteDataReader::getInt64(const int index) const
+uint64_t SQLiteDataReader::GetInt64(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return sqlite3_column_int64(_command._stmt, index);
 }
 
-double SQLiteDataReader::getFloat(const int index) const
+double SQLiteDataReader::GetFloat(const int index) const
 {
-	verify(index);
+	Verify(index);
 	
 	return sqlite3_column_double(_command._stmt, index);
 }
 
-std::string SQLiteDataReader::getString(const int index) const
+std::string SQLiteDataReader::GetString(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return std::string((const char*)sqlite3_column_text(_command._stmt, index), 
 		sqlite3_column_bytes(_command._stmt, index));
 }
 
-std::string SQLiteDataReader::getString16(const int index) const
+std::string SQLiteDataReader::GetString16(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	return std::string((const char*)sqlite3_column_text16(_command._stmt, index), 
 		sqlite3_column_bytes(_command._stmt, index));
 }
 
-std::string SQLiteDataReader::getBLOB(const int index) const
+std::string SQLiteDataReader::GetBLOB(const int index) const
 {
-	verify(index);
+	Verify(index);
 
 	const char *column_blob = (const char *)sqlite3_column_blob(_command._stmt, index);
 	int column_bytes = sqlite3_column_bytes(_command._stmt, index);
@@ -124,7 +130,7 @@ std::string SQLiteDataReader::getBLOB(const int index) const
 	return std::string(column_blob, column_bytes);
 }
 
-inline void SQLiteDataReader::verify(const int index) const
+void SQLiteDataReader::Verify(const int index) const
 {
 	if (index < 0 || index >= _fieldCount) {
 		throw std::out_of_range("Index out of range");

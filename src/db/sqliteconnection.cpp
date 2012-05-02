@@ -44,51 +44,52 @@ SQLiteConnection::SQLiteConnection(const SQLiteConnection& other)
 SQLiteConnection::~SQLiteConnection(void)
 {
 	if (_db) {
-		close();
+		Close();
 	}
 }
 
-void SQLiteConnection::open(void)
+void SQLiteConnection::Open(void)
 {
 	if (sqlite3_open(_name.c_str(), &_db) != SQLITE_OK) {
 		throw SQLiteException("Unable to open database.");
 	}
 
-	setBusyTimeout(3000);
+	SetBusyTimeout(3000);
 }
 
-void SQLiteConnection::close(void)
+void SQLiteConnection::Close(void)
 {
 	sqlite3_close(_db);
+
 	_db = NULL;
 }
 
-inline void SQLiteConnection::isOpened(void) const
+void SQLiteConnection::IsOpened(void) const
 {
 	if (!_db) {
 		throw SQLiteException("Not open database connection.");
 	}
 }
 
-void SQLiteConnection::execute(const std::string& sql, int (*callback)(void*,int,char**,char**), void* argument) const
+void SQLiteConnection::Execute(const std::string& sql, int (*callback)(void*,int,char**,char**), void* argument) const
 {
-	isOpened();
+	IsOpened();
 
 	if (sqlite3_exec(_db, sql.c_str(), callback, argument, NULL) != SQLITE_OK) {
 		throw SQLiteException(*this);
 	}
 }
 
-void SQLiteConnection::setBusyTimeout(const int millisecond) const
+void SQLiteConnection::SetBusyTimeout(const int millisecond) const
 {
-	isOpened();
+	IsOpened();
 
 	if (sqlite3_busy_timeout(_db, millisecond) != SQLITE_OK) {
 		throw SQLiteException(*this);
 	}
 }
 
-SQLiteTransaction SQLiteConnection::beginTransaction(void) const
+SQLiteTransaction SQLiteConnection::BeginTransaction(void) const
 {
 	return SQLiteTransaction(*this);
 }

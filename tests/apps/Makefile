@@ -5,11 +5,9 @@ EXE			= $(MODULE)
 CCFLAGS	+= \
 					-Isrc/include \
 					`pkg-config --cflags jlwuit` \
-					`pkg-config --cflags libxine` \
 
 LDFLAGS	+= \
 					`pkg-config --libs jlwuit` \
-					`pkg-config --libs libxine` \
 
 OBJS 		= \
 					calc.o\

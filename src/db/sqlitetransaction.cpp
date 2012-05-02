@@ -30,7 +30,7 @@ SQLiteTransaction::SQLiteTransaction(const SQLiteConnection& connection):
 		throw SQLiteException(_connection);
 	}
 
-	_connection.execute("BEGIN TRANSACTION;");
+	_connection.Execute("BEGIN TRANSACTION;");
 	_connection._inTransaction = true;
 }
 
@@ -42,28 +42,24 @@ SQLiteTransaction::SQLiteTransaction(const SQLiteTransaction& other):
 
 SQLiteTransaction::~SQLiteTransaction(void)
 {
-	if (_connection._inTransaction)
-	{
-		try
-		{
-			rollback();
-		}
-		catch (...)
-		{
+	if (_connection._inTransaction) {
+		try {
+			Rollback();
+		} catch (...) {
 			return;
 		}
 	}
 }
 
-void SQLiteTransaction::commit(void)
+void SQLiteTransaction::Commit(void)
 {
-	_connection.execute("COMMIT TRANSACTION;");
+	_connection.Execute("COMMIT TRANSACTION;");
 	_connection._inTransaction = false;
 }
 
-void SQLiteTransaction::rollback(void)
+void SQLiteTransaction::Rollback(void)
 {
-	_connection.execute("ROLLBACK TRANSACTION;");
+	_connection.Execute("ROLLBACK TRANSACTION;");
 	_connection._inTransaction = false;
 }
 
