@@ -45,28 +45,28 @@ class SQLiteDataReader {
 	private:
 		explicit SQLiteDataReader(SQLiteCommand &command);
 		
-		void verify(const int index) const;
+		virtual void Verify(const int index) const;
 		SQLiteDataReader & operator=(const SQLiteDataReader &);
 
 	public:
 		SQLiteDataReader(const SQLiteDataReader *other);
 		~SQLiteDataReader(void);
 
-		bool read(void) const;
-		void close();
+		virtual bool Read(void) const;
+		virtual void Close();
 
-		int getFieldCount(void) const;
-		std::string getFieldName(const int index) const;
-		SQLiteDbType getFieldDbType(const int index) const;
-		std::string getDataTypeName(const int index) const;
-		bool isDbNull(const int index) const;
+		virtual int GetFieldCount() const;
+		virtual std::string GetFieldName(const int index) const;
+		virtual SQLiteDbType GetFieldType(const int index) const;
+		virtual std::string GetDataTypeName(const int index) const;
+		virtual bool IsNull(const int index) const;
 
-		int getInt32(const int index) const;
-		long long getInt64(const int index) const;
-		double getFloat(const int index) const;
-		std::string getString(const int index) const;
-		std::string getString16(const int index) const;
-		std::string getBLOB(const int index) const;
+		virtual uint32_t GetInt32(const int index) const;
+		virtual uint64_t GetInt64(const int index) const;
+		virtual double GetFloat(const int index) const;
+		virtual std::string GetString(const int index) const;
+		virtual std::string GetString16(const int index) const;
+		virtual std::string GetBLOB(const int index) const;
 
 };
 

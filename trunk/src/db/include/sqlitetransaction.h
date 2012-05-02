@@ -39,8 +39,8 @@ class SQLiteTransaction {
 		SQLiteTransaction(const SQLiteTransaction &other);
 		~SQLiteTransaction(void);
 
-		void commit(void);
-		void rollback(void);
+		virtual void Commit(void);
+		virtual void Rollback(void);
 
 };
 

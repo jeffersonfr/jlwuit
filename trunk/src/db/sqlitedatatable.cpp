@@ -35,7 +35,7 @@ SQLiteDataTable::SQLiteDataTable(const SQLiteConnection& connection, const std::
 	_rows = 0;
 	_columns = 0;
 
-	assign(connection, commandText);
+	Assign(connection, commandText);
 }
 
 SQLiteDataTable::SQLiteDataTable(const SQLiteDataTable& other): 
@@ -59,59 +59,52 @@ SQLiteDataTable::~SQLiteDataTable(void)
 	_data.clear();
 }
 
-int SQLiteDataTable::rows(void) const
+int SQLiteDataTable::Rows(void) const
 {
 	return _rows;
 }
 
-int SQLiteDataTable::columns(void) const
+int SQLiteDataTable::Columns(void) const
 {
 	return _columns;
 }
 
-std::string SQLiteDataTable::getFieldName(const int column)
+std::string SQLiteDataTable::GetFieldName(const int column)
 {
-	if (column < 0 || column >= _columns)
-	{
+	if (column < 0 || column >= _columns) {
 		std::out_of_range("Index out of range.");
 	}
 
 	return _data[column];
 }
 
-std::string SQLiteDataTable::getFieldValue(const int row, const int column)
+std::string SQLiteDataTable::GetFieldValue(const int row, const int column)
 {
-	if (column < 0 || column >= _columns)
-	{
+	if (column < 0 || column >= _columns) {
 		std::out_of_range("Index out of range.");
 	}
 
-	if (row < 0 || row >= _rows)
-	{
+	if (row < 0 || row >= _rows) {
 		std::out_of_range("Index out of range.");
 	}
 
 	return _data[_columns * (row + 1) + column];
 }
 
-void SQLiteDataTable::assign(const SQLiteConnection& connection, const std::string& commandText)
+void SQLiteDataTable::Assign(const SQLiteConnection& connection, const std::string& commandText)
 {
-	connection.isOpened();
-
 	char** result;
-	if (sqlite3_get_table(connection._db, commandText.c_str(), &result, &_rows, &_columns, NULL) != SQLITE_OK)
-	{
+
+	connection.IsOpened();
+
+	if (sqlite3_get_table(connection._db, commandText.c_str(), &result, &_rows, &_columns, NULL) != SQLITE_OK) {
 		throw SQLiteException(connection);
 	}
 
-	for (int i = 0; i < _columns * (_rows + 1); i++)
-	{
-		if (result[i])
-		{
+	for (int i = 0; i < _columns * (_rows + 1); i++) {
+		if (result[i]) {
 			_data.push_back(result[i]);
-		}
-		else
-		{
+		} else {
 			_data.push_back("NULL");
 		}
 	}

@@ -41,7 +41,7 @@ SQLiteCommand::SQLiteCommand(const SQLiteConnection& connection, const std::stri
 	_commandText = commandText;
 	_stmt = NULL;
 
-	prepare();
+	Prepare();
 }
 
 SQLiteCommand::SQLiteCommand(const SQLiteCommand& other): 
@@ -51,35 +51,37 @@ SQLiteCommand::SQLiteCommand(const SQLiteCommand& other):
 	_stmt = other._stmt; 
 
 	if (!_commandText.empty()) {
-		prepare();
+		Prepare();
 	}
 }
 
 SQLiteCommand::~SQLiteCommand(void)
 {
-	finalize();
+	Finalize();
 }
 
-void SQLiteCommand::setCommandText(const std::string& commandText)
+void SQLiteCommand::SetCommandText(const std::string& commandText)
 {
-	reset();
+	Reset();
+	
 	_commandText.assign(commandText);
-	prepare();
+	
+	Prepare();
 }
 
-SQLiteParameter SQLiteCommand::createParameter(void)
+SQLiteParameter SQLiteCommand::CreateParameter(void)
 {
 	return SQLiteParameter(*this);
 }
 
-int SQLiteCommand::executeNonQuery(void)
+int SQLiteCommand::ExecuteNonQuery(void)
 {
-	step();
+	Step();
 
 	return sqlite3_changes(_connection._db);
 }
 
-int SQLiteCommand::executeScalar(void)
+int SQLiteCommand::ExecuteScalar(void)
 {
 	//_ASSERT_EXPR(0, L"The function has not been implementation. It will be return 0.");
 	//_wassert(L"The function has not been implementation. It will be return 0.", __FILEW__, __LINE__);
@@ -88,65 +90,59 @@ int SQLiteCommand::executeScalar(void)
 	return 0;
 }
 
-const SQLiteDataReader SQLiteCommand::executeReader(void)
+const SQLiteDataReader SQLiteCommand::ExecuteReader(void)
 {
 	return new SQLiteDataReader(*this);
 }
 
-void SQLiteCommand::fill(SQLiteDataTable& dataTable)
+void SQLiteCommand::Fill(SQLiteDataTable& dataTable)
 {
-	dataTable.assign(_connection, _commandText);
+	dataTable.Assign(_connection, _commandText);
 }
 
-inline void SQLiteCommand::prepare(void)
+void SQLiteCommand::Prepare(void)
 {
-	_connection.isOpened();
+	_connection.IsOpened();
 
-	if (sqlite3_prepare(_connection._db, _commandText.c_str(), -1, &_stmt, NULL) != SQLITE_OK)
-	{
+	if (sqlite3_prepare(_connection._db, _commandText.c_str(), -1, &_stmt, NULL) != SQLITE_OK) {
 		throw SQLiteException(_connection);
 	}
 }
 
-inline bool SQLiteCommand::step(void)
+bool SQLiteCommand::Step(void)
 {
-	if (_commandText.empty())
-	{
+	if (_commandText.empty()) {
 		throw SQLiteException("The command text has not be assigned.");
 	}
 
-	if (!_stmt)
-	{
+	if (!_stmt) {
 		throw SQLiteException("The sqlite statement is null.");
 	}
 
-	switch(sqlite3_step(_stmt))
-	{
-	case SQLITE_ROW:
-		return true;
-	case SQLITE_DONE:
-		return false;
-	default:
+	switch(sqlite3_step(_stmt)) {
+		case SQLITE_ROW:
+			return true;
+		case SQLITE_DONE:
+			return false;
+		default:
+			throw SQLiteException(_connection);
+	}
+}
+
+void SQLiteCommand::Reset(void)
+{
+	if (sqlite3_reset(_stmt) != SQLITE_OK) {
 		throw SQLiteException(_connection);
 	}
 }
 
-inline void SQLiteCommand::reset(void)
+void SQLiteCommand::Finalize(void)
 {
-	if (sqlite3_reset(_stmt) != SQLITE_OK)
-	{
-		throw SQLiteException(_connection);
-	}
-}
-
-inline void SQLiteCommand::finalize(void)
-{
-	if (_stmt)
-	{
-		if (sqlite3_finalize(_stmt) != SQLITE_OK)
-		{
+	if (_stmt) {
+		if (sqlite3_finalize(_stmt) != SQLITE_OK) {
 			throw SQLiteException(_connection);
 		}
+
 		_stmt = NULL;
 	}
 }

@@ -21,15 +21,12 @@ DOCDIR		= doc
 PREFIX		= /usr/local
 
 CCFLAGS		+= \
-						-g -ggdb \
-						-Wall -rdynamic -fpic -funroll-loops -O2 \
-
-ARFLAGS		+= \
-						-rc \
-
-CCFLAGS		+= \
-						$(DEFINES) \
+						-Wall -g -ggdb -rdynamic -fpic -funroll-loops -O2 $(DEFINES) \
 						-I$(INCDIR) \
+						-I$(SRCDIR)/$(INCDIR) \
+
+ARFLAGS		= \
+						rc \
 
 ECHO			= echo -e
 

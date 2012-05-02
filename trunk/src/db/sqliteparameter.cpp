@@ -37,74 +37,74 @@ SQLiteParameter::~SQLiteParameter(void)
 
 }
 
-void SQLiteParameter::bind(const int index)
+void SQLiteParameter::Bind(const int index)
 {
-	assigned();
-	verify(sqlite3_bind_null(_command._stmt, index));
+	Assigned();
+	Verify(sqlite3_bind_null(_command._stmt, index));
 }
 
-void SQLiteParameter::bind(const int index, const int& value)
+void SQLiteParameter::Bind(const int index, const int& value)
 {
-	assigned();
-	verify(sqlite3_bind_int(_command._stmt, index, value));
+	Assigned();
+	Verify(sqlite3_bind_int(_command._stmt, index, value));
 }
 
-void SQLiteParameter::bind(const int index, const long long& value)
+void SQLiteParameter::Bind(const int index, const long long& value)
 {
-	assigned();
-	verify(sqlite3_bind_int64(_command._stmt, index, value));
+	Assigned();
+	Verify(sqlite3_bind_int64(_command._stmt, index, value));
 }
 
-void SQLiteParameter::bind(const int index, const double& value)
+void SQLiteParameter::Bind(const int index, const double& value)
 {
-	assigned();
-	verify(sqlite3_bind_double(_command._stmt, index, value));
+	Assigned();
+	Verify(sqlite3_bind_double(_command._stmt, index, value));
 }
 
-void SQLiteParameter::bind(const int index, const std::string& value)
+void SQLiteParameter::Bind(const int index, const std::string& value)
 {
-	assigned();
-	verify(sqlite3_bind_text(_command._stmt, index, value.c_str(), int(value.length()), SQLITE_TRANSIENT));
+	Assigned();
+	Verify(sqlite3_bind_text(_command._stmt, index, value.c_str(), int(value.length()), SQLITE_TRANSIENT));
 }
 
-void SQLiteParameter::bind(const int index, const std::wstring& value)
+void SQLiteParameter::Bind(const int index, const std::wstring& value)
 {
-	assigned();
-	verify(sqlite3_bind_text16(_command._stmt, index, value.c_str(), int(value.length()), SQLITE_TRANSIENT));
+	Assigned();
+	Verify(sqlite3_bind_text16(_command._stmt, index, value.c_str(), int(value.length()), SQLITE_TRANSIENT));
 }
 
-void SQLiteParameter::bind(const int index, const char* value)
+void SQLiteParameter::Bind(const int index, const char* value)
 {
-	assigned();
-	verify(sqlite3_bind_text(_command._stmt, index, value, (int)strlen(value), SQLITE_TRANSIENT));
+	Assigned();
+	Verify(sqlite3_bind_text(_command._stmt, index, value, (int)strlen(value), SQLITE_TRANSIENT));
 }
 
-void SQLiteParameter::bind(const int index, const wchar_t* value)
+void SQLiteParameter::Bind(const int index, const wchar_t* value)
 {
-	assigned();
-	verify(sqlite3_bind_text16(_command._stmt, index, value, (int)wcslen(value), SQLITE_TRANSIENT));
+	Assigned();
+	Verify(sqlite3_bind_text16(_command._stmt, index, value, (int)wcslen(value), SQLITE_TRANSIENT));
 }
 
-void SQLiteParameter::bind(const int index, const char* value, int size)
+void SQLiteParameter::Bind(const int index, const char* value, int size)
 {
-	assigned();
-	verify(sqlite3_bind_blob(_command._stmt, index, value, size, SQLITE_TRANSIENT));
+	Assigned();
+	Verify(sqlite3_bind_blob(_command._stmt, index, value, size, SQLITE_TRANSIENT));
 }
 
-void SQLiteParameter::bind(const int index, const void* value, int size)
+void SQLiteParameter::Bind(const int index, const void* value, int size)
 {
-	assigned();
-	verify(sqlite3_bind_blob(_command._stmt, index, value, size, SQLITE_TRANSIENT));
+	Assigned();
+	Verify(sqlite3_bind_blob(_command._stmt, index, value, size, SQLITE_TRANSIENT));
 }
 
-inline void SQLiteParameter::assigned(void) const
+void SQLiteParameter::Assigned(void) const
 {
 	if (_isAssigned) {
 		throw SQLiteException("The parameter has been assigned.");
 	}
 }
 
-inline void SQLiteParameter::verify(const int result)
+void SQLiteParameter::Verify(const int result)
 {
 	if (result != SQLITE_OK) {
 		throw SQLiteException(_command._connection);

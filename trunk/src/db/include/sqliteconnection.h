@@ -48,8 +48,8 @@ class SQLiteConnection {
 		SQLiteConnection(const SQLiteConnection& );
 		SQLiteConnection& operator=(const SQLiteConnection& );
 
-		void execute(const std::string& sql, int (*callback)(void*, int, char**, char**) = NULL, void* argument = NULL) const;
-		void isOpened(void) const; 
+		virtual void Execute(const std::string& sql, int (*callback)(void*, int, char**, char**) = NULL, void* argument = NULL) const;
+		virtual void IsOpened(void) const; 
 
 	public:
 		std::string _name;
@@ -59,11 +59,11 @@ class SQLiteConnection {
 		explicit SQLiteConnection(const std::string &name);
 		~SQLiteConnection(void);
 
-		void open(void);
-		void close(void);
+		virtual void Open(void);
+		virtual void Close(void);
 
-		SQLiteTransaction beginTransaction(void) const;
-		void setBusyTimeout(const int millisecond) const;
+		virtual SQLiteTransaction BeginTransaction(void) const;
+		virtual void SetBusyTimeout(const int millisecond) const;
 
 };
 

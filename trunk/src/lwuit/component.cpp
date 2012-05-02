@@ -721,6 +721,7 @@ void Component::Paint(Graphics *g)
 			}
 
 			if (cw > 0 && ch > 0) {
+				g->SetClip(clip.x, clip.y, clip.width, clip.height);
 				g->Translate(cx, cy);
 				c->Paint(g);
 				g->Translate(-cx, -cy);
@@ -731,10 +732,9 @@ void Component::Paint(Graphics *g)
 	}
 
 	g->SetClip(clip.x, clip.y, clip.width, clip.height);
+	g->Reset();
 
 	Revalidate();
-
-	g->Reset();
 }
 
 void Component::Repaint(Component *cmp)

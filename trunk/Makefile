@@ -31,6 +31,7 @@ DEFINES		= \
 
 REQUIRES	= \
 						jlibcpp \
+						libxine \
 
 SRC_APPS	= \
 						appdatabase.o\
@@ -46,7 +47,8 @@ SRC_DB		= \
 						sqliteexception.o\
 						sqliteparameter.o\
 						sqlitetransaction.o\
-
+						shell.o\
+						sqlite3.o\
 
 SRC_IMAGE	= \
 						averageimagefilter.o\

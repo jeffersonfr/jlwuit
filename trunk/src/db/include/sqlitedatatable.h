@@ -42,12 +42,12 @@ class SQLiteDataTable {
 		SQLiteDataTable& operator=(const SQLiteDataTable& other);
 		~SQLiteDataTable(void);
 
-		void assign(const SQLiteConnection& connection, const std::string& commandText);
+		virtual void Assign(const SQLiteConnection& connection, const std::string& commandText);
 
-		int rows(void) const;
-		int columns(void) const;
-		std::string getFieldName(const int column);
-		std::string getFieldValue(const int row, const int column);
+		virtual int Rows(void) const;
+		virtual int Columns(void) const;
+		virtual std::string GetFieldName(const int column);
+		virtual std::string GetFieldValue(const int row, const int column);
 
 };
 
