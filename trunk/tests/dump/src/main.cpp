@@ -35,18 +35,6 @@ class Dump : public jlwuit::Component {
 		{
 			_off = jlwuit::Image::CreateImage(GetWidth(), GetHeight(), jlwuit::LPF_ARGB);
 			_sfont = jlwuit::Font::CreateFont("./comic.ttf", jlwuit::LFA_NORMAL, 20);
-
-			/*
-			Button *button = new Button("teste", 10, 10, 80, 40);
-
-			button->SetVisible(true);
-			Add(button);
-	
-			button->RequestFocus();
-			button->SetFont(_sfont);
-
-			SetFont(_sfont);
-			*/
 		}
 
 		virtual ~Dump()
@@ -55,26 +43,25 @@ class Dump : public jlwuit::Component {
 			delete _off;
 		}
 
+		virtual void Paint(jlwuit::Graphics *g) 
+		{
+			jlwuit::Component::Paint(g);
+
+			g->SetColor(jlwuit::Color::Blue);
+			g->FillRectangle(10, 10, 50, 50);
+			g->DrawImage("images/teste.png", 20, 20, 50, 50);
+		}
+		
 		virtual bool Render(std::string filename) 
 		{
 			jlwuit::Graphics *g = _off->GetGraphics();
-			int width = GetWidth(), 
-					height = GetHeight();
-
-			// primitives
-			g->SetColor(jlwuit::Color::Blue);
-			g->FillRectangle(50, 50, 100, 50);
-			g->DrawImage("images/teste.png", 20, 80, 60, 60);
-
-			// container
 			jlwuit::lwuit_point_t t = g->Translate();
 
 			g->Translate(-t.x, -t.y);
 			g->ReleaseClip();
 
-			jlwuit::Component::Paint(_off->GetGraphics());
+			Paint(_off->GetGraphics());
 
-			// dump
 			jlwuit::ImageIO *io = new jlwuit::ImageIO(filename, jlwuit::LPF_ARGB);
 			jlwuit::lwuit_size_t size = _off->GetSize();
 			uint32_t *rgb = NULL;

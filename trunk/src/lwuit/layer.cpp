@@ -41,4 +41,13 @@ LayerSetup * Layer::GetLayerSetup()
 	return NULL;
 }
 
+bool Layer::IsEnabled()
+{
+	return false;
+}
+
+void Layer::SetEnabled(bool b)
+{
+}
+
 }

@@ -57,6 +57,16 @@ RootContainer * LayerImpl::GetRootContainer()
 	return _root_container;
 }
 
+bool LayerImpl::IsEnabled()
+{
+	return _window->IsVisible();
+}
+
+void LayerImpl::SetEnabled(bool b)
+{
+	_window->SetVisible(b);
+}
+
 void LayerImpl::Repaint(jgui::Component *cmp)
 {
 	jgui::Graphics *g = _window->GetGraphics();

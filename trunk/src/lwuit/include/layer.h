@@ -60,6 +60,18 @@ class Layer {
 		 * \brief
 		 *
 		 */
+		virtual bool IsEnabled();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetEnabled(bool b);
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual LayerSetup * GetLayerSetup();
 
 };
