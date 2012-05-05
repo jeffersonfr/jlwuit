@@ -25,7 +25,8 @@
 
 namespace jlwuit {
 
-HTTPRequest::HTTPRequest()
+HTTPRequest::HTTPRequest(std::string url):
+	_url(url)
 {
 	_header.SetTextParam("Host", "localhost");
 	_header.SetTextParam("User-Agent", "jlwuit/0.01-linux");
@@ -35,16 +36,6 @@ HTTPRequest::HTTPRequest()
 
 HTTPRequest::~HTTPRequest()
 {
-}
-
-void HTTPRequest::Open(std::string url)
-{
-	_url = url;
-}
-
-void HTTPRequest::SetProtocol(lwuit_http_protocol_t protocol)
-{
-	_protocol = protocol;
 }
 
 ParamMapper * HTTPRequest::GetHeader()
@@ -66,19 +57,31 @@ void HTTPRequest::Send(jio::InputStream *stream, HTTPStatusChanged *listener)
 {
 	std::ostringstream o;
 
-	if (_protocol == LHP_GET) {
-		o << "GET ";
-	} else if (_protocol == LHP_GET) {
-		o << "POST ";
+	if (stream == NULL) {
+		// TODO:: fill parameters
+		o << "GET " << _url.GetHost() << " HTTP/1.0\r\n";
+	} else {
+		o << "POST " << _url.GetHost() << " HTTP/1.0\r\n";
 	}
-
-	o << _url << " HTTP/1.0\r\n";
 
 	if (stream != NULL) {
 		o << "Content-Length: " << stream->GetSize() << "\r\n";
 	}
 
-	// TODO:: add parameters
+	std::map<std::string, std::string> params = _header.GetParameters();
+	
+	for (std::map<std::string, std::string>::iterator i=params.begin(); i!=params.end(); i++) {
+		o << i->first << i->second << "\r\n";
+	}
+
+	o << "\r\n";
+	
+	// TODO:: send ostringstream
+
+	if (stream != NULL) {
+		// TODO:: send stream
+	}
+
 }
 
 }

@@ -23,17 +23,9 @@
 #include "httpstatuschanged.h"
 #include "parammapper.h"
 #include "jinputstream.h"
+#include "jurl.h"
 
 namespace jlwuit {
-
-/**
- * \brief
- *
- */
-enum lwuit_http_protocol_t {
-	LHP_GET,
-	LHP_POST
-};
 
 /**
  * \brief
@@ -48,16 +40,14 @@ class HTTPRequest {
 		/** \brief */
 		ParamMapper _cookies;
 		/** \brief */
-		std::string _url;
-		/** \brief */
-		lwuit_http_protocol_t _protocol;
+		jcommon::URL _url;
 
 	protected:
 		/**
 		 * \brief
 		 *
 		 */
-		HTTPRequest();
+		HTTPRequest(std::string url);
 
 	public:
 		/**
@@ -66,18 +56,6 @@ class HTTPRequest {
 		 */
 		virtual ~HTTPRequest();
 		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Open(std::string url);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetProtocol(lwuit_http_protocol_t protocol);
-
 		/**
 		 * \brief
 		 *

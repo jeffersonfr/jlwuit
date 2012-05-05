@@ -87,6 +87,7 @@ void GraphicLayerImpl::Run()
 	Graphics *gb = _buffer->GetGraphics();
 
 	g->SetBlittingFlags(jgui::JBF_NOFX);
+	g->Clear();
 
 	while (true) {
 		jthread::AutoLock lock(&_mutex);
@@ -112,7 +113,6 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 void GraphicLayerImpl::Paint(jlwuit::Graphics *g)
 {
 	// TODO:: sincronizar com LookAndFill::Lock/Unlock()
-	
 	g->Reset();
 	g->Clear();
 

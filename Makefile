@@ -18,7 +18,7 @@ CCFLAGS		+= \
 						-Isrc/ipc/$(INCDIR) \
 						-Isrc/prefs/$(INCDIR) \
 						-Isrc/usb/$(INCDIR) \
-						-Isrc/http/$(INCDIR) \
+						-Isrc/net/$(INCDIR) \
 						-Isrc/util/$(INCDIR) \
 						-I/usr/local/include \
 						`pkg-config --cflags jlibcpp` \
@@ -140,7 +140,7 @@ SRC_USB		= \
 						usbstatusevent.o\
 						usbstatuslistener.o\
 
-SRC_HTTP	= \
+SRC_NET		= \
 						httprequest.o\
 						httpresponse.o\
 						httpstatuschanged.o\
@@ -151,13 +151,13 @@ SRC_UTIL	= \
 OBJS			= \
 						$(addprefix src/apps/, $(SRC_APPS)) \
 						$(addprefix src/db/, $(SRC_DB)) \
+						$(addprefix src/net/, $(SRC_HTTP)) \
 						$(addprefix src/image/, $(SRC_IMAGE)) \
+						$(addprefix src/ipc/, $(SRC_IPC)) \
 						$(addprefix src/lwuit/, $(SRC_LWUIT)) \
 						$(addprefix src/media/, $(SRC_MEDIA)) \
-						$(addprefix src/ipc/, $(SRC_IPC)) \
 						$(addprefix src/prefs/, $(SRC_PREFS)) \
 						$(addprefix src/usb/, $(SRC_USB)) \
-						$(addprefix src/http/, $(SRC_HTTP)) \
 						$(addprefix src/util/, $(SRC_UTIL)) \
 
 .PHONY: all strip tests doc install uninstall clean $(PLATFORMS)
@@ -190,7 +190,7 @@ install: uninstall
 	@install -d -o nobody -m 755 $(PREFIX)/$(MODULE)/sounds && install -o nobody -m 644 resources/sounds/* $(PREFIX)/$(MODULE)/sounds
 	@$(ECHO) "Installing include files in $(PREFIX)/include/$(MODULE) $(OK)" && mkdir -p $(PREFIX)/include/$(MODULE)
 	@install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)
-	@for i in apps db image lwuit media ipc prefs usb http util; do \
+	@for i in apps db net image lwuit media ipc prefs usb util; do \
 		install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)/$$i && install -o nobody -m 644 src/$$i/include/* $(PREFIX)/include/$(MODULE)/$$i ; \
 	done
 	@$(ECHO) "Installing $(EXE) in $(PREFIX)/lib/lib$(MODULE).so $(OK)"
