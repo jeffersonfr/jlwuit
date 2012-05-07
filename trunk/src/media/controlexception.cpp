@@ -17,49 +17,17 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "videotransformationcontrol.h"
+#include "controlexception.h"
 
 namespace jlwuit {
 
-VideoTransformationControl::VideoTransformationControl():
-	Control(LMC_VIDEO_TRANSFORMATION)
+ControlException::ControlException(std::string reason):
+  Exception(reason)
 {
 }
 
-VideoTransformationControl::~VideoTransformationControl()
+ControlException::~ControlException() throw ()
 {
-}
-
-void VideoTransformationControl::SetLocation(int x, int y)
-{
-}
-
-void VideoTransformationControl::SetSize(int width, int height)
-{
-}
-
-void VideoTransformationControl::SetBounds(int x, int y, int width, int height)
-{
-}
-
-int VideoTransformationControl::GetX()
-{
-	return 0;
-}
-
-int VideoTransformationControl::GetY()
-{
-	return 0;
-}
-
-int VideoTransformationControl::GetWidth()
-{
-	return 0;
-}
-
-int VideoTransformationControl::GetHeight()
-{
-	return 0;
 }
 
 }

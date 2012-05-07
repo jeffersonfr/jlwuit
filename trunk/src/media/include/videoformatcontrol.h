@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_VIDEOCONFIGURATIONCONTROL_H
-#define LWUIT_VIDEOCONFIGURATIONCONTROL_H
+#ifndef LWUIT_VIDEOFORMATCONTROL_H
+#define LWUIT_VIDEOFORMATCONTROL_H
 
 #include "control.h"
 
@@ -90,20 +90,20 @@ enum lwuit_hd_video_format_t {
  *
  * \author Jeff Ferr
  */
-class VideoConfigurationControl : public Control {
+class VideoFormatControl : public Control {
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		VideoConfigurationControl();
+		VideoFormatControl();
 
 		/**
 		 * \brief Destrutor virtual.
 		 *
 		 */
-		virtual ~VideoConfigurationControl();
+		virtual ~VideoFormatControl();
 
 		/**
 		 * \brief Define a razão de aspecto a ser utilizada
