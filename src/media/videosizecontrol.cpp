@@ -17,77 +17,59 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_VIDEOTRANSFORMATIONCONTROL_H
-#define LWUIT_VIDEOTRANSFORMATIONCONTROL_H
-
-#include "control.h"
+#include "videosizecontrol.h"
 
 namespace jlwuit {
 
-/**
- * \brief
- *
- * \author Jeff Ferr
- */
-class VideoTransformationControl : public Control {
-
-	public:
-		/**
-		 * \brief
-		 *
-		 */
-		VideoTransformationControl();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual ~VideoTransformationControl();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetLocation(int x, int y);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetSize(int width, int height);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetBounds(int x, int y, int width, int height);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetX();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetY();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetWidth();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual int GetHeight();
-
-};
-
+VideoSizeControl::VideoSizeControl():
+	Control("video.size")
+{
+}
+		
+VideoSizeControl::~VideoSizeControl()
+{
 }
 
-#endif 
+void VideoSizeControl::SetSource(lwuit_region_t t)
+{
+	SetSource(t.x, t.y, t.width, t.height);
+}
+
+void VideoSizeControl::SetDestination(lwuit_region_t t)
+{
+	SetDestination(t.x, t.y, t.width, t.height);
+}
+
+void VideoSizeControl::SetSource(int x, int y, int width, int height)
+{
+}
+
+void VideoSizeControl::SetDestination(int x, int y, int width, int height)
+{
+}
+
+lwuit_region_t VideoSizeControl::GetSource()
+{
+	lwuit_region_t t;
+
+	t.x = 0;
+	t.y = 0;
+	t.width = 0;
+	t.height = 0;
+
+	return t;
+}
+
+lwuit_region_t VideoSizeControl::GetDestination()
+{
+	lwuit_region_t t;
+
+	t.x = 0;
+	t.y = 0;
+	t.width = 0;
+	t.height = 0;
+
+	return t;
+}
+
+}

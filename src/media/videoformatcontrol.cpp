@@ -17,96 +17,96 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "videoconfigurationcontrol.h"
+#include "videoformatcontrol.h"
 
 namespace jlwuit {
 
-VideoConfigurationControl::VideoConfigurationControl():
-	Control(LMC_VIDEO_CONFIGURATION)
+VideoFormatControl::VideoFormatControl():
+	Control("video.format")
 {
 }
 		
-VideoConfigurationControl::~VideoConfigurationControl()
+VideoFormatControl::~VideoFormatControl()
 {
 }
 
-void VideoConfigurationControl::SetAspectRatio(lwuit_aspect_ratio_t t)
+void VideoFormatControl::SetAspectRatio(lwuit_aspect_ratio_t t)
 {
 }
 
-void VideoConfigurationControl::SetContentMode(lwuit_video_mode_t t)
+void VideoFormatControl::SetContentMode(lwuit_video_mode_t t)
 {
 }
 
-void VideoConfigurationControl::SetVideoFormatHD(lwuit_hd_video_format_t vf)
+void VideoFormatControl::SetVideoFormatHD(lwuit_hd_video_format_t vf)
 {
 }
 
-void VideoConfigurationControl::SetVideoFormatSD(lwuit_sd_video_format_t vf)
+void VideoFormatControl::SetVideoFormatSD(lwuit_sd_video_format_t vf)
 {
 }
 
-void VideoConfigurationControl::SetContrast(int value)
+void VideoFormatControl::SetContrast(int value)
 {
 }
 
-void VideoConfigurationControl::SetSaturation(int value)
+void VideoFormatControl::SetSaturation(int value)
 {
 }
 
-void VideoConfigurationControl::SetHUE(int value)
+void VideoFormatControl::SetHUE(int value)
 {
 }
 
-void VideoConfigurationControl::SetBrightness(int value)
+void VideoFormatControl::SetBrightness(int value)
 {
 }
 
-void VideoConfigurationControl::SetSharpness(int value)
+void VideoFormatControl::SetSharpness(int value)
 {
 }
 
-lwuit_aspect_ratio_t VideoConfigurationControl::GetAspectRatio()
+lwuit_aspect_ratio_t VideoFormatControl::GetAspectRatio()
 {
 	return LAR_16x9;
 }
 
-lwuit_video_mode_t VideoConfigurationControl::GetContentMode()
+lwuit_video_mode_t VideoFormatControl::GetContentMode()
 {
 	return LVM_FULL;
 }
 
-lwuit_hd_video_format_t VideoConfigurationControl::GetVideoFormatHD()
+lwuit_hd_video_format_t VideoFormatControl::GetVideoFormatHD()
 {
 	return LHVF_1080i;
 }
 
-lwuit_sd_video_format_t VideoConfigurationControl::GetVideoFormatSD()
+lwuit_sd_video_format_t VideoFormatControl::GetVideoFormatSD()
 {
 	return LSVF_PAL_M;
 }
 
-int VideoConfigurationControl::GetContrast()
+int VideoFormatControl::GetContrast()
 {
 	return 0;
 }
 
-int VideoConfigurationControl::GetSaturation()
+int VideoFormatControl::GetSaturation()
 {
 	return 0;
 }
 
-int VideoConfigurationControl::GetHUE()
+int VideoFormatControl::GetHUE()
 {
 	return 0;
 }
 
-int VideoConfigurationControl::GetBrightness()
+int VideoFormatControl::GetBrightness()
 {
 	return 0;
 }
 
-int VideoConfigurationControl::GetSharpness()
+int VideoFormatControl::GetSharpness()
 {
 	return 0;
 }
