@@ -46,6 +46,7 @@ Scene::Scene(int x, int y, int w, int h):
 	Component(x, y, w, h)
 {
 	_activity = NULL;
+	_component = NULL;
 
 	SetAnimationDelay(1000);
 	SetVisible(false);
@@ -55,11 +56,11 @@ Scene::Scene(int x, int y, int w, int h):
 
 Scene::~Scene()
 {
+	jthread::AutoLock lock(&_container_mutex); 																														\
+
 	Implementation::GetInstance()->UnregisterScene(this);
 	
 	jthread::TimerTask::Cancel();
-
-	jthread::AutoLock lock(&_container_mutex); 																														\
 
 	if (_activity != NULL) {
 		delete _activity;
@@ -235,16 +236,15 @@ bool Scene::OnMouseClick(UserEvent *event)
 	return false;
 }
 
-Component *_component = NULL;
 bool Scene::OnMouseMove(UserEvent *event)
 {
+	jthread::AutoLock lock(&_container_mutex); 																														\
+
 	if (_activity != NULL) {
 		if (_activity->OnMouseMove(event) == true) {
 			return true;
 		}
 	}
-
-	jthread::AutoLock lock(&_container_mutex); 																														\
 
 	Component *cmp = NULL;
 

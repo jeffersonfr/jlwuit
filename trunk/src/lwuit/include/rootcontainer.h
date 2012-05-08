@@ -93,7 +93,13 @@ class RootContainer : public Component {
 		 * \brief
 		 *
 		 */
-		Layer * GetLayer();
+		virtual Layer * GetLayer();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Component * GetTopLevelAncestor();
 
 		/**
 		 * \brief
@@ -118,12 +124,6 @@ class RootContainer : public Component {
 		 *
 		 */
 		virtual void Add(Component *c, std::string align);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Component * GetTopLevelAncestor();
 
 		/**
 		 * \brief
