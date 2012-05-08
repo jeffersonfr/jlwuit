@@ -68,10 +68,19 @@ void VideoLayerImpl::Play()
 	jthread::AutoLock lock(&_mutex);
 
 	if (_provider != NULL) {
+		IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
+		IDirectFBDisplayLayer *layer = NULL;
+		IDirectFBWindow *window = NULL;
+		IDirectFBSurface *surface = NULL;
 		DFBSurfaceDescription sdsc;
 		DFBWindowDescription desc;
 
 		desc.flags = (DFBWindowDescriptionFlags)(DWDESC_POSX | DWDESC_POSY | DWDESC_WIDTH | DWDESC_HEIGHT | DWDESC_STACKING);
+		desc.stacking = DWSC_LOWER;
+		desc.posx = 0;
+		desc.posy = 0;
+		desc.width = jgui::GFXHandler::GetInstance()->GetScreenWidth();
+		desc.height = jgui::GFXHandler::GetInstance()->GetScreenHeight();
 
 		_provider->GetSurfaceDescription(_provider, &sdsc);
 
@@ -80,23 +89,12 @@ void VideoLayerImpl::Play()
 			desc.surface_caps = sdsc.caps;
 		}
 
-		desc.posx   = 0;
-		desc.posy   = 0;
-		desc.width  = jgui::GFXHandler::GetInstance()->GetScreenWidth();
-		desc.height = jgui::GFXHandler::GetInstance()->GetScreenHeight();
-		desc.stacking = DWSC_LOWER;
-
-		IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
-		IDirectFBDisplayLayer *layer;
-		IDirectFBWindow *window;
-
 		directfb->GetDisplayLayer(directfb, DLID_PRIMARY, &layer);
 		layer->CreateWindow(layer, &desc, &window);
+		window->GetSurface(window, &surface);
 		window->SetOpacity(window, 0xff);
-
 		_window->SetNativeWindow(window);
-
-		_provider->PlayTo(_provider, (IDirectFBSurface *)_window->GetGraphics()->GetNativeSurface(), NULL, VideoLayerImpl::Callback, this);
+		_provider->PlayTo(_provider, surface, NULL, VideoLayerImpl::Callback, this);
 	}
 }
 

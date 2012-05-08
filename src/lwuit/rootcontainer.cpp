@@ -123,6 +123,11 @@ Layer * RootContainer::GetLayer()
 	return _layer;
 }
 
+Component * RootContainer::GetTopLevelAncestor()
+{
+	return this;
+}
+
 void RootContainer::Add(Component *c, int index)
 {
 	if (dynamic_cast<Scene *>(c) == NULL) {
@@ -157,12 +162,6 @@ void RootContainer::Add(Component *c, std::string align)
 	}
 
 	Component::Add(c, align);
-}
-
-Component * RootContainer::GetTopLevelAncestor()
-{
-	return Component::GetTopLevelAncestor();
-	return this;
 }
 
 void RootContainer::Paint(Graphics *g)

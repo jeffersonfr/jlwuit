@@ -42,6 +42,8 @@ class Scene : public Component, public jthread::TimerTask {
 		/** \brief */
 		Scene *_activity;
 		/** \brief */
+		Component *_component;
+		/** \brief */
 		jthread::Timer _timer;
 		/** \brief */
 		std::string _state;
