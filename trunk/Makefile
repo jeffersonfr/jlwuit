@@ -112,13 +112,14 @@ SRC_LWUIT	= \
 SRC_MEDIA	= \
 						audioconfigurationcontrol.o\
 						control.o\
+						controlexception.o\
 						mediaexception.o\
 						player.o\
 						playerevent.o\
 						playereventlistener.o\
 						playermanager.o\
-						videoconfigurationcontrol.o\
-						videotransformationcontrol.o\
+						videoformatcontrol.o\
+						videosizecontrol.o\
 						volumecontrol.o\
 
 SRC_IPC		= \

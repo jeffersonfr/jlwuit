@@ -56,9 +56,14 @@ void Implementation::Deinitialize()
 {
 }
 
+RootContainer * Implementation::GetContainer(Layer *layer)
+{
+	return NULL;
+}
+
 EventManager * Implementation::GetEventManager()
 {
-	return _instance->GetEventManager();
+	return NULL;
 }
 
 Font * Implementation::CreateFont(std::string name, lwuit_font_attributes_t attributes, int height)

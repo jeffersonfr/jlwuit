@@ -19,15 +19,57 @@
  ***************************************************************************/
 #include "isdtvplayer.h"
 #include "device.h"
+#include "controlexception.h"
+#include "videosizecontrol.h"
 #include "videolayerimpl.h"
 
 namespace jlwuit {
 
 VideoLayerImpl *impl = NULL;
 
+class ISDTVSizeControl : public VideoSizeControl {
+	
+	private:
+		LayerSetup *_setup;
+
+	public:
+		ISDTVSizeControl(LayerSetup *setup):
+			VideoSizeControl()
+		{
+			_setup = setup;
+		}
+
+		virtual ~ISDTVSizeControl()
+		{
+		}
+
+		virtual void SetSource(int x, int y, int w, int h)
+		{
+			throw ControlException("Main player cannot set source bounds");
+		}
+
+		virtual void SetDestination(int x, int y, int w, int h)
+		{
+			_setup->SetBounds(x, y, w, h);
+		}
+
+		virtual lwuit_region_t GetSource()
+		{
+			return GetDestination();
+		}
+
+		virtual lwuit_region_t GetDestination()
+		{
+			return _setup->GetBounds();
+		}
+
+};
+
 ISDTVPlayer::ISDTVPlayer()
 {
 	impl = (VideoLayerImpl *)jlwuit::Device::GetDefaultScreen()->GetLayerByID("video");
+
+	_controls.push_back(new ISDTVSizeControl(impl->GetLayerSetup()));
 }
 
 ISDTVPlayer::~ISDTVPlayer()
@@ -88,16 +130,6 @@ void ISDTVPlayer::SetDecodeRate(double rate)
 double ISDTVPlayer::GetDecodeRate()
 {
 	return impl->GetDecodeRate();
-}
-
-Control * ISDTVPlayer::GetControl(lwuit_media_control_t type)
-{
-	return NULL;
-}
-
-Component * ISDTVPlayer::GetVisualComponent()
-{
-	return NULL;
 }
 
 }

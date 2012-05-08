@@ -110,7 +110,7 @@ class Component : public UserEventListener, public Animation {
 		 * \Constructor.
 		 *
 		 */
-		Component(int x = 0, int y = 0, int width = 0, int height = 0);
+		Component(int x = 0, int y = 0, int w = 0, int h = 0);
 
 		/**
 		 * \brief Destructor.
@@ -176,7 +176,7 @@ class Component : public UserEventListener, public Animation {
 		 * \brief
 		 *
 		 */
-		virtual int GetBaseline(int width, int height);
+		virtual int GetBaseline(int w, int h);
 
 		/**
 		 * \brief
@@ -338,7 +338,7 @@ class Component : public UserEventListener, public Animation {
 		 * \brief
 		 *
 		 */
-		virtual void SetBounds(int x, int y, int width, int height);
+		virtual void SetBounds(int x, int y, int w, int h);
 
 		/**
 		 * \brief
@@ -368,7 +368,7 @@ class Component : public UserEventListener, public Animation {
 		 * \brief
 		 *
 		 */
-		virtual void SetSize(int width, int height);
+		virtual void SetSize(int w, int h);
 
 		/**
 		 * \brief

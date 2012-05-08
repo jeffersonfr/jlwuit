@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "player.h"
+#include <stdio.h>
 
 namespace jlwuit {
 
@@ -27,6 +28,13 @@ Player::Player()
 
 Player::~Player()
 {
+	while (_controls.size() > 0) {
+		Control *control = (*_controls.begin());
+
+		_controls.erase(_controls.begin());
+
+		delete control;
+	}
 }
 
 void Player::Play()
@@ -81,20 +89,21 @@ void Player::SetDecodeRate(double rate)
 {
 }
 
-std::vector<Control *> Player::GetControls()
+std::vector<Control *> & Player::GetControls()
 {
-	std::vector<Control *> controls;
-
-	return controls;
+	return _controls;
 }
 
-Control * Player::GetControl(lwuit_media_control_t type)
+Control * Player::GetControl(std::string id)
 {
-	return NULL;
-}
+	for (std::vector<Control *>::iterator i=_controls.begin(); i!=_controls.end(); i++) {
+		Control *control = (*i);
 
-Component * Player::GetVisualComponent()
-{
+		if (control->GetID() == id) {
+			return control;
+		}
+	}
+
 	return NULL;
 }
 

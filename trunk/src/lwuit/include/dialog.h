@@ -20,7 +20,7 @@
 #ifndef LWUIT_DIALOG_H
 #define LWUIT_DIALOG_H
 
-#include "scene.h"
+#include "rootcontainer.h"
 #include "jtimer.h"
 
 #include <string>
@@ -36,7 +36,7 @@ class Dialog : public Component, public jthread::TimerTask {
 
 	private:
 		/** \brief */
-		Scene *_scene;
+		RootContainer *_root;
 		/** \brief */
 		jthread::Timer _timer;
 		/** \brief */
@@ -47,7 +47,7 @@ class Dialog : public Component, public jthread::TimerTask {
 		 * \brief
 		 *
 		 */
-		Dialog(Scene *scene);
+		Dialog(Component *cmp);
 
 		/**
 		 * \brief

@@ -22,7 +22,7 @@
 namespace jlwuit {
 
 AudioConfigurationControl::AudioConfigurationControl():
-	Control(LMC_AUDIO_CONFIGURATION)
+	Control("audio.configuration")
 {
 }
 		

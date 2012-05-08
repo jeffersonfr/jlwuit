@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "toast.h"
 #include "device.h"
+#include "style.h"
+#include "lookandfeel.h"
 #include "jstringtokenizer.h"
 
 #include <map>
@@ -30,10 +32,10 @@
 
 namespace jlwuit {
 	
-std::map<Scene *, std::vector<Toast *> > toasts;
+std::map<Component *, std::vector<Toast *> > toasts;
 
-Toast::Toast(Scene *scene):
-	Dialog(scene)
+Toast::Toast(Component *cmp):
+	Dialog(cmp)
 {
 	SetTimeout(TOAST_TIMEOUT);
 
@@ -82,9 +84,9 @@ void Toast::InitRowString(std::vector<std::string> *lines, std::string text, int
 	}
 }
 
-void Toast::ReleaseScene(Scene *scene)
+void Toast::Release(Component *cmp)
 {
-	std::map<Scene *, std::vector<Toast *> >::iterator i =  toasts.find(scene);
+	std::map<Component *, std::vector<Toast *> >::iterator i =  toasts.find(cmp);
 
 	if (i != toasts.end()) {
 		for (std::vector<Toast *>::iterator j=i->second.begin(); j!=i->second.end(); j++) {
@@ -97,11 +99,11 @@ void Toast::ReleaseScene(Scene *scene)
 	}
 }
 
-Toast * Toast::Create(Scene *scene)
+Toast * Toast::Create(Component *cmp)
 {
-	Toast *toast = new Toast(scene);
+	Toast *toast = new Toast(cmp);
 
-	toasts[scene].push_back(toast);
+	toasts[cmp].push_back(toast);
 
 	return toast;
 }

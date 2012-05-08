@@ -59,7 +59,7 @@ class LayerImpl : public Layer {
 		 * \brief
 		 *
 		 */
-		RootContainer * GetRootContainer();
+		RootContainer * GetContainer();
 
 		/**
 		 * \brief

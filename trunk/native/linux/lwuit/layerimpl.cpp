@@ -52,7 +52,7 @@ void LayerImpl::Initialize()
 {
 }
 
-RootContainer * LayerImpl::GetRootContainer()
+RootContainer * LayerImpl::GetContainer()
 {
 	return _root_container;
 }

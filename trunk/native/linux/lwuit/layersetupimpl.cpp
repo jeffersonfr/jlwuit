@@ -23,7 +23,8 @@
 
 namespace jlwuit {
 
-LayerSetupImpl::LayerSetupImpl(jgui::Window *window)
+LayerSetupImpl::LayerSetupImpl(jgui::Window *window):
+	LayerSetup()
 {
 	_window = window;
 }

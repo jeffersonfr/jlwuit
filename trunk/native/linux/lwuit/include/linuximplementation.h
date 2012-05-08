@@ -74,6 +74,12 @@ class LinuxImplementation : public jlwuit::Implementation {
 		 * \brief
 		 *
 		 */
+		virtual RootContainer * GetContainer(Layer *layer);
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual EventManager * GetEventManager();
 
 		/**

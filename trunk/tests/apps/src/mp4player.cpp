@@ -22,7 +22,7 @@
 #include "playermanager.h"
 #include "usbmanager.h"
 #include "device.h"
-
+#include "videosizecontrol.h"
 #include "jfile.h"
 #include "jioexception.h"
 
@@ -35,6 +35,8 @@
 #define TEXT_SPAN			(TEXT_SIZE+GAPY)
 
 #define SCREEN_SAVER_TIMEOUT	60
+
+#define NUM_ITEMS			5
 
 namespace jlwuit {
 
@@ -54,7 +56,16 @@ MP4Player::MP4Player():
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 
 	if (player != NULL) {
+		VideoSizeControl *control = (VideoSizeControl *)player->GetControl("video.size");
+		
 		player->Stop();
+
+		if (control != NULL) {
+			int w = (GetWidth()-3*GAPX)/2,
+					h = (NUM_ITEMS+1)*TEXT_SPAN+GAPY;
+
+			control->SetDestination(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
+		}
 	}
 	
 	jlwuit::LookAndFeel::LoadImage("rewind", "images/rewind.png");
@@ -78,11 +89,15 @@ MP4Player::~MP4Player()
 	delete _player;
 	_player = NULL;
 	
-	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->GetLayerSetup()->SetBounds(0, 0, 1920, 1080);
-
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 
 	if (player != NULL) {
+		VideoSizeControl *control = (VideoSizeControl *)player->GetControl("video.size");
+
+		if (control != NULL) {
+			control->SetDestination(0, 0, 1920, 1080);
+		}
+		
 		player->Play();
 	}
 
@@ -307,9 +322,8 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 
 	int sw = bounds.width-2*GAPX,
 			sh = bounds.height-2*GAPY;
-	int num_items = 5,
-			w = (sw-GAPX)/2,
-			h = (num_items+1)*TEXT_SPAN+GAPY;
+	int w = (sw-GAPX)/2,
+			h = (NUM_ITEMS+1)*TEXT_SPAN+GAPY;
 	int boxw = (w-2*GAPX)/4;
 
 	laf->DrawBox(g, NULL, 0, 0, bounds.width, bounds.height);
@@ -328,20 +342,17 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 	// draw items
 	int dindex = 0;
 
-	if (_index > num_items) {
-		dindex = _index-num_items;
+	if (_index > NUM_ITEMS) {
+		dindex = _index-NUM_ITEMS;
 	}
 
-	for (int i=0; i<num_items; i++) {
+	for (int i=0; i<NUM_ITEMS; i++) {
 		laf->DrawBorder(g, NULL, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 	}
 
-	for (int i=dindex; i<num_items && i<(int)_videos.size(); i++) {
+	for (int i=dindex; i<NUM_ITEMS && i<(int)_videos.size(); i++) {
 		laf->DrawText(g, NULL, "medium", _videos[i+dindex], 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 	}
-
-	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->
-		GetLayerSetup()->SetBounds(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
 
 	laf->DrawBox(g, NULL, 1*(w+GAPX)+GAPX, 1*TEXT_SPAN+GAPY, w, h);
 	g->Clear(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
