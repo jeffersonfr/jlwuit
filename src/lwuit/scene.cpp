@@ -21,9 +21,6 @@
 #include "device.h"
 #include "eventmanager.h"
 #include "implementation.h"
-#include "dialog.h"
-
-#include <algorithm>
 
 #define DISPATCH_KEY_EVENT(method) 			\
 	Component *focus = GetFocusOwner();		\
@@ -45,8 +42,8 @@
 
 namespace jlwuit {
 
-Scene::Scene(int x, int y, int width, int height):
-	Component(x, y, width, height)
+Scene::Scene(int x, int y, int w, int h):
+	Component(x, y, w, h)
 {
 	_activity = NULL;
 
@@ -64,8 +61,6 @@ Scene::~Scene()
 
 	jthread::AutoLock lock(&_container_mutex); 																														\
 
-	_dialogs.clear();
-	
 	if (_activity != NULL) {
 		delete _activity;
 		_activity = NULL;
@@ -100,85 +95,6 @@ void Scene::StartActivity(Scene *scene)
 
 void Scene::SendToLayer(std::string layer)
 {
-}
-
-void Scene::RegisterDialog(Dialog *dialog)
-{
-	if (dialog == NULL) {
-		return;
-	}
-
-	jthread::AutoLock lock(&_dialogs_mutex);
-
-	std::vector<Dialog *>::iterator i = std::find(_dialogs.begin(), _dialogs.end(), dialog);
-
-	if (i == _dialogs.end()) {
-		_dialogs.push_back(dialog);
-	}
-}
-
-void Scene::UnregisterDialog(Dialog *dialog)
-{
-	if (dialog == NULL) {
-		return;
-	}
-
-	jthread::AutoLock lock(&_dialogs_mutex);
-
-	std::vector<Dialog *>::iterator i = std::find(_dialogs.begin(), _dialogs.end(), dialog);
-
-	if (i != _dialogs.end()) {
-		_dialogs.erase(i);
-	}
-}
-
-void Scene::PaintDialogs(Graphics *g)
-{
-	jthread::AutoLock lock(&_dialogs_mutex);
-
-	struct lwuit_region_t clip = g->GetClip();
-
-	for (std::vector<Dialog *>::iterator i=_dialogs.begin(); i!=_dialogs.end(); i++) {
-		Dialog *c = (*i);
-
-		if (c->IsVisible() == true) {
-			int cx = c->GetX(),
-					cy = c->GetY(),
-					cw = c->GetWidth(),
-					ch = c->GetHeight();
-
-			if (cx > clip.width) {
-				cx = clip.width;
-			}
-
-			if (cy > clip.height) {
-				cy = clip.height;
-			}
-
-			if (cw > (clip.width-cx)) {
-				cw = clip.width-cx;
-			}
-
-			if (ch > (clip.height-cy)) {
-				ch = clip.height-cy;
-			}
-
-			if (cw > 0 && ch > 0) {
-				g->Translate(cx, cy);
-				g->SetClip(0, 0, cw-1, ch-1);
-				c->Paint(g);
-				g->ReleaseClip();
-				g->Translate(-cx, -cy);
-			}
-		}
-	}
-}
-
-void Scene::Paint(Graphics *g)
-{
-	Component::Paint(g);
-
-	PaintDialogs(g);
 }
 
 void Scene::SetAnimationDelay(int ms)

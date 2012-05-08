@@ -29,6 +29,7 @@ namespace jlwuit {
 
 class Scene;
 class Layer;
+class Dialog;
 
 /**
  * \brief
@@ -37,7 +38,35 @@ class Layer;
  */
 class RootContainer : public Component {
 
+	friend class Dialog;
+
+	private:
+		/** \brief */
+		std::vector<Dialog *> _dialogs;
+		/** \brief */
+		jthread::Mutex _dialogs_mutex;
+
+	private:
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void RegisterDialog(Dialog *dialog);
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void UnregisterDialog(Dialog *dialog);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void PaintDialogs(Graphics *g);
+
 	protected:
+		/** \brief */
 		Layer *_layer;
 
 	protected:
@@ -45,7 +74,7 @@ class RootContainer : public Component {
 		 * \brief
 		 *
 		 */
-		RootContainer(Layer *layer, int x, int y, int width, int height);
+		RootContainer(Layer *layer, int x, int y, int w, int h);
 
 	public:
 		/**
@@ -53,6 +82,12 @@ class RootContainer : public Component {
 		 *
 		 */
 		virtual ~RootContainer();
+
+		/**
+		 * \brief
+		 *
+		 */
+		static RootContainer * GetContainer(Layer *layer);
 
 		/**
 		 * \brief
@@ -83,6 +118,18 @@ class RootContainer : public Component {
 		 *
 		 */
 		virtual void Add(Component *c, std::string align);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Component * GetTopLevelAncestor();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Paint(Graphics *g);
 
 };
 

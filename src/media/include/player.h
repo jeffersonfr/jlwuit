@@ -36,6 +36,10 @@ namespace jlwuit {
 class Player {
 
 	protected:
+		/** \brief */
+		std::vector<Control *> _controls;
+
+	protected:
 		/**
 		 * \brief
 		 *
@@ -132,21 +136,14 @@ class Player {
 		 *
 		 * \return controls
 		 */
-		virtual std::vector<Control *> GetControls();
+		virtual std::vector<Control *> & GetControls();
 
 		/**
 		 * \brief Return a specific control related with the type.
 		 *
 		 * \return
 		 */
-		virtual Control * GetControl(lwuit_media_control_t type);
-
-		/**
-		 * \brief If exists, return a visual component associated with this player.
-		 *
-		 * \return
-		 */
-		virtual Component * GetVisualComponent();
+		virtual Control * GetControl(std::string id);
 
 		/**
 		 * \brief Registry a listener.

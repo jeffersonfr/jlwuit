@@ -29,8 +29,6 @@
 
 namespace jlwuit {
 
-class Dialog;
-
 /**
  * \brief
  *
@@ -38,13 +36,7 @@ class Dialog;
  */
 class Scene : public Component, public jthread::TimerTask {
 
-	friend class Dialog;
-
 	private:
-		/** \brief */
-		std::vector<Dialog *> _dialogs;
-		/** \brief */
-		jthread::Mutex _dialogs_mutex;
 		/** \brief */
 		jthread::Mutex _input_mutex;
 		/** \brief */
@@ -59,24 +51,6 @@ class Scene : public Component, public jthread::TimerTask {
 		 * \brief
 		 *
 		 */
-		virtual void RegisterDialog(Dialog *dialog);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void UnregisterDialog(Dialog *dialog);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void PaintDialogs(Graphics *g);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual void Run();
 
 	public:
@@ -84,7 +58,7 @@ class Scene : public Component, public jthread::TimerTask {
 		 * \brief
 		 *
 		 */
-		Scene(int x, int y, int width, int height);
+		Scene(int x, int y, int w, int h);
 
 		/**
 		 * \brief
@@ -193,12 +167,6 @@ class Scene : public Component, public jthread::TimerTask {
 		 *
 		 */
 		virtual bool OnMouseWheel(UserEvent *event);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Paint(Graphics *g);
 
 };
 

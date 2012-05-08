@@ -26,6 +26,10 @@ namespace jlwuit {
 
 class ISDTVPlayer : public jlwuit::Player {
 
+	private:
+		/** \brief */
+		Control *_video_size;
+
 	public:
 		/**
 		 * \brief
@@ -103,12 +107,6 @@ class ISDTVPlayer : public jlwuit::Player {
 		 * \brief
 		 *
 		 */
-		virtual Control * GetControl(lwuit_media_control_t type);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual double GetDecodeRate();
 
 		/**
@@ -116,12 +114,6 @@ class ISDTVPlayer : public jlwuit::Player {
 		 *
 		 */
 		virtual void SetDecodeRate(double rate);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Component * GetVisualComponent();
 
 };
 

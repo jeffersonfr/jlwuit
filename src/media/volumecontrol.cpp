@@ -22,7 +22,7 @@
 namespace jlwuit {
 
 VolumeControl::VolumeControl():
-	Control(LMC_VOLUME)
+	Control("audio.volume")
 {
 }
 

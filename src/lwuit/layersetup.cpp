@@ -57,7 +57,7 @@ void LayerSetup::SetLocation(struct lwuit_point_t point)
 {
 }
 
-void LayerSetup::SetSize(int width, int height)
+void LayerSetup::SetSize(int w, int h)
 {
 }
 

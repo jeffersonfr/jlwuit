@@ -28,8 +28,6 @@
 
 namespace jlwuit {
 
-class Scene;
-
 /**
  * \brief
  *
@@ -48,7 +46,6 @@ class Toast : public Dialog {
 		lwuit_gravity_t _gravity;
 
 	private:
-		
 		/**
 		 * \brief
 		 *
@@ -59,14 +56,14 @@ class Toast : public Dialog {
 		 * \brief
 		 *
 		 */
-		static void ReleaseScene(Scene *scene);
+		static void Release(Component *cmp);
 
 	protected:
 		/**
 		 * \brief
 		 *
 		 */
-		Toast(Scene *scene);
+		Toast(Component *cmp);
 
 	public:
 		/**
@@ -79,7 +76,7 @@ class Toast : public Dialog {
 		 * \brief
 		 *
 		 */
-		static Toast * Create(Scene *scene);
+		static Toast * Create(Component *cmp = NULL);
 
 		/**
 		 * \brief

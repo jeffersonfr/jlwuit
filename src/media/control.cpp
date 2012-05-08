@@ -21,18 +21,18 @@
 
 namespace jlwuit {
 
-Control::Control(lwuit_media_control_t type)
+Control::Control(std::string id)
 {
-	_type = type;
+	_id = id;
 }
 
 Control::~Control()
 {
 }
 
-lwuit_media_control_t Control::GetType()
+std::string Control::GetID()
 {
-	return _type;
+	return _id;
 }
 
 }

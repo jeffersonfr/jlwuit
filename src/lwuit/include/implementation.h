@@ -27,6 +27,8 @@
 namespace jlwuit {
 
 class EventManager;
+class RootContainer;
+class Layer;
 class Image;
 class Scene;
 class Font;
@@ -73,6 +75,12 @@ class Implementation {
 		 *
 		 */
 		virtual void Deinitialize();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual RootContainer * GetContainer(Layer *layer);
 
 		/**
 		 * \brief

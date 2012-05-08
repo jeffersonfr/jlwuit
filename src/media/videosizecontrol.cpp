@@ -40,11 +40,11 @@ void VideoSizeControl::SetDestination(lwuit_region_t t)
 	SetDestination(t.x, t.y, t.width, t.height);
 }
 
-void VideoSizeControl::SetSource(int x, int y, int width, int height)
+void VideoSizeControl::SetSource(int x, int y, int w, int h)
 {
 }
 
-void VideoSizeControl::SetDestination(int x, int y, int width, int height)
+void VideoSizeControl::SetDestination(int x, int y, int w, int h)
 {
 }
 

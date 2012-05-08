@@ -84,6 +84,15 @@ void LinuxImplementation::Deinitialize()
 	_is_initialized = false;
 }
 
+RootContainer * LinuxImplementation::GetContainer(Layer *layer)
+{
+	if (layer != NULL) {
+		return dynamic_cast<LayerImpl *>(layer)->GetContainer();
+	}
+
+	return NULL;
+}
+
 EventManager * LinuxImplementation::GetEventManager()
 {
 	return _eventmanager;
@@ -232,21 +241,23 @@ Image * LinuxImplementation::CreateImage(Image *image)
 
 void LinuxImplementation::RegisterScene(Scene *scene)
 {
-	Layer *layer = Device::GetDefaultScreen()->GetLayerByID("graphics");
+	RootContainer *container = GetContainer(Device::GetDefaultScreen()->GetLayerByID("graphics"));
+	EventManager *eventmanager = GetEventManager();
 
-	if (layer != NULL) {
-		dynamic_cast<LayerImpl *>(layer)->GetRootContainer()->Add(scene);
-		GetEventManager()->RegisterUserEventListener(scene);
+	if (container != NULL) {
+		container->Add(scene);
+		eventmanager->RegisterUserEventListener(scene);
 	}
 }
 
 void LinuxImplementation::UnregisterScene(Scene *scene)
 {
-	Layer *layer = Device::GetDefaultScreen()->GetLayerByID("graphics");
+	RootContainer *container = GetContainer(Device::GetDefaultScreen()->GetLayerByID("graphics"));
+	EventManager *eventmanager = GetEventManager();
 
-	if (layer != NULL) {
-		GetEventManager()->RemoveUserEventListener(scene);
-		dynamic_cast<LayerImpl *>(layer)->GetRootContainer()->Remove(scene);
+	if (container != NULL) {
+		eventmanager->RemoveUserEventListener(scene);
+		container->Remove(scene);
 	}
 }
 

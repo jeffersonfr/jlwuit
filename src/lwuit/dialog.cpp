@@ -19,25 +19,26 @@
  ***************************************************************************/
 #include "dialog.h"
 #include "implementation.h"
+#include "device.h"
 #include "exception.h"
 
 namespace jlwuit {
 	
-Dialog::Dialog(Scene *scene)
+Dialog::Dialog(Component *cmp)
 {
-	if (scene == NULL) {
-		throw Exception("Dialog cannot refer a null scene");
+	if (cmp == NULL || dynamic_cast<RootContainer *>(cmp->GetTopLevelAncestor()) == NULL) {
+		cmp = RootContainer::GetContainer(Device::GetDefaultScreen()->GetLayerByID("graphics"));
 	}
 
-	_scene = scene;
+	_root = dynamic_cast<RootContainer *>(cmp->GetTopLevelAncestor());
 	_timeout = -1;
 	
-	_scene->RegisterDialog(this);
+	_root->RegisterDialog(this);
 }
 
 Dialog::~Dialog()
 {
-	_scene->UnregisterDialog(this);
+	_root->UnregisterDialog(this);
 	
 	jthread::TimerTask::Cancel();
 }
@@ -51,7 +52,7 @@ void Dialog::Show()
 {
 	SetVisible(true);
 	
-	_scene->Repaint();
+	_root->Repaint();
 	
 	_timer.RemoveSchedule(this);
 
@@ -66,7 +67,7 @@ void Dialog::Hide()
 
 	SetVisible(false);
 	
-	_scene->Repaint();
+	_root->Repaint();
 }
 
 void Dialog::Run() 

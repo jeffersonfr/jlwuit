@@ -92,7 +92,7 @@ class LayerSetup {
 		 * \brief
 		 *
 		 */
-		virtual void SetSize(int width, int height);
+		virtual void SetSize(int w, int h);
 
 		/**
 		 * \brief

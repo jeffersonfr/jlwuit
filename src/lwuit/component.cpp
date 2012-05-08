@@ -30,7 +30,7 @@
 
 namespace jlwuit {
 
-Component::Component(int x, int y, int width, int height)
+Component::Component(int x, int y, int w, int h)
 {
 	SetUIID("Component");
 
@@ -50,8 +50,8 @@ Component::Component(int x, int y, int width, int height)
 
 	_location.x = x;
 	_location.y = y;
-	_size.width = width;
-	_size.height = height;
+	_size.width = w;
+	_size.height = h;
 
 	_orientation = LCO_LEFT_TO_RIGHT;
 	
@@ -138,7 +138,7 @@ void Component::SetStyle(Style *style)
 	_style->Copy(style);
 }
 
-int Component::GetBaseline(int width, int height)
+int Component::GetBaseline(int w, int h)
 {
 	return -1;
 }

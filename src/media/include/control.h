@@ -22,18 +22,9 @@
 
 #include "control.h"
 
-namespace jlwuit {
+#include <string>
 
-/**
- * \brief
- *
- */
-enum lwuit_media_control_t {
-	LMC_VOLUME,
-	LMC_AUDIO_CONFIGURATION,
-	LMC_VIDEO_CONFIGURATION,
-	LMC_VIDEO_TRANSFORMATION
-};
+namespace jlwuit {
 
 /**
  * \brief
@@ -43,14 +34,15 @@ enum lwuit_media_control_t {
 class Control {
 	
 	private:
-		lwuit_media_control_t _type;
+		/** \brief */
+		std::string _id;
 
 	protected:
 		/**
 		 * \brief
 		 *
 		 */
-		Control(lwuit_media_control_t type);
+		Control(std::string id);
 
 	public:
 
@@ -64,7 +56,7 @@ class Control {
 		 * \brief
 		 *
 		 */
-		lwuit_media_control_t GetType();
+		std::string GetID();
 
 };
 
