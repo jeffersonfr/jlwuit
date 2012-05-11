@@ -75,19 +75,21 @@ MP4Player::MP4Player():
 	jlwuit::LookAndFeel::LoadImage("forward", "images/forward.png");
 	jlwuit::LookAndFeel::LoadImage("logo", "images/mp4-logo.png");
 
-	jlwuit::USBManager::GetInstance()->AddUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
 }
 
 MP4Player::~MP4Player()
 {
-	jlwuit::USBManager::GetInstance()->Stop();
 	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->Stop();
 
 	Hide();
 
-	delete _player;
-	_player = NULL;
+	if (_player != NULL) {
+		delete _player;
+		_player = NULL;
+	}
 	
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 

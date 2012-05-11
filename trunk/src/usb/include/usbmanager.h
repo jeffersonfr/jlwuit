@@ -72,7 +72,7 @@ class USBManager : public jthread::Thread {
 		 * \brief
 		 *
 		 */
-		void AddUSBStatusListener(USBStatusListener *listener);
+		void RegisterUSBStatusListener(USBStatusListener *listener);
 		
 		/**
 		 * \brief

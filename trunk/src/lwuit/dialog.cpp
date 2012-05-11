@@ -34,6 +34,8 @@ Dialog::Dialog(Component *cmp)
 	_timeout = -1;
 	
 	_root->RegisterDialog(this);
+
+	_timer.Start();
 }
 
 Dialog::~Dialog()
@@ -41,6 +43,8 @@ Dialog::~Dialog()
 	_root->UnregisterDialog(this);
 	
 	jthread::TimerTask::Cancel();
+	_timer.RemoveSchedule(this);
+	_timer.Stop();
 }
 
 void Dialog::SetTimeout(int ms)
@@ -63,8 +67,6 @@ void Dialog::Show()
 
 void Dialog::Hide()
 {
-	_timer.RemoveSchedule(this);
-
 	SetVisible(false);
 	
 	_root->Repaint();

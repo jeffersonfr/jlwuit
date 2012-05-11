@@ -36,7 +36,8 @@ namespace jlwuit {
 
 USBManager *USBManager::_instance = NULL;
 
-USBManager::USBManager() : jthread::Thread()
+USBManager::USBManager(): 
+	jthread::Thread()
 {
 	_mounted = false;
 	_running = false;
@@ -58,7 +59,7 @@ USBManager * USBManager::GetInstance()
 	return _instance;
 }
 
-void USBManager::AddUSBStatusListener(USBStatusListener *listener)
+void USBManager::RegisterUSBStatusListener(USBStatusListener *listener)
 {
 	if (listener == NULL) {
 		return;
@@ -66,7 +67,11 @@ void USBManager::AddUSBStatusListener(USBStatusListener *listener)
 
 	jthread::AutoLock lock(&_mutex);
 
-	_status_listeners.push_back(listener);
+	std::vector<USBStatusListener *>::iterator i = std::find(_status_listeners.begin(), _status_listeners.end(), listener);
+
+	if (i == _status_listeners.end()) {
+		_status_listeners.push_back(listener);
+	}
 }
 
 void USBManager::RemoveUSBStatusListener(USBStatusListener *listener)
@@ -131,11 +136,13 @@ void USBManager::Run()
 		_mounted = false;
 
 		do {
-			if (_running == false) {
-				goto _run_exit;
+			for (int i=0; i<10; i++) {
+				if (_running == false) {
+					goto _run_exit;
+				}
+
+				usleep(200000);
 			}
-			
-			sleep(2);
 		} while (system(MOUNT_COMMAND) != 0);
 			
 		DispatchUSBStatusEvent(new USBStatusEvent(LET_ENTRY_USB, USB_MOUNT_POINT));
@@ -143,11 +150,13 @@ void USBManager::Run()
 		_mounted = true;
 		
 		do {
-			if (_running == false) {
-				goto _run_exit;
+			for (int i=0; i<10; i++) {
+				if (_running == false) {
+					goto _run_exit;
+				}
+
+				usleep(200000);
 			}
-			
-			sleep(2);
 		} while (system(MOUNTED_COMMAND) != 0);
 	} while(_running == true);
 	

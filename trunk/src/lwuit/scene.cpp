@@ -22,6 +22,8 @@
 #include "eventmanager.h"
 #include "implementation.h"
 
+#include <stdio.h>
+
 #define DISPATCH_KEY_EVENT(method) 			\
 	Component *focus = GetFocusOwner();		\
 																				\
@@ -42,6 +44,8 @@
 
 namespace jlwuit {
 
+jthread::Mutex _mutex;
+
 Scene::Scene(int x, int y, int w, int h):
 	Component(x, y, w, h)
 {
@@ -56,11 +60,7 @@ Scene::Scene(int x, int y, int w, int h):
 
 Scene::~Scene()
 {
-	jthread::AutoLock lock(&_container_mutex); 																														\
-
-	Implementation::GetInstance()->UnregisterScene(this);
-	
-	jthread::TimerTask::Cancel();
+	jthread::AutoLock lock(&_mutex); 																														\
 
 	if (_activity != NULL) {
 		delete _activity;
@@ -68,8 +68,28 @@ Scene::~Scene()
 	}
 }
 
+void Scene::InitImpl()
+{
+	Implementation::GetInstance()->GetEventManager()->RegisterUserEventListener(this);
+		
+	_timer.Schedule(this, (uint64_t)0LL, GetAnimationDelay()*1000LL, true);
+	_timer.Start();
+}
+
+void Scene::DeinitImpl()
+{
+	Implementation::GetInstance()->GetEventManager()->RemoveUserEventListener(this);
+	
+	jthread::TimerTask::Cancel();
+	
+	_timer.RemoveSchedule(this);
+	_timer.Stop();
+}
+
 void Scene::Run() 
 {
+	jthread::AutoLock lock(&_mutex); 																														\
+
 	if (Animated() == true) {
 		Repaint();
 	}
@@ -77,11 +97,11 @@ void Scene::Run()
 
 void Scene::StartActivity(Scene *scene)
 {
+	jthread::AutoLock lock(&_mutex); 																														\
+
 	if (scene == NULL) {
 		return;
 	}
-
-	Implementation::GetInstance()->GetEventManager()->RemoveUserEventListener(scene);
 
 	if (_activity != NULL) {
 		delete _activity;
@@ -91,7 +111,7 @@ void Scene::StartActivity(Scene *scene)
 	SetVisible(false);
 
 	_activity = scene;
-	_activity->Show();
+	_activity->SetVisible(true);
 }
 
 void Scene::SendToLayer(std::string layer)
@@ -110,17 +130,14 @@ int Scene::GetAnimationDelay()
 
 void Scene::Show()
 {
-	_timer.Schedule(this, (uint64_t)0LL, GetAnimationDelay()*1000LL, true);
-	
+	jthread::AutoLock lock(&_mutex); 																														\
+
+	InitImpl();
 	SetVisible(true);
 }
 
 void Scene::Hide()
 {
-	jthread::TimerTask::Cancel();
-
-	_timer.RemoveSchedule(this);
-
 	SetVisible(false);
 }
 
@@ -136,10 +153,12 @@ void Scene::SetState(std::string state)
 
 bool Scene::OnKeyDown(UserEvent *event)
 {
+	jthread::AutoLock lock(&_mutex); 																														\
+
 	if (_activity != NULL) {
 		if (event->GetKeySymbol() == LKS_BACK) {
 			_activity->Hide();
-
+			
 			delete _activity;
 			_activity = NULL;
 
@@ -148,9 +167,9 @@ bool Scene::OnKeyDown(UserEvent *event)
 			return true;
 		}
 		
-		if (_activity->OnKeyDown(event) == true) {
-			return true;
-		}
+		_activity->OnKeyDown(event);
+
+		return true;
 	}
 
 	DISPATCH_KEY_EVENT(OnKeyDown);
@@ -161,9 +180,7 @@ bool Scene::OnKeyDown(UserEvent *event)
 bool Scene::OnKeyPress(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnKeyPress(event) == true) {
-			return true;
-		}
+		return _activity->OnKeyPress(event);
 	}
 
 	DISPATCH_KEY_EVENT(OnKeyPress);
@@ -174,9 +191,7 @@ bool Scene::OnKeyPress(UserEvent *event)
 bool Scene::OnKeyUp(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnKeyUp(event) == true) {
-			return true;
-		}
+		return _activity->OnKeyUp(event);
 	}
 
 	DISPATCH_KEY_EVENT(OnKeyUp);
@@ -187,9 +202,7 @@ bool Scene::OnKeyUp(UserEvent *event)
 bool Scene::OnKeyLongPress(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnKeyLongPress(event) == true) {
-			return true;
-		}
+		return _activity->OnKeyLongPress(event);
 	}
 
 	DISPATCH_KEY_EVENT(OnKeyLongPress);
@@ -200,9 +213,7 @@ bool Scene::OnKeyLongPress(UserEvent *event)
 bool Scene::OnMousePress(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnMousePress(event) == true) {
-			return true;
-		}
+		return _activity->OnMousePress(event);
 	}
 	
 	DISPATCH_MOUSE_EVENT(OnMousePress)
@@ -213,9 +224,7 @@ bool Scene::OnMousePress(UserEvent *event)
 bool Scene::OnMouseRelease(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnMouseRelease(event) == true) {
-			return true;
-		}
+		return _activity->OnMouseRelease(event);
 	}
 
 	DISPATCH_MOUSE_EVENT(OnMouseRelease)
@@ -226,9 +235,7 @@ bool Scene::OnMouseRelease(UserEvent *event)
 bool Scene::OnMouseClick(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnMouseClick(event) == true) {
-			return true;
-		}
+		return _activity->OnMouseClick(event);
 	}
 
 	DISPATCH_MOUSE_EVENT(OnMouseClick)
@@ -241,9 +248,7 @@ bool Scene::OnMouseMove(UserEvent *event)
 	jthread::AutoLock lock(&_container_mutex); 																														\
 
 	if (_activity != NULL) {
-		if (_activity->OnMouseMove(event) == true) {
-			return true;
-		}
+		return _activity->OnMouseMove(event);
 	}
 
 	Component *cmp = NULL;
@@ -278,9 +283,7 @@ bool Scene::OnMouseMove(UserEvent *event)
 bool Scene::OnMouseWheel(UserEvent *event)
 {
 	if (_activity != NULL) {
-		if (_activity->OnMouseWheel(event) == true) {
-			return true;
-		}
+		return _activity->OnMouseWheel(event);
 	}
 
 	DISPATCH_MOUSE_EVENT(OnMouseWheel)

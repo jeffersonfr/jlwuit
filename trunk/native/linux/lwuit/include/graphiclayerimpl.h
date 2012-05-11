@@ -22,7 +22,7 @@
 
 #include "component.h"
 #include "layerimpl.h"
-
+#include "jcondition.h"
 #include "jthread.h"
 
 namespace jlwuit {

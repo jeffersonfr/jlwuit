@@ -242,21 +242,18 @@ Image * LinuxImplementation::CreateImage(Image *image)
 void LinuxImplementation::RegisterScene(Scene *scene)
 {
 	RootContainer *container = GetContainer(Device::GetDefaultScreen()->GetLayerByID("graphics"));
-	EventManager *eventmanager = GetEventManager();
 
 	if (container != NULL) {
 		container->Add(scene);
-		eventmanager->RegisterUserEventListener(scene);
 	}
 }
 
 void LinuxImplementation::UnregisterScene(Scene *scene)
 {
 	RootContainer *container = GetContainer(Device::GetDefaultScreen()->GetLayerByID("graphics"));
-	EventManager *eventmanager = GetEventManager();
 
 	if (container != NULL) {
-		eventmanager->RemoveUserEventListener(scene);
+		scene->DeinitImpl();
 		container->Remove(scene);
 	}
 }

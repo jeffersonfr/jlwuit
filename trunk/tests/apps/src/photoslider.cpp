@@ -41,14 +41,14 @@ PhotoSlider::PhotoSlider():
 	_index = -1;
 	_message =  "Insira um Pen-Drive contendo imagens";
 
-	jlwuit::USBManager::GetInstance()->AddUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
 }
 
 PhotoSlider::~PhotoSlider()
 {
-	jlwuit::USBManager::GetInstance()->Stop();
 	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->Stop();
 }
 
 void PhotoSlider::Paint(jlwuit::Graphics *g)

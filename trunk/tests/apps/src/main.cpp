@@ -18,14 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "implementation.h"
-
 #include "calc.h"
 #include "mp3player.h"
 #include "mp4player.h"
 #include "photoslider.h"
+#include "jautolock.h"
+
 #include <spawn.h>
 #include <sys/wait.h>
-
 #include <stdio.h>
 
 #define GAPX		16
@@ -38,6 +38,9 @@
 #define TEXT_SPAN	(TEXT_SIZE+GAPY)
 
 class AppSwitch : public jlwuit::Scene {
+
+	private:
+		jthread::Mutex _mutex;
 
 	public:
 		/**
@@ -64,6 +67,8 @@ class AppSwitch : public jlwuit::Scene {
 		 */
 		virtual bool OnKeyDown(jlwuit::UserEvent *event)
 		{
+			jthread::AutoLock lock(&_mutex);
+
 			if (jlwuit::Scene::OnKeyDown(event) == true) {
 				return true;
 			}
