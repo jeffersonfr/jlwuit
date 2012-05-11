@@ -20,7 +20,7 @@
 #include "mp3player.h"
 #include "usbmanager.h"
 #include "playermanager.h"
-
+#include "videosizecontrol.h"
 #include "jfile.h"
 #include "jioexception.h"
 
@@ -62,24 +62,26 @@ MP3Player::MP3Player():
 	jlwuit::LookAndFeel::LoadImage("forward", "images/forward.png");
 	jlwuit::LookAndFeel::LoadImage("logo", "images/mp3-logo.png");
 
-	jlwuit::USBManager::GetInstance()->AddUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
 }
 
 MP3Player::~MP3Player()
 {
-	jlwuit::USBManager::GetInstance()->Stop();
 	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->Stop();
 
 	Hide();
 
+	if (_player != NULL) {
+		delete _player;
+		_player = NULL;
+	}
+	
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 
 	if (player != NULL) {
 		player->Play();
-		
-		delete _player;
-		_player = NULL;
 	}
 	
 	jlwuit::LookAndFeel::ReleaseImage("rewind");

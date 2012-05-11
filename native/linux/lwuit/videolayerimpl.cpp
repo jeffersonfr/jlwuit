@@ -59,8 +59,37 @@ void VideoLayerImpl::SetFile(std::string file)
 	IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
 
 	if (directfb->CreateVideoProvider(directfb, _file.c_str(), &_provider) != DFB_OK) {
+		_provider = NULL;
+
 		return;
 	}
+		
+	IDirectFBDisplayLayer *layer = NULL;
+	IDirectFBWindow *window = NULL;
+	IDirectFBSurface *surface = NULL;
+	DFBSurfaceDescription sdsc;
+	DFBWindowDescription desc;
+
+	desc.flags = (DFBWindowDescriptionFlags)(DWDESC_POSX | DWDESC_POSY | DWDESC_WIDTH | DWDESC_HEIGHT | DWDESC_STACKING);
+	desc.stacking = DWSC_LOWER;
+	desc.posx = 0;
+	desc.posy = 0;
+	desc.width = jgui::GFXHandler::GetInstance()->GetScreenWidth();
+	desc.height = jgui::GFXHandler::GetInstance()->GetScreenHeight();
+
+	_provider->GetSurfaceDescription(_provider, &sdsc);
+
+	if (sdsc.flags & DSDESC_CAPS) {
+		desc.flags = (DFBWindowDescriptionFlags)(desc.flags | DWDESC_SURFACE_CAPS);
+		desc.surface_caps = sdsc.caps;
+	}
+
+	directfb->GetDisplayLayer(directfb, DLID_PRIMARY, &layer);
+	layer->CreateWindow(layer, &desc, &window);
+	window->GetSurface(window, &surface);
+	window->SetOpacity(window, 0xff);
+
+	_window->SetNativeWindow(window);
 }
 
 void VideoLayerImpl::Play() 
@@ -68,33 +97,11 @@ void VideoLayerImpl::Play()
 	jthread::AutoLock lock(&_mutex);
 
 	if (_provider != NULL) {
-		IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
-		IDirectFBDisplayLayer *layer = NULL;
-		IDirectFBWindow *window = NULL;
-		IDirectFBSurface *surface = NULL;
-		DFBSurfaceDescription sdsc;
-		DFBWindowDescription desc;
+		IDirectFBSurface *surface = (IDirectFBSurface *)_window->GetGraphics()->GetNativeSurface();
 
-		desc.flags = (DFBWindowDescriptionFlags)(DWDESC_POSX | DWDESC_POSY | DWDESC_WIDTH | DWDESC_HEIGHT | DWDESC_STACKING);
-		desc.stacking = DWSC_LOWER;
-		desc.posx = 0;
-		desc.posy = 0;
-		desc.width = jgui::GFXHandler::GetInstance()->GetScreenWidth();
-		desc.height = jgui::GFXHandler::GetInstance()->GetScreenHeight();
+		_provider->PlayTo(_provider, surface, NULL, VideoLayerImpl::Callback, (void *)this);
 
-		_provider->GetSurfaceDescription(_provider, &sdsc);
-
-		if (sdsc.flags & DSDESC_CAPS) {
-			desc.flags = (DFBWindowDescriptionFlags)(desc.flags | DWDESC_SURFACE_CAPS);
-			desc.surface_caps = sdsc.caps;
-		}
-
-		directfb->GetDisplayLayer(directfb, DLID_PRIMARY, &layer);
-		layer->CreateWindow(layer, &desc, &window);
-		window->GetSurface(window, &surface);
-		window->SetOpacity(window, 0xff);
-		_window->SetNativeWindow(window);
-		_provider->PlayTo(_provider, surface, NULL, VideoLayerImpl::Callback, this);
+		usleep(500000);
 	}
 }
 
