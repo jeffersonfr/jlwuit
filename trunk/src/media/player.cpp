@@ -94,6 +94,11 @@ std::vector<Control *> & Player::GetControls()
 	return _controls;
 }
 
+Component * Player::GetVisualComponent()
+{
+	return NULL;
+}
+
 Control * Player::GetControl(std::string id)
 {
 	for (std::vector<Control *>::iterator i=_controls.begin(); i!=_controls.end(); i++) {

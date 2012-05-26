@@ -146,6 +146,13 @@ class Player {
 		virtual Control * GetControl(std::string id);
 
 		/**
+		 * \brief Return a specific control related with the type.
+		 *
+		 * \return
+		 */
+		virtual Component * GetVisualComponent();
+
+		/**
 		 * \brief Registry a listener.
 		 *
 		 * \param listener

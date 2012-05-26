@@ -27,7 +27,8 @@ NATIVE_LWUIT 	+= \
 					 videolayerimpl.o\
 
 NATIVE_MEDIA 	+= \
-					 isdtvplayer.o\
+					 isdtvplayerimpl.o\
+					 videoplayerimpl.o\
 
 NATIVE_IPC		+= \
 
