@@ -17,31 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_ISDTVPLAYER_H
-#define LWUIT_ISDTVPLAYER_H
+#ifndef LWUIT_VIDEOPLAYERIMPL_H
+#define LWUIT_VIDEOPLAYERIMPL_H
 
 #include "player.h"
 
 namespace jlwuit {
 
-class ISDTVPlayer : public jlwuit::Player {
+class VideoPlayerImpl : public jlwuit::Player {
 
 	private:
 		/** \brief */
 		Control *_video_size;
+		/** \brief */
+		Control *_video_format;
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		ISDTVPlayer();
+		VideoPlayerImpl();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual ~ISDTVPlayer();
+		virtual ~VideoPlayerImpl();
 
 		/**
 		 * \brief

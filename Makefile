@@ -26,12 +26,12 @@ CCFLAGS		+= \
 LDFLAGS		= \
 						-L$(LIBDIR) \
 						`pkg-config --libs jlibcpp` \
+						`pkg-config --libs libxine` \
 
 DEFINES		= \
 
 REQUIRES	= \
 						jlibcpp \
-						libxine \
 
 SRC_APPS	= \
 						appdatabase.o\

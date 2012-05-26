@@ -17,30 +17,106 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "playermanager.h"
-#include "isdtvplayerimpl.h"
-#include "videoplayerimpl.h"
-#include "jurl.h"
+#ifndef LWUIT_ISDTVPLAYERIMPL_H
+#define LWUIT_ISDTVPLAYERIMPL_H
+
+#include "player.h"
 
 namespace jlwuit {
 
-PlayerManager::PlayerManager()
-{
-}
+class ISDTVPlayerImpl : public jlwuit::Player {
 
-PlayerManager::~PlayerManager()
-{
-}
+	private:
+		/** \brief */
+		Control *_video_size;
 
-Player * PlayerManager::CreatePlayer(std::string url) throw (MediaException)
-{
-	jcommon::URL jurl(url);
+	public:
+		/**
+		 * \brief
+		 *
+		 */
+		ISDTVPlayerImpl();
 
-	if (jurl.GetProtocol() == "isdtv") {
-		return new ISDTVPlayerImpl();
-	}
+		/**
+		 * \brief
+		 *
+		 */
+		virtual ~ISDTVPlayerImpl();
 
-	return NULL;
-}
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Play();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Pause();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Stop();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Resume();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Close();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetMediaTime(uint64_t i);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual uint64_t GetMediaTime();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetLoop(bool b);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsPlaying();
 		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsLoop();
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual double GetDecodeRate();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetDecodeRate(double rate);
+
+};
+
 }
+
+#endif

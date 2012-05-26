@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "isdtvplayer.h"
+#include "isdtvplayerimpl.h"
 #include "device.h"
 #include "controlexception.h"
 #include "videosizecontrol.h"
@@ -27,19 +27,19 @@ namespace jlwuit {
 
 VideoLayerImpl *impl = NULL;
 
-class ISDTVSizeControl : public VideoSizeControl {
+class ISDTVSizeControlImpl : public VideoSizeControl {
 	
 	private:
 		LayerSetup *_setup;
 
 	public:
-		ISDTVSizeControl(LayerSetup *setup):
+		ISDTVSizeControlImpl(LayerSetup *setup):
 			VideoSizeControl()
 		{
 			_setup = setup;
 		}
 
-		virtual ~ISDTVSizeControl()
+		virtual ~ISDTVSizeControlImpl()
 		{
 		}
 
@@ -65,69 +65,69 @@ class ISDTVSizeControl : public VideoSizeControl {
 
 };
 
-ISDTVPlayer::ISDTVPlayer()
+ISDTVPlayerImpl::ISDTVPlayerImpl()
 {
 	impl = (VideoLayerImpl *)jlwuit::Device::GetDefaultScreen()->GetLayerByID("video");
 
-	_controls.push_back(new ISDTVSizeControl(impl->GetLayerSetup()));
+	_controls.push_back(new ISDTVSizeControlImpl(impl->GetLayerSetup()));
 }
 
-ISDTVPlayer::~ISDTVPlayer()
+ISDTVPlayerImpl::~ISDTVPlayerImpl()
 {
 }
 
-void ISDTVPlayer::Play()
+void ISDTVPlayerImpl::Play()
 {
 	impl->Play();
 }
 
-void ISDTVPlayer::Pause()
+void ISDTVPlayerImpl::Pause()
 {
 }
 
-void ISDTVPlayer::Stop()
+void ISDTVPlayerImpl::Stop()
 {
 	impl->Stop();
 }
 
-void ISDTVPlayer::Resume()
+void ISDTVPlayerImpl::Resume()
 {
 }
 
-void ISDTVPlayer::Close()
+void ISDTVPlayerImpl::Close()
 {
 }
 
-void ISDTVPlayer::SetMediaTime(uint64_t time)
+void ISDTVPlayerImpl::SetMediaTime(uint64_t time)
 {
 	impl->SetMediaTime(time);
 }
 
-uint64_t ISDTVPlayer::GetMediaTime()
+uint64_t ISDTVPlayerImpl::GetMediaTime()
 {
 	return impl->GetMediaTime();
 }
 
-void ISDTVPlayer::SetLoop(bool b)
+void ISDTVPlayerImpl::SetLoop(bool b)
 {
 }
 
-bool ISDTVPlayer::IsPlaying()
-{
-	return false;
-}
-
-bool ISDTVPlayer::IsLoop()
+bool ISDTVPlayerImpl::IsPlaying()
 {
 	return false;
 }
 
-void ISDTVPlayer::SetDecodeRate(double rate)
+bool ISDTVPlayerImpl::IsLoop()
+{
+	return false;
+}
+
+void ISDTVPlayerImpl::SetDecodeRate(double rate)
 {
 	impl->SetDecodeRate(rate);
 }
 
-double ISDTVPlayer::GetDecodeRate()
+double ISDTVPlayerImpl::GetDecodeRate()
 {
 	return impl->GetDecodeRate();
 }

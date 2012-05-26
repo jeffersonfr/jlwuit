@@ -100,140 +100,134 @@ class VideoFormatControl : public Control {
 		VideoFormatControl();
 
 		/**
-		 * \brief Destrutor virtual.
+		 * \brief Destructor.
 		 *
 		 */
 		virtual ~VideoFormatControl();
 
 		/**
-		 * \brief Define a razão de aspecto a ser utilizada
+		 * \brief Define media's aspect ratio.
 		 *
-		 * \param ar Razão de aspecto a ser utilizada
+		 * \param t
 		 */
 		virtual void SetAspectRatio(lwuit_aspect_ratio_t t);
 
 		/**
-		 * \brief Define o tipo de adaptação de tela a ser utilizada. O resultado final da adaptação
-		 * dependerá do formato da mídia reproduzida e da razão de aspecto da tela que exibe o vídeo
+		 * \brief Define the video mode. The final result will depend from content mode and aspect ratio.
 		 *
-		 * \param cm Tipo da adaptação de tela a ser empregada
+		 * \param t
 		 */
 		virtual void SetContentMode(lwuit_video_mode_t t);
 
 		/**
-		 * \brief Define o formato de vídeo a ser utilizado na saída HD
+		 * \brief Define the high definition format of media.
 		 *
-		 * \param vf Formato de vídeo HD a ser utilizado 
+		 * \param t
 		 */
 		virtual void SetVideoFormatHD(lwuit_hd_video_format_t vf);
 
 		/**
-		 * \brief Define o formato de vídeo a ser utilizado na saída SD
+		 * \brief Define the standard definition format of media.
 		 *
-		 * \param vf Formato de vídeo SD
+		 * \param t
 		 */
 		virtual void SetVideoFormatSD(lwuit_sd_video_format_t vf);
 
 		/**
-		 * \brief Define o valor da configuração de constraste. A faixa de
-		 * valores válidos é [0-100]
+		 * \brief Define a value to contrast. The value must is between [0..100].
 		 *
-		 * \param value Valor da configuração de constraste
+		 * \param value 
 		 */
 		virtual void SetContrast(int value);
 
 		/**
-		 * \brief Define o valor da configuração de saturação. A faixa de
-		 * valores válidos é [0-100]
+		 * \brief Define a value to saturation. The value must is between [0..100].
 		 *
-		 * \param value Valor da configuração de saturação
+		 * \param value 
 		 */
 		virtual void SetSaturation(int value);
 
 		/**
-		 * \brief Define o valor da configuração de matiz. A faixa de
-		 * valores válidos é [0-100]
+		 * \brief Define a value to HUE. The value must is between [0..100].
 		 *
-		 * \param value Valor da configuração de matiz
+		 * \param value 
 		 */
 		virtual void SetHUE(int value);
 
 		/**
-		 * \brief Define o valor da configuração de brilho. A faixa de
-		 * valores válidos é [0-100]
+		 * \brief Define a value to brightness. The value must is between [0..100].
 		 *
-		 * \param value Valor da configuração de brilho
+		 * \param value 
 		 */
 		virtual void SetBrightness(int value);
 
 		/**
-		 * \brief Define o valor da configuração de nitidez. A faixa de
-		 * valores válidos é [0-100]
+		 * \brief Define a value to sharpness. The value must is between [0..100].
 		 *
-		 * \param value Valor da configuração de nitidez
+		 * \param value
 		 */
 		virtual void SetSharpness(int value);
 
 		/**
-		 * \brief Informa a razão de aspecto definida
+		 * \brief Returns the aspect ratio.
 		 *
-		 * \return Razão de aspecto
+		 * \return 
 		 */
 		virtual lwuit_aspect_ratio_t GetAspectRatio();
 
 		/**
-		 * \brief Informa a adaptação de tela definida
+		 * \brief Returns the content mode.
 		 *
-		 * \return Adaptação de tela
+		 * \return 
 		 */
 		virtual lwuit_video_mode_t GetContentMode();
 
 		/**
-		 * \brief Informa o formato de vídeo definido para a saída HD
+		 * \brief Returns high definition format.
 		 *
-		 * \return Formato de vídeo HD
+		 * \return 
 		 */
 		virtual lwuit_hd_video_format_t GetVideoFormatHD();
 
 		/**
-		 * \brief Informar o formato de vídeo definido para a saída SD
+		 * \brief Returns standard definition format.
 		 *
-		 * \return Formato de vídeo SD
+		 * \return 
 		 */
 		virtual lwuit_sd_video_format_t GetVideoFormatSD();
 
 		/**
-		 * \brief Informa o valor da configuração de constraste
+		 * \brief Returns the contrast.
 		 *
-		 * \return Valor da configuração constraste
+		 * \return 
 		 */
 		virtual int GetContrast();
 
 		/**
-		 * \brief Informa o valor da configuração de saturação
+		 * \brief Returns de saturation.
 		 *
-		 * \return Valor da configuração saturação
+		 * \return 
 		 */
 		virtual int GetSaturation();
 
 		/**
-		 * \brief Informa o valor da configuração de matiz
+		 * \brief Returns the HUE.
 		 *
-		 * \return Valor da configuração matiz
+		 * \return 
 		 */
 		virtual int GetHUE();
 
 		/**
-		 * \brief Informa o valor da configuração de brilho
+		 * \brief Returns the brightness.
 		 *
-		 * \return Valor da configuração brilho
+		 * \return 
 		 */
 		virtual int GetBrightness();
 
 		/**
-		 * \brief Informa o valor da configuração de nitidez
+		 * \brief Returns the sharpness.
 		 *
-		 * \return Valor da configuração de nitidez
+		 * \return 
 		 */
 		virtual int GetSharpness();
 
