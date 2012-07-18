@@ -35,7 +35,7 @@ bool Transition::IsRunning()
 	return false;
 }
 
-bool Transition::Animated()
+bool Transition::Animate()
 {
 	return false;
 }

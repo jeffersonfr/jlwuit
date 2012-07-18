@@ -53,6 +53,12 @@ class Scene : public Component, public jthread::TimerTask {
 		 * \brief
 		 *
 		 */
+		virtual bool MatchToken(std::string current_token, std::string token);
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual void Run();
 
 	public:
@@ -127,6 +133,12 @@ class Scene : public Component, public jthread::TimerTask {
 		 *
 		 */
 		virtual void SetState(std::string state);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool MatchState(std::string state);
 
 		/**
 		 * \brief

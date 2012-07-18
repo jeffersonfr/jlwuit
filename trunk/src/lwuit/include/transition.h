@@ -56,7 +56,7 @@ class Transition : public Animation {
 		 * \brief
 		 *
 		 */
-		virtual bool Animated();
+		virtual bool Animate();
 
 		/**
 		 * \brief

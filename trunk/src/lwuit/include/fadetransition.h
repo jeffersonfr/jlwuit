@@ -58,7 +58,7 @@ class FadeTransition : public Transition {
 		 * \brief
 		 *
 		 */
-		virtual bool Animated();
+		virtual bool Animate();
 
 		/**
 		 * \brief

@@ -28,7 +28,7 @@ NATIVE_LWUIT 	+= \
 
 NATIVE_MEDIA 	+= \
 					 isdtvplayerimpl.o\
-					 videoplayerimpl.o\
+					 #videoplayerimpl.o\
 
 NATIVE_IPC		+= \
 

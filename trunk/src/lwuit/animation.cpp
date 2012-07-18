@@ -29,7 +29,7 @@ Animation::~Animation()
 {
 }
 
-bool Animation::Animated()
+bool Animation::Animate()
 {
 	return false;
 }

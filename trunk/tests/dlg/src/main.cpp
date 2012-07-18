@@ -55,7 +55,7 @@ class DialogTest : public jlwuit::Scene {
 		{
 		}
 
-		virtual bool Animated()
+		virtual bool Animate()
 		{
 			jlwuit::Dialog *dlg = new Sample(this);
 

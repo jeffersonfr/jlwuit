@@ -21,8 +21,42 @@
 #include "controlexception.h"
 #include "videosizecontrol.h"
 #include "videoformatcontrol.h"
+#include "mediaexception.h"
+#include "imageimpl.h"
+
+#include "jautolock.h"
+#include "jgfxhandler.h"
 
 namespace jlwuit {
+
+class VideoComponentImpl : public jlwuit::Component {
+
+	private:
+		jlwuit::ImageImpl *_buffer;
+
+	public:
+		VideoComponentImpl(int x, int y, int w, int h, int iw, int ih):
+			jlwuit::Component(x, y, w, h)
+		{
+			_buffer = new jlwuit::ImageImpl(jgui::Image::CreateImage(w, h, jgui::JPF_ARGB, w, h));
+		}
+
+		virtual ~VideoComponentImpl()
+		{
+			delete _buffer;
+		}
+
+		virtual void Paint(jlwuit::Graphics *g)
+		{
+			g->DrawImage(_buffer, 0, 0, GetWidth(), GetHeight());
+		}
+
+		virtual jlwuit::Image * GetBuffer()
+		{
+			return _buffer;
+		}
+
+}
 
 class VideoSizeControlImpl : public VideoSizeControl {
 	
@@ -56,7 +90,7 @@ class VideoSizeControlImpl : public VideoSizeControl {
 
 		virtual lwuit_region_t GetDestination()
 		{
-			std::cout << "VideoSizeControlImpl::GetDestination() not implemented." << std::endl;
+			throw jlwuit::MediaException("VideoSizeControlImpl::GetDestination() not implemented");
 		}
 
 };
@@ -160,18 +194,56 @@ class VideoFormatControlImpl : public VideoFormatControl {
 
 };
 
-VideoPlayerImpl::VideoPlayerImpl()
+VideoPlayerImpl::VideoPlayerImpl(std::string file)
 {
+	_file = file;
+
+	IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
+
+	if (directfb->CreateVideoProvider(directfb, _file.c_str(), &_provider) != DFB_OK) {
+		_provider = NULL;
+
+		throw jlwuit::MediaException("Media format not supported");
+	}
+		
+	DFBSurfaceDescription sdsc;
+	
+	_provider->GetSurfaceDescription(_provider, &sdsc);
+
+	_component = new VideoComponentImpl(0, 0, sdsc.width, sdsc.height);
+
 	_controls.push_back(new VideoSizeControlImpl(this));
 	_controls.push_back(new VideoFormatControlImpl(this));
 }
 
 VideoPlayerImpl::~VideoPlayerImpl()
 {
+	if (_provider != NULL) {
+		_provider->Release(_provider);
+	}
 }
 
+void VideoPlayerImpl::Callback(void *ctx)
+{
+	// TODO:: otimizacao
+	// if (random() < 80%) {
+	// 	draw()
+	// } 
+	// return;
+	reinterpret_cast<VideoPlayerImpl *>(ctx)->GetVisualComponent()->Repaint();
+}
+		
 void VideoPlayerImpl::Play()
 {
+	jthread::AutoLock lock(&_mutex);
+
+	if (_provider != NULL) {
+		IDirectFBSurface *surface = (IDirectFBSurface *)_component->GetBuffer()->GetGraphics()->GetNativeSurface();
+
+		_provider->PlayTo(_provider, surface, NULL, VideoPlayerImpl::Callback, (void *)this);
+
+		usleep(500000);
+	}
 }
 
 void VideoPlayerImpl::Pause()
@@ -180,6 +252,12 @@ void VideoPlayerImpl::Pause()
 
 void VideoPlayerImpl::Stop()
 {
+	jthread::AutoLock lock(&_mutex);
+
+	if (_provider != NULL) {
+		_provider->Stop(_provider);
+		_window->Repaint();
+	}
 }
 
 void VideoPlayerImpl::Resume()
@@ -192,11 +270,24 @@ void VideoPlayerImpl::Close()
 
 void VideoPlayerImpl::SetMediaTime(uint64_t time)
 {
+	jthread::AutoLock lock(&_mutex);
+
+	if (_provider != NULL) {
+		_provider->SeekTo(_provider, time/1000LL);
+	}
 }
 
 uint64_t VideoPlayerImpl::GetMediaTime()
 {
-	return 0LL;
+	jthread::AutoLock lock(&_mutex);
+
+	double time = 0.0;
+
+	if (_provider != NULL) {
+		_provider->GetPos(_provider, &time);
+	}
+
+	return time*1000LL;
 }
 
 void VideoPlayerImpl::SetLoop(bool b)
@@ -215,11 +306,29 @@ bool VideoPlayerImpl::IsLoop()
 
 void VideoPlayerImpl::SetDecodeRate(double rate)
 {
+	jthread::AutoLock lock(&_mutex);
+
+	if (_provider != NULL) {
+		_provider->SetSpeed(_provider, rate);
+	}
 }
 
 double VideoPlayerImpl::GetDecodeRate()
 {
-	return 0.0;
+	jthread::AutoLock lock(&_mutex);
+
+	double rate = 1.0;
+
+	if (_provider != NULL) {
+		_provider->GetSpeed(_provider, &rate);
+	}
+
+	return rate;
+}
+
+Component * VideoPlayerImpl::GetVisualComponent()
+{
+	return _component;
 }
 
 }

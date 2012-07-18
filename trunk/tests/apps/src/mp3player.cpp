@@ -92,7 +92,7 @@ MP3Player::~MP3Player()
 	jlwuit::LookAndFeel::ReleaseImage("logo");
 }
 
-bool MP3Player::Animated()
+bool MP3Player::Animate()
 {
 	_screen_saver_state = 0;
 	_screen_saver_timeout = _screen_saver_timeout + 1;

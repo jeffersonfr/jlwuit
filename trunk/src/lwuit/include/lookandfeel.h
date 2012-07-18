@@ -144,13 +144,13 @@ class LookAndFeel {
 		 * \brief
 		 *
 		 */
-		void DrawBorder(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h);
+		void DrawBorder(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size = 1);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawBox(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h);
+		void DrawBox(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size = 1);
 		
 		/**
 		 * \brief
@@ -158,6 +158,12 @@ class LookAndFeel {
 		 */
 		void DrawProgressBar(jlwuit::Graphics *g, jlwuit::Style *style, int value, int x, int y, int w, int h);
 		
+		/**
+		 * \brief
+		 *
+		 */
+		int TextSize(std::string font_id, std::string text);
+
 		/**
 		 * \brief
 		 *

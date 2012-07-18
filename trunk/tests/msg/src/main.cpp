@@ -41,7 +41,7 @@ class MessageTest : public jlwuit::Scene {
 		{
 		}
 
-		virtual bool Animated()
+		virtual bool Animate()
 		{
 			if (_state == 0) {
 				// top

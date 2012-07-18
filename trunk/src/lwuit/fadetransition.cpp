@@ -36,7 +36,7 @@ bool FadeTransition::IsRunning()
 	return (_alpha > 0);
 }
 
-bool FadeTransition::Animated()
+bool FadeTransition::Animate()
 {
 	_alpha = _alpha - 0x10;
 
