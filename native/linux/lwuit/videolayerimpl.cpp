@@ -32,6 +32,9 @@ VideoLayerImpl::VideoLayerImpl():
 
 VideoLayerImpl::~VideoLayerImpl()
 {
+	if (_provider != NULL) {
+		_provider->Release(_provider);
+	}
 }
 
 void VideoLayerImpl::Initialize()
@@ -88,6 +91,8 @@ void VideoLayerImpl::SetFile(std::string file)
 	layer->CreateWindow(layer, &desc, &window);
 	window->GetSurface(window, &surface);
 	window->SetOpacity(window, 0xff);
+
+	// TODO:: delete previous native window
 
 	_window->SetNativeWindow(window);
 }

@@ -31,8 +31,11 @@ namespace jlwuit {
 class VideoLayerImpl : public LayerImpl {
 
 	private:
+		/** \brief */
 		IDirectFBVideoProvider *_provider;
+		/** \brief */
 		jthread::Mutex _mutex;
+		/** \brief */
 		std::string _file;
 
 	private:

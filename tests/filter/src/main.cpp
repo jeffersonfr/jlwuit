@@ -87,7 +87,7 @@ class FilterTest : public jlwuit::Scene {
 		{
 		}
 
-		virtual bool Animated()
+		virtual bool Animate()
 		{
 			return false;
 		}

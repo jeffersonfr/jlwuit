@@ -34,20 +34,23 @@ class SlideComponent : public jlwuit::Component {
 	private:
 		std::vector<std::string> _images;
 		double _level;
-		int _gap_x;
-		int _gap_y;
 		int _index;
+		int _next_index;
+		int _offset;
+		int _factor;
 		int _longpress_timeout;
+		int _step;
 		bool _is_mouse_pressed;
+		std::string _state;
 
 	public:
 		SlideComponent(int x, int y, int width, int height):
 			jlwuit::Component(x, y, width, height)
 		{
+			_step = 32;
 			_index = 0;
-			_level = 1.0;
-			_gap_x = 16;
-			_gap_y = 64;
+			_factor = 3;
+			_offset = 0;
 
 			_images.push_back("chat");
 			_images.push_back("favorite");
@@ -61,10 +64,14 @@ class SlideComponent : public jlwuit::Component {
 			_images.push_back("star");
 			_images.push_back("twitter");
 			_images.push_back("upload");
+			/*
+			*/
 
 			for (std::vector<std::string>::iterator i=_images.begin(); i!=_images.end(); i++) {
 				jlwuit::LookAndFeel::LoadImage((*i), "images/" + (*i) + ".png");
 			}
+				
+			jlwuit::LookAndFeel::LoadImage("square", "images/square.png");
 
 			SetVisible(true);
 		}
@@ -74,45 +81,6 @@ class SlideComponent : public jlwuit::Component {
 			for (std::vector<std::string>::iterator i=_images.begin(); i!=_images.end(); i++) {
 				jlwuit::LookAndFeel::ReleaseImage((*i));
 			}
-		}
-
-		virtual int GetLevel() {
-			return _level;
-		}
-
-		virtual void SetLvel(int level) {
-			_level = level;
-		}
-
-		virtual int GetGapX() {
-			return _gap_x;
-		}
-
-		virtual void SetGapX(int gap) {
-			_gap_x = gap;
-		}
-
-		virtual int GetGapY() {
-			return _gap_y;
-		}
-
-		virtual void SetGapY(int gap) {
-			_gap_y = gap;
-		}
-
-		virtual bool Animated()
-		{
-			if (_is_mouse_pressed == true) {
-				_longpress_timeout = _longpress_timeout - 1;
-
-				if (_longpress_timeout == 0) {
-					OnMouseLongPress(NULL);
-				}
-			
-				return true;
-			}
-
-			return false;
 		}
 
 		virtual bool OnMouseLongPress(jlwuit::UserEvent *event)
@@ -125,7 +93,7 @@ class SlideComponent : public jlwuit::Component {
 		virtual bool OnMousePress(jlwuit::UserEvent *event)
 		{
 			_is_mouse_pressed = true;
-			_longpress_timeout = 2;
+			_longpress_timeout = 20;
 
 			return true;
 		}
@@ -137,24 +105,147 @@ class SlideComponent : public jlwuit::Component {
 			return true;
 		}
 
+		virtual bool Animate()
+		{
+			jlwuit::lwuit_size_t items_size = GetItemsSize();
+
+			std::string state = _state;
+			bool flag = false;
+
+			if (_state == "forward") {
+				_offset = _offset - _step;
+
+				if (_offset < -items_size.width) {
+					_state = "";
+					_offset = 0;
+					_index = _next_index;
+				}
+	
+				flag = true;
+			} else if (_state == "backward") {
+				_offset = _offset + _step;
+				
+				if (_offset > items_size.width) {
+					_state = "";
+					_offset = 0;
+					_index = _next_index;
+				}
+					
+				flag = true;
+			} else if (_state == "back") {
+				if (_offset <= 0) {
+					_offset = _offset + _step;
+
+					if (_offset >= 0) {
+						_offset = 0;
+						_state = "";
+					}
+				} else {
+					_offset = _offset - _step;
+
+					if (_offset <= 0) {
+						_offset = 0;
+						_state = "";
+					}
+				}
+
+				flag = true;
+			}
+
+			if (_step > 32) {
+				_step = _step - 4;
+
+				if (_state == "") {
+					if (state == "backward") {
+						Previous();
+					} else if (state == "forward") {
+						Next();
+					} else if (state == "back") {
+						// TODO:: depois de ir para frente, segurar <direcao contraria> e a lista trava
+					}
+				}
+			}
+
+			return flag;
+		}
+
+		virtual void Previous()
+		{
+			if (_state == "forward") {
+				_next_index = _index;
+				_state = "back";
+			} else {
+				if (_state == "") {
+					_offset = 0;
+				}
+
+				_next_index = _index - 1;
+
+				if (_next_index < 0) {
+					_next_index = 0; // _images.size()-1;
+					_state = "";
+					_offset = 0;
+				} else {
+					_state = "backward";
+				}
+			}
+		}
+
+		virtual void Next()
+		{
+			if (_state == "backward") {
+				_next_index = _index;
+				_state = "back";
+			} else {
+				if (_state == "") {
+					_offset = 0;
+				}
+
+				_next_index = _index + 1;
+
+				if (_next_index >= (int)_images.size()) {
+					_next_index = (int)_images.size()-1; // 0;
+
+					if (_next_index < 0) {
+						_next_index = 0;
+					}
+
+					_state = "";
+					_offset = 0;
+				} else {
+					_state = "forward";
+				}
+			}
+		}
+
 		virtual bool OnKeyDown(jlwuit::UserEvent *event)
 		{
 			if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT) {
-				_index = _index - 1;
-
-				if (_index < 0) {
-					_index = _images.size()-1;
-				}
+				Previous();
 			} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT) {
-				_index = _index + 1;
-
-				if (_index >= (int)_images.size()) {
-					_index = 0;
-				}
+				Next();
 			}
 				
-			Repaint();
+			return true;
+		}
 
+		virtual bool OnKeyPress(jlwuit::UserEvent *event)
+		{
+			if ((event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT || event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT)) {
+				_step = _step + 8;
+
+				if (_step > 64) {
+					_step = 64;
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		virtual bool OnKeyUp(jlwuit::UserEvent *event)
+		{
 			return true;
 		}
 
@@ -168,29 +259,55 @@ class SlideComponent : public jlwuit::Component {
 				return;
 			}
 
-			int limit = _images.size()-1,
-					limit_r = frames_length/2,
-					limit_l = frames_length/2;
+			int climit = frames_length/2,
+					rlimit = climit,
+					llimit = climit;
 
-			if (limit > frames_length) {
-				limit = frames_length;
+			if (rlimit > (_images.size()-_index-1)) {
+				rlimit = _images.size()-_index-1;
 			}
 
-			frames[frames_length/2] = _index;
+			if (llimit > _index) {
+				llimit = _index;
+			}
 
-			for (int i=0; i<=limit_r; i++) {
-				frames[frames_length/2+i] = (_index+i)%_images.size();
+			frames[climit] = _index;
+
+			for (int i=1; i<=rlimit; i++) {
+				frames[climit+i] = (_index+i)%_images.size();
 			}
 			
-			for (int i=0; i<=limit_l; i++) {
+			for (int i=1; i<=llimit; i++) {
 				int index = _index-i;
 
 				if (index < 0) {
 					index = index + _images.size();
 				}
 
-				frames[frames_length/2-i] = index%_images.size();
+				frames[climit-i] = index%_images.size();
 			}
+		}
+
+		virtual void SetFactor(int factor)
+		{
+			_factor = factor;
+		}
+
+		virtual int GetFactor()
+		{
+			return _factor;
+		}
+
+		virtual jlwuit::lwuit_size_t GetItemsSize()
+		{
+			jlwuit::lwuit_region_t bounds = GetBounds();
+
+			struct jlwuit::lwuit_size_t t;
+
+			t.width = (bounds.width-2*_factor*GAPX)/(2*_factor+1);
+			t.height = bounds.height-2*GAPY;
+
+			return t;
 		}
 
 		virtual void Paint(jlwuit::Graphics *g)
@@ -198,46 +315,34 @@ class SlideComponent : public jlwuit::Component {
 			jlwuit::LookAndFeel *laf = jlwuit::LookAndFeel::GetInstance();
 			jlwuit::lwuit_region_t bounds = GetBounds();
 
-			int factor = 2+1; // add more two images (left, right)
-			int frames_length = 2*factor+1,
+			jlwuit::lwuit_size_t items_size = GetItemsSize();
+			int frames_length = 2*(_factor+1)+1,
 					frames[frames_length];
-			int framew = bounds.width/(frames_length-2)-_gap_x*(frames_length-2-1),
-					frameh = bounds.height;
-			int dx = framew+_gap_x,
-					dy;
+			int dx = (_factor/2)*(items_size.width+GAPX),
+					dw = (items_size.width+GAPX)*((_factor+1)/2);
 
 			GetFrames(frames, frames_length);
 
 			g->SetClip(0, 0, bounds.width, bounds.height);
-			g->SetColor(jlwuit::Color::Blue);
-			g->FillRectangle(0, 0, 1000, 1000);
+			g->FillRectangle(0, 0, bounds.width, bounds.height);
 			
-			for (int i=0; i<factor; i++) {
-				int idx1 = i,
-						idx2 = frames_length-i-1;
+			laf->DrawImage(g, "background", 0, 0, bounds.width, bounds.height);
+			
+			if (_images.size() == 0) {
+				return;
+			}
 
-				dy = exp(_level*(factor-i+1));
+			for (int i=0; i<frames_length; i++) {
+				int ix = i-_factor+(_factor-1)/2;
 
-				if (frames[idx1] >= 0) {
-					laf->DrawImage(g, _images[frames[idx1]], idx1*dx-dx, dy+exp(-i)*_gap_y, framew, frameh-2*dy);
-				}
-
-				if (frames[idx2] >= 0) {
-					laf->DrawImage(g, _images[frames[idx2]], idx2*dx-dx, dy+exp(-i)*_gap_y, framew, frameh-2*dy);
+				if (frames[i] >= 0) {
+					laf->DrawImage(g, _images[frames[i]], ix*(items_size.width+GAPX)+dx+_offset, GAPY, items_size.width, items_size.height);
 				}
 			}
-			
-			int idx = frames_length/2;
-
-			dy = exp(factor-idx+1);
-			
-			if (frames[idx] >= 0) {
-				laf->DrawImage(g, _images[frames[idx]], idx*dx-dx, dy, framew, frameh-2*dy);
-			}
-			
-			// draw center image
-
+					
 			g->ReleaseClip();
+
+			laf->DrawImage(g, "square", dx+dw-GAPX, 0, items_size.width+2*GAPX, items_size.height+2*GAPY);
 		}
 
 };
@@ -251,7 +356,9 @@ class SlideTest : public jlwuit::Scene {
 		SlideTest():
 			jlwuit::Scene(0, 0, 1920, 1080)
 		{
-			Add(_slide = new SlideComponent(100, 100, 640, 240));
+			SetAnimationDelay(100);
+
+			Add(_slide = new SlideComponent(100, 100, 1280, 240));
 		}
 
 		virtual ~SlideTest()
@@ -259,14 +366,19 @@ class SlideTest : public jlwuit::Scene {
 			delete _slide;
 		}
 
-		virtual bool Animated()
+		virtual bool Animate()
 		{
-			return _slide->Animated();
+			return _slide->Animate();
 		}
 
 		virtual bool OnKeyDown(jlwuit::UserEvent *event)
 		{
 			return _slide->OnKeyDown(event);
+		}
+
+		virtual bool OnKeyPress(jlwuit::UserEvent *event)
+		{
+			return _slide->OnKeyPress(event);
 		}
 
 };

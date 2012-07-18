@@ -82,7 +82,7 @@ class SceneTest : public jlwuit::Scene {
 			}
 		}
 
-		virtual bool Animated()
+		virtual bool Animate()
 		{
 			jlwuit::lwuit_size_t size = GetSize();
 

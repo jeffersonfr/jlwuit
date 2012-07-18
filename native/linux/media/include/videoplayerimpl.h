@@ -22,22 +22,41 @@
 
 #include "player.h"
 
+#include "jimage.h"
+
+#include <directfb.h>
+
 namespace jlwuit {
 
 class VideoPlayerImpl : public jlwuit::Player {
 
 	private:
 		/** \brief */
-		Control *_video_size;
+		IDirectFBVideoProvider *_provider;
 		/** \brief */
-		Control *_video_format;
+		jthread::Mutex _mutex;
+		/** \brief */
+		std::string _file;
+		/** \brief */
+		jlwuit::Control *_video_size;
+		/** \brief */
+		jlwuit::Control *_video_format;
+		/** \brief */
+		jlwuit::Component *_component;
 
+	private:
+		/**
+		 * \brief
+		 *
+		 */
+		static void Callback(void *ctx);
+		
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		VideoPlayerImpl();
+		VideoPlayerImpl(std::string file);
 
 		/**
 		 * \brief
@@ -116,6 +135,12 @@ class VideoPlayerImpl : public jlwuit::Player {
 		 *
 		 */
 		virtual void SetDecodeRate(double rate);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Component * GetVisualComponent();
 
 };
 

@@ -54,7 +54,7 @@ class SlideTransition : public Transition {
 		 * \brief
 		 *
 		 */
-		virtual bool Animated();
+		virtual bool Animate();
 
 		/**
 		 * \brief

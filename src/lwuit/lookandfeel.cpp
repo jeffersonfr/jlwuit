@@ -37,6 +37,7 @@ LookAndFeel::LookAndFeel()
 	LoadFont("small", "resources/fonts/font.ttf", 20);
 	LoadFont("medium", "resources/fonts/font.ttf", 24);
 	LoadFont("large", "resources/fonts/font.ttf", 36);
+	LoadFont("huge", "resources/fonts/font.ttf", 48);
 }
 
 LookAndFeel::~LookAndFeel()
@@ -148,36 +149,68 @@ jlwuit::Color LookAndFeel::GetColor(Style *style, std::string color_id)
 	return _default_style->GetColor(prefix + color_id);
 }
 	
-void LookAndFeel::DrawBorder(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h)
+void LookAndFeel::DrawBorder(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size)
 {
+	if (w < 0 || h < 0) {
+		return;
+	}
+
 	g->SetColor(GetColor(style, "border.color"));
-	g->DrawRectangle(x, y, w, h);
+
+	for (int i=0; i<border_size; i++) {
+		g->DrawRectangle(x+i, y+i, w-2*i, h-2*i);
+	}
 }
 
-void LookAndFeel::DrawBox(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h)
+void LookAndFeel::DrawBox(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size)
 {
+	if (w < 0 || h < 0) {
+		return;
+	}
+
 	g->SetColor(GetColor(style, "bg.color"));
 	g->FillRectangle(x, y, w, h);
 	
-	DrawBorder(g, style, x, y, w, h);
+	DrawBorder(g, style, x, y, w, h, border_size);
 }
 
 void LookAndFeel::DrawProgressBar(jlwuit::Graphics *g, jlwuit::Style *style, int value, int x, int y, int w, int h)
 {
-	if (value < 0) {
-		value = 0;
-	}
-
-	if (value > 100) {
-		value = 100;
+	if (w < 0 || h < 0) {
+		return;
 	}
 
 	value = (w*value)/100;
 
-	g->SetColor(GetColor(style, "border.color"));
-	g->DrawRectangle(x, y, w, h);
-	g->SetColor(GetColor(style, "scroll.color"));
-	g->FillRectangle(x+1, y+1, value-2, h-2);
+	if (value < 0) {
+		value = 0;
+	}
+
+	if (value > w) {
+		value = w;
+	}
+
+	int gap = 4,
+			wp = value-2*gap,
+			hp = h-2*gap;
+
+	if (wp > 0 && hp > 0) {
+		g->SetColor(GetColor(style, "scroll.color"));
+		g->FillRectangle(x+gap, y+gap, value-2*gap, h-2*gap);
+	}
+	
+	DrawBorder(g, style, x, y, w, h, 1);
+}
+
+int LookAndFeel::TextSize(std::string font_id, std::string text)
+{
+	jlwuit::Font *font = (jlwuit::Font *)GetReference(&_fonts, font_id);
+
+	if (font == NULL) {
+		return 0;
+	}
+
+	return font->GetStringWidth(text);
 }
 
 void LookAndFeel::DrawText(jlwuit::Graphics *g, jlwuit::Style *style, std::string font_id, std::string text, int x, int y, int w, int h, jlwuit::lwuit_horizontal_align_t halign, jlwuit::lwuit_vertical_align_t valign)

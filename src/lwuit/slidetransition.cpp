@@ -35,7 +35,7 @@ bool SlideTransition::IsRunning()
 	return false;
 }
 
-bool SlideTransition::Animated()
+bool SlideTransition::Animate()
 {
 	return false;
 }

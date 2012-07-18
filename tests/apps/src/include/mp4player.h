@@ -185,7 +185,7 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 * \brief
 		 *
 		 */
-		virtual bool Animated();
+		virtual bool Animate();
 		
 		/**
 		 * \brief

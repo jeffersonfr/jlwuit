@@ -300,7 +300,7 @@ void MP4Player::SetFullTime(std::string time)
 	*/
 }
 
-bool MP4Player::Animated()
+bool MP4Player::Animate()
 {
 	_screen_saver_state = 0;
 	_screen_saver_timeout = _screen_saver_timeout + 1;

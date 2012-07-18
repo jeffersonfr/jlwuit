@@ -199,7 +199,7 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 * \brief
 		 *
 		 */
-		virtual bool Animated();
+		virtual bool Animate();
 
 		/**
 		 * \brief
