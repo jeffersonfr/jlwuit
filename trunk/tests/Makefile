@@ -12,6 +12,7 @@ MODULES = \
 			msg \
 			prefs \
 			slide \
+			video \
 
 all:
 	@for i in $(MODULES); do \

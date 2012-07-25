@@ -46,7 +46,7 @@ bool HEImageFilter::Transform(uint8_t *data, int width, int height)
 					max_b = 0x00;
 
 	for (int i=0; i<size; i+=4) {
-		uint8_t a = data[i+3],
+		uint8_t // a = data[i+3],
 						r = data[i+2],
 						g = data[i+1],
 						b = data[i+0];

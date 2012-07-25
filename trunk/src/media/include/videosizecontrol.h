@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_VIDESIZECONTROL_H
+#ifndef LWUIT_VIDEOSIZECONTROL_H
 #define LWUIT_VIDEOSIZECONTROL_H
 
 #include "control.h"

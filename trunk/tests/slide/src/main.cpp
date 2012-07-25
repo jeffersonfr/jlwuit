@@ -358,6 +358,8 @@ class SlideTest : public jlwuit::Scene {
 		{
 			SetAnimationDelay(100);
 
+			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
+
 			Add(_slide = new SlideComponent(100, 100, 1280, 240));
 		}
 

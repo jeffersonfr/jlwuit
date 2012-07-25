@@ -18,12 +18,21 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "player.h"
+
+#include <algorithm>
+
 #include <stdio.h>
 
 namespace jlwuit {
 
 Player::Player()
 {
+	_media_info.title = "";
+	_media_info.author = "";
+	_media_info.album = "";
+	_media_info.genre = "";
+	_media_info.comments = "";
+	_media_info.year = -1;
 }
 
 Player::~Player()
@@ -35,6 +44,11 @@ Player::~Player()
 
 		delete control;
 	}
+}
+
+lwuit_media_info_t Player::GetMediaInfo()
+{
+	return _media_info;
 }
 
 void Player::Play()
@@ -68,11 +82,6 @@ uint64_t Player::GetMediaTime()
 
 void Player::SetLoop(bool b)
 {
-}
-
-bool Player::IsPlaying()
-{
-	return false;
 }
 
 bool Player::IsLoop()
@@ -114,10 +123,26 @@ Control * Player::GetControl(std::string id)
 
 void Player::RegisterPlayerListener(PlayerEventListener *listener)
 {
+	if (listener == NULL) {
+		return;
+	}
+
+	if (std::find(_player_listeners.begin(), _player_listeners.end(), listener) == _player_listeners.end()) {
+		_player_listeners.push_back(listener);
+	}
 }
 
 void Player::RemovePlayerListener(PlayerEventListener *listener)
 {
+	if (listener == NULL) {
+		return;
+	}
+
+	std::vector<PlayerEventListener *>::iterator i = std::find(_player_listeners.begin(), _player_listeners.end(), listener);
+	
+	if (i != _player_listeners.end()) {
+		_player_listeners.erase(i);
+	}
 }
 
 }
