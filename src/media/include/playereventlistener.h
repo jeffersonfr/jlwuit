@@ -46,77 +46,32 @@ class PlayerEventListener {
 		virtual ~PlayerEventListener();
 
 		/**
-		 * \brief Este método recebe eventos MediaPlayerEvent do tipo STARTED_EVENT. Este tipo 
-		 * de evento indica o início da reprodução de mídia.
+		 * \brief
 		 *
-		 * O objeto <i>event</i> recebido no parâmetro não deve ser removido da memória
-		 * dentro deste método. É papel da fonte disparadora de eventos remover os eventos 
-		 * criados. Além disso, o ouvinte não deve guardar referência para o evento fora do 
-		 * contexto de execução de <i>MediaStarted</i> pois o disparador de evento é livre 
-		 * para remover o evento da memória a qualquer momento após o retorno do método <i>
-		 * MediaStarted</i>.
-		 *
-		 * \param event O objeto <i>MediaPlayerEvent</i> carregando informações a respeito do evento
 		 */
 		virtual void MediaStarted(PlayerEvent *event);
 
 		/**
-		 * \brief Este método recebe eventos MediaPlayerEvent do tipo RESUMED_EVENT. Este tipo 
-		 * de evento indica o início da reprodução de mídia.
+		 * \brief
 		 *
-		 * O objeto <i>event</i> recebido no parâmetro não deve ser removido da memória
-		 * dentro deste método. É papel da fonte disparadora de eventos remover os eventos 
-		 * criados. Além disso, o ouvinte não deve guardar referência para o evento fora do 
-		 * contexto de execução de <i>MediaResumed</i> pois o disparador de evento é livre 
-		 * para remover o evento da memória a qualquer momento após o retorno do método <i>
-		 * MediaResumed</i>.
-		 *
-		 * \param event O objeto <i>MediaPlayerEvent</i> carregando informações a respeito do evento
 		 */
 		virtual void MediaResumed(PlayerEvent *event);
 
 		/**
-		 * \brief Este método recebe eventos MediaPlayerEvent do tipo PAUSED_EVENT. Este tipo 
-		 * de evento indica o início da reprodução de mídia.
+		 * \brief
 		 *
-		 * O objeto <i>event</i> recebido no parâmetro não deve ser removido da memória
-		 * dentro deste método. É papel da fonte disparadora de eventos remover os eventos 
-		 * criados. Além disso, o ouvinte não deve guardar referência para o evento fora do 
-		 * contexto de execução de <i>MediaPaused</i> pois o disparador de evento é livre 
-		 * para remover o evento da memória a qualquer momento após o retorno do método <i>
-		 * MediaPaused</i>.
-		 *
-		 * \param event O objeto <i>MediaPlayerEvent</i> carregando informações a respeito do evento
 		 */
 		virtual void MediaPaused(PlayerEvent *event);
 
 		/**
-		 * \brief Este método recebe eventos MediaPlayerEvent do tipo STOPPED_EVENT. Este tipo 
-		 * de evento indica o início da reprodução de mídia.
+		 * \brief
 		 *
-		 * O objeto <i>event</i> recebido no parâmetro não deve ser removido da memória
-		 * dentro deste método. É papel da fonte disparadora de eventos remover os eventos 
-		 * criados. Além disso, o ouvinte não deve guardar referência para o evento fora do 
-		 * contexto de execução de <i>MediaStopped</i> pois o disparador de evento é livre 
-		 * para remover o evento da memória a qualquer momento após o retorno do método <i>
-		 * MediaStopped</i>.
-		 *
-		 * \param event O objeto <i>MediaPlayerEvent</i> carregando informações a respeito do evento
 		 */
 		virtual void MediaStopped(PlayerEvent *event);
 
 		/**
-		 * \brief Este método recebe eventos MediaPlayerEvent do tipo FINISHED_EVENT. Este tipo 
-		 * de evento indica o início da reprodução de mídia.
+		 * \brief
 		 *
-		 * O objeto <i>event</i> recebido no parâmetro não deve ser removido da memória
-		 * dentro deste método. É papel da fonte disparadora de eventos remover os eventos 
-		 * criados. Além disso, o ouvinte não deve guardar referência para o evento fora do 
-		 * contexto de execução de <i>MediaFinished</i> pois o disparador de evento é livre 
-		 * para remover o evento da memória a qualquer momento após o retorno do método <i>
-		 * MediaFinished</i>.
-		 *
-		 * \param event O objeto <i>MediaPlayerEvent</i> carregando informações a respeito do evento
 		 */
 		virtual void MediaFinished(PlayerEvent *event);
 

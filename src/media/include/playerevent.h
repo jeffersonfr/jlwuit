@@ -27,8 +27,8 @@ namespace jlwuit {
  *
  */
 enum lwuit_player_event_t {
-	LPE_PAUSED,
 	LPE_STARTED,
+	LPE_PAUSED,
 	LPE_RESUMED,
 	LPE_STOPPED,
 	LPE_FINISHED

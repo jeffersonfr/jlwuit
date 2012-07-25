@@ -28,11 +28,15 @@
 
 namespace jlwuit {
 
-class VideoPlayerImpl : public jlwuit::Player {
+class VideoComponentImpl;
 
-	private:
+class VideoPlayerImpl : public jlwuit::Player, public jthread::Thread {
+
+	public:
 		/** \brief */
 		IDirectFBVideoProvider *_provider;
+		/** \brief */
+		IDirectFBEventBuffer *_events;
 		/** \brief */
 		jthread::Mutex _mutex;
 		/** \brief */
@@ -42,7 +46,21 @@ class VideoPlayerImpl : public jlwuit::Player {
 		/** \brief */
 		jlwuit::Control *_video_format;
 		/** \brief */
-		jlwuit::Component *_component;
+		VideoComponentImpl *_component;
+		/** \brief */
+		double _aspect;
+		/** \brief */
+		double _decode_rate;
+		/** \brief */
+		bool _is_paused;
+		/** \brief */
+		bool _is_closed;
+		/** \brief */
+		bool _is_loop;
+		/** \brief */
+		bool _has_audio;
+		/** \brief */
+		bool _has_video;
 
 	private:
 		/**
@@ -116,12 +134,6 @@ class VideoPlayerImpl : public jlwuit::Player {
 		 * \brief
 		 *
 		 */
-		virtual bool IsPlaying();
-		
-		/**
-		 * \brief
-		 *
-		 */
 		virtual bool IsLoop();
 		
 		/**
@@ -142,6 +154,18 @@ class VideoPlayerImpl : public jlwuit::Player {
 		 */
 		virtual Component * GetVisualComponent();
 
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Run();
+		
+		/*
+		 * \brief
+		 *
+		 */
+		virtual void DispatchPlayerEvent(PlayerEvent *event);
+		
 };
 
 }

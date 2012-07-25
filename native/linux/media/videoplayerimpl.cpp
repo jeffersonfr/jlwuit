@@ -21,6 +21,7 @@
 #include "controlexception.h"
 #include "videosizecontrol.h"
 #include "videoformatcontrol.h"
+#include "volumecontrol.h"
 #include "mediaexception.h"
 #include "imageimpl.h"
 
@@ -31,14 +32,39 @@ namespace jlwuit {
 
 class VideoComponentImpl : public jlwuit::Component {
 
-	private:
+	public:
+		/** \brief */
+		jthread::Mutex _mutex;
+		/** \brief */
 		jlwuit::ImageImpl *_buffer;
+		/** \brief */
+		jgui::Image *_image;
+		/** \brief */
+		jlwuit::lwuit_region_t _src;
+		/** \brief */
+		jlwuit::lwuit_region_t _dst;
+		/** \brief */
+		bool _diff;
 
 	public:
 		VideoComponentImpl(int x, int y, int w, int h, int iw, int ih):
 			jlwuit::Component(x, y, w, h)
 		{
-			_buffer = new jlwuit::ImageImpl(jgui::Image::CreateImage(w, h, jgui::JPF_ARGB, w, h));
+			_buffer = new jlwuit::ImageImpl(_image = jgui::Image::CreateImage(w, h, jgui::JPF_ARGB, iw, ih));
+
+			_src.x = 0;
+			_src.y = 0;
+			_src.width = w;
+			_src.height = h;
+
+			_dst.x = 0;
+			_dst.y = 0;
+			_dst.width = w;
+			_dst.height = h;
+
+			_diff = false;
+
+			SetVisible(true);
 		}
 
 		virtual ~VideoComponentImpl()
@@ -48,7 +74,22 @@ class VideoComponentImpl : public jlwuit::Component {
 
 		virtual void Paint(jlwuit::Graphics *g)
 		{
-			g->DrawImage(_buffer, 0, 0, GetWidth(), GetHeight());
+			jlwuit::Component::Paint(g);
+
+			if (_diff == false) {
+				g->DrawImage(_buffer, 0, 0, GetWidth(), GetHeight());
+			} else {
+				jlwuit::lwuit_region_t clip = g->GetClip();
+
+				g->SetClip(0, 0, GetWidth(), GetHeight());
+				g->DrawImage(_buffer, _src.x, _src.y, _src.width, _src.height, _dst.x, _dst.y, _dst.width, _dst.height);
+				g->SetClip(clip.x, clip.y, clip.width, clip.height);
+			}
+		}
+
+		virtual jgui::Image * GetImage()
+		{
+			return _image;
 		}
 
 		virtual jlwuit::Image * GetBuffer()
@@ -56,15 +97,101 @@ class VideoComponentImpl : public jlwuit::Component {
 			return _buffer;
 		}
 
-}
+};
+
+class VolumeControlImpl : public VolumeControl {
+	
+	private:
+		/** \brief */
+		VideoPlayerImpl *_player;
+		/** \brief */
+		int _level;
+		/** \brief */
+		bool _is_muted;
+
+	public:
+		VolumeControlImpl(VideoPlayerImpl *player):
+			VolumeControl()
+		{
+			_player = player;
+			_level = 50;
+			_is_muted = false;
+		}
+
+		virtual ~VolumeControlImpl()
+		{
+		}
+
+		virtual int GetLevel()
+		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			float level = 0.0f;
+
+			if (_player->_provider != NULL) {
+				_player->_provider->GetVolume(_player->_provider, &level);
+			}
+
+			return (int)(level*100.0f);
+		}
+
+		virtual void SetLevel(int level)
+		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			_level = level;
+
+			if (_level <= 0) {
+				_level = 0;
+				_is_muted = true;
+			} else {
+				if (_level > 100) {
+					_level = 100;
+				}
+
+				_is_muted = false;
+			}
+
+			if (_player->_provider != NULL) {
+				_player->_provider->SetVolume(_player->_provider, _level/100.0f);
+			}
+		}
+		
+		virtual bool IsMuted()
+		{
+			return _is_muted;
+		}
+
+		virtual void SetMute(bool b)
+		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_is_muted == b) {
+				return;
+			}
+
+			if (_is_muted == false) {
+				float level = _level/100.0f;
+
+				if (_player->_provider != NULL) {
+					_player->_provider->SetVolume(_player->_provider, level);
+				}
+			} else {
+				if (_player->_provider != NULL) {
+					_player->_provider->SetVolume(_player->_provider, 0.0f);
+				}
+			}
+		}
+
+};
 
 class VideoSizeControlImpl : public VideoSizeControl {
 	
 	private:
-		Player *_player;
+		VideoPlayerImpl *_player;
 
 	public:
-		VideoSizeControlImpl(Player *player):
+		VideoSizeControlImpl(VideoPlayerImpl *player):
 			VideoSizeControl()
 		{
 			_player = player;
@@ -76,21 +203,48 @@ class VideoSizeControlImpl : public VideoSizeControl {
 
 		virtual void SetSource(int x, int y, int w, int h)
 		{
-			throw ControlException("Main player cannot set source bounds");
+			jthread::AutoLock lock(&_player->_component->_mutex);
+			
+			_player->_component->_src.x = x;
+			_player->_component->_src.y = y;
+			_player->_component->_src.width = w;
+			_player->_component->_src.height = h;
+			
+			_player->_component->_diff = false;
+
+			if (_player->_component->_src.x != _player->_component->_dst.x ||
+					_player->_component->_src.y != _player->_component->_dst.y ||
+					_player->_component->_src.width != _player->_component->_dst.width ||
+					_player->_component->_src.height != _player->_component->_dst.height) {
+				_player->_component->_diff = true;
+			}
 		}
 
 		virtual void SetDestination(int x, int y, int w, int h)
 		{
+			_player->_component->_dst.x = x;
+			_player->_component->_dst.y = y;
+			_player->_component->_dst.width = w;
+			_player->_component->_dst.height = h;
+			
+			_player->_component->_diff = false;
+
+			if (_player->_component->_src.x != _player->_component->_dst.x ||
+					_player->_component->_src.y != _player->_component->_dst.y ||
+					_player->_component->_src.width != _player->_component->_dst.width ||
+					_player->_component->_src.height != _player->_component->_dst.height) {
+				_player->_component->_diff = true;
+			}
 		}
 
 		virtual lwuit_region_t GetSource()
 		{
-			return GetDestination();
+			return _player->_component->_src;
 		}
 
 		virtual lwuit_region_t GetDestination()
 		{
-			throw jlwuit::MediaException("VideoSizeControlImpl::GetDestination() not implemented");
+			return _player->_component->_dst;
 		}
 
 };
@@ -98,10 +252,10 @@ class VideoSizeControlImpl : public VideoSizeControl {
 class VideoFormatControlImpl : public VideoFormatControl {
 	
 	private:
-		Player *_player;
+		VideoPlayerImpl *_player;
 
 	public:
-		VideoFormatControlImpl(Player *player):
+		VideoFormatControlImpl(VideoPlayerImpl *player):
 			VideoFormatControl()
 		{
 			_player = player;
@@ -129,26 +283,81 @@ class VideoFormatControlImpl : public VideoFormatControl {
 
 		virtual void SetContrast(int value)
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_CONTRAST);
+				adj.contrast = value;
+
+				_player->_provider->SetColorAdjustment(_player->_provider, &adj);
+			}
 		}
 
 		virtual void SetSaturation(int value)
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_SATURATION);
+				adj.saturation = value;
+
+				_player->_provider->SetColorAdjustment(_player->_provider, &adj);
+			}
 		}
 
 		virtual void SetHUE(int value)
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_HUE);
+				adj.hue = value;
+
+				_player->_provider->SetColorAdjustment(_player->_provider, &adj);
+			}
 		}
 
 		virtual void SetBrightness(int value)
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_BRIGHTNESS);
+				adj.brightness = value;
+
+				_player->_provider->SetColorAdjustment(_player->_provider, &adj);
+			}
 		}
 
 		virtual void SetSharpness(int value)
 		{
+			// TODO::
 		}
 
 		virtual lwuit_aspect_ratio_t GetAspectRatio()
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			double aspect = _player->_aspect;
+
+			if (aspect == (1.0/1.0)) {
+				return LAR_1x1;
+			} else if (aspect == (2.0/3.0)) {
+				return LAR_2x3;
+			} else if (aspect == (4.0/3.0)) {
+				return LAR_4x3;
+			} else if (aspect == (16.0/9.0)) {
+				return LAR_16x9;
+			}
+
 			return LAR_16x9;
 		}
 
@@ -169,21 +378,69 @@ class VideoFormatControlImpl : public VideoFormatControl {
 
 		virtual int GetContrast()
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_CONTRAST);
+
+				_player->_provider->GetColorAdjustment(_player->_provider, &adj);
+			
+				return adj.contrast;
+			}
+				
 			return 0;
 		}
 
 		virtual int GetSaturation()
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_SATURATION);
+
+				_player->_provider->GetColorAdjustment(_player->_provider, &adj);
+			
+				return adj.saturation;
+			}
+				
 			return 0;
 		}
 
 		virtual int GetHUE()
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_HUE);
+
+				_player->_provider->GetColorAdjustment(_player->_provider, &adj);
+			
+				return adj.hue;
+			}
+				
 			return 0;
 		}
 
 		virtual int GetBrightness()
 		{
+			jthread::AutoLock lock(&_player->_mutex);
+
+			if (_player->_provider != NULL) {
+				DFBColorAdjustment adj;
+
+				adj.flags = (DFBColorAdjustmentFlags)(DCAF_BRIGHTNESS);
+
+				_player->_provider->GetColorAdjustment(_player->_provider, &adj);
+			
+				return adj.brightness;
+			}
+				
 			return 0;
 		}
 
@@ -197,9 +454,16 @@ class VideoFormatControlImpl : public VideoFormatControl {
 VideoPlayerImpl::VideoPlayerImpl(std::string file)
 {
 	_file = file;
+	_is_paused = false;
+	_decode_rate = 1.0;
+	_is_loop = false;
+	_is_closed = false;
+	_has_audio = false;
+	_has_video = false;
+	_component = NULL;
 
 	IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
-
+	
 	if (directfb->CreateVideoProvider(directfb, _file.c_str(), &_provider) != DFB_OK) {
 		_provider = NULL;
 
@@ -207,40 +471,74 @@ VideoPlayerImpl::VideoPlayerImpl(std::string file)
 	}
 		
 	DFBSurfaceDescription sdsc;
+	DFBStreamDescription mdsc;
 	
+	_provider->SetPlaybackFlags(_provider, DVPLAY_NOFX);
 	_provider->GetSurfaceDescription(_provider, &sdsc);
+	_provider->GetStreamDescription(_provider, &mdsc);
+	_provider->CreateEventBuffer(_provider, &_events);
 
-	_component = new VideoComponentImpl(0, 0, sdsc.width, sdsc.height);
+	_aspect = 16.0/9.0;
+	
+	_media_info.title = std::string(mdsc.title);
+	_media_info.author = std::string(mdsc.author);
+	_media_info.album = std::string(mdsc.album);
+	_media_info.genre = std::string(mdsc.genre);
+	_media_info.comments = std::string(mdsc.comment);
+	_media_info.year = mdsc.year;
 
-	_controls.push_back(new VideoSizeControlImpl(this));
-	_controls.push_back(new VideoFormatControlImpl(this));
+	if (mdsc.caps & DVSCAPS_AUDIO) {
+		_has_audio = true;
+	
+		_controls.push_back(new VolumeControlImpl(this));
+	}
+
+	if (mdsc.caps & DVSCAPS_VIDEO) {
+		_has_video = true;
+		_aspect = mdsc.video.aspect;
+
+		_component = new VideoComponentImpl(0, 0, sdsc.width, sdsc.height, sdsc.width, sdsc.height);
+
+		_controls.push_back(new VideoSizeControlImpl(this));
+		_controls.push_back(new VideoFormatControlImpl(this));
+	}
+
+	Start();
 }
 
 VideoPlayerImpl::~VideoPlayerImpl()
 {
-	if (_provider != NULL) {
-		_provider->Release(_provider);
+	Close();
+	
+	delete _component;
+	_component = NULL;
+
+	for (std::vector<Control *>::iterator i=_controls.begin(); i!=_controls.end(); i++) {
+		Control *control = (*i);
+
+		delete control;
 	}
+
+	_controls.clear();
 }
 
 void VideoPlayerImpl::Callback(void *ctx)
 {
-	// TODO:: otimizacao
-	// if (random() < 80%) {
-	// 	draw()
-	// } 
-	// return;
-	reinterpret_cast<VideoPlayerImpl *>(ctx)->GetVisualComponent()->Repaint();
+	reinterpret_cast<jlwuit::Component *>(ctx)->Repaint();
 }
 		
 void VideoPlayerImpl::Play()
 {
 	jthread::AutoLock lock(&_mutex);
 
-	if (_provider != NULL) {
-		IDirectFBSurface *surface = (IDirectFBSurface *)_component->GetBuffer()->GetGraphics()->GetNativeSurface();
+	if (_is_paused == false && _provider != NULL) {
+		jgui::Graphics *graphics = dynamic_cast<VideoComponentImpl *>(_component)->GetImage()->GetGraphics();
 
-		_provider->PlayTo(_provider, surface, NULL, VideoPlayerImpl::Callback, (void *)this);
+		if (_has_video == true) {
+			_provider->PlayTo(_provider, (IDirectFBSurface *)graphics->GetNativeSurface(), NULL, VideoPlayerImpl::Callback, (void *)_component);
+		} else {
+			_provider->PlayTo(_provider, (IDirectFBSurface *)graphics->GetNativeSurface(), NULL, NULL, NULL);
+		}
 
 		usleep(500000);
 	}
@@ -248,6 +546,29 @@ void VideoPlayerImpl::Play()
 
 void VideoPlayerImpl::Pause()
 {
+	jthread::AutoLock lock(&_mutex);
+
+	if (_is_paused == false) {
+		_is_paused = true;
+		_decode_rate = GetDecodeRate();
+
+		SetDecodeRate(0.0);
+		
+		DispatchPlayerEvent(new PlayerEvent(this, LPE_PAUSED));
+	}
+}
+
+void VideoPlayerImpl::Resume()
+{
+	jthread::AutoLock lock(&_mutex);
+
+	if (_is_paused == true) {
+		_is_paused = false;
+
+		SetDecodeRate(_decode_rate);
+		
+		DispatchPlayerEvent(new PlayerEvent(this, LPE_RESUMED));
+	}
 }
 
 void VideoPlayerImpl::Stop()
@@ -256,16 +577,34 @@ void VideoPlayerImpl::Stop()
 
 	if (_provider != NULL) {
 		_provider->Stop(_provider);
-		_window->Repaint();
-	}
-}
 
-void VideoPlayerImpl::Resume()
-{
+		if (_has_video == true) {
+			_component->Repaint();
+		}
+
+		_is_paused = false;
+	}
 }
 
 void VideoPlayerImpl::Close()
 {
+	jthread::AutoLock lock(&_mutex);
+
+	if (_is_closed == true) {
+		return;
+	}
+
+	_is_closed = true;
+
+	if (_provider != NULL) {
+		_events->Release(_events);
+		_events = NULL;
+
+		_provider->Release(_provider);
+		_provider = NULL;
+	}
+
+	WaitThread();
 }
 
 void VideoPlayerImpl::SetMediaTime(uint64_t time)
@@ -292,21 +631,31 @@ uint64_t VideoPlayerImpl::GetMediaTime()
 
 void VideoPlayerImpl::SetLoop(bool b)
 {
-}
+	jthread::AutoLock lock(&_mutex);
 
-bool VideoPlayerImpl::IsPlaying()
-{
-	return false;
+	_is_loop = b;
+
+	if (_provider != NULL) {
+		if (_is_loop == false) {
+			_provider->SetPlaybackFlags(_provider, DVPLAY_NOFX);
+		} else {
+			_provider->SetPlaybackFlags(_provider, DVPLAY_LOOPING);
+		}
+	}
 }
 
 bool VideoPlayerImpl::IsLoop()
 {
-	return false;
+	return _is_loop;
 }
 
 void VideoPlayerImpl::SetDecodeRate(double rate)
 {
 	jthread::AutoLock lock(&_mutex);
+
+	if (rate != 0.0) {
+		_is_paused = false;
+	}
 
 	if (_provider != NULL) {
 		_provider->SetSpeed(_provider, rate);
@@ -329,6 +678,64 @@ double VideoPlayerImpl::GetDecodeRate()
 Component * VideoPlayerImpl::GetVisualComponent()
 {
 	return _component;
+}
+
+void VideoPlayerImpl::Run()
+{
+	while (_is_closed == false) {
+		_events->WaitForEventWithTimeout(_events, 0, 100);
+
+		while (_events->HasEvent(_events) == DFB_OK) {
+			DFBVideoProviderEvent event;
+
+			_events->GetEvent(_events, DFB_EVENT(&event));
+
+			if (event.clazz == DFEC_VIDEOPROVIDER) {
+				// TODO:: disparar eventos de midia
+				if (event.type == DVPET_STARTED) {
+					DispatchPlayerEvent(new PlayerEvent(this, LPE_STARTED));
+				} else if (event.type == DVPET_STOPPED) {
+					DispatchPlayerEvent(new PlayerEvent(this, LPE_STOPPED));
+				} else if (event.type == DVPET_FINISHED) {
+					DispatchPlayerEvent(new PlayerEvent(this, LPE_FINISHED));
+				}
+			}
+		}
+	}
+}
+
+void VideoPlayerImpl::DispatchPlayerEvent(PlayerEvent *event)
+{
+	if (event == NULL) {
+		return;
+	}
+
+	int k = 0,
+			size = (int)_player_listeners.size();
+
+	while (k++ < (int)_player_listeners.size()) {
+		PlayerEventListener *listener = _player_listeners[k-1];
+
+		if (event->GetType() == LPE_STARTED) {
+			listener->MediaStarted(event);
+		} else if (event->GetType() == LPE_PAUSED) {
+			listener->MediaPaused(event);
+		} else if (event->GetType() == LPE_RESUMED) {
+			listener->MediaResumed(event);
+		} else if (event->GetType() == LPE_STOPPED) {
+			listener->MediaStopped(event);
+		} else if (event->GetType() == LPE_FINISHED) {
+			listener->MediaFinished(event);
+		}
+
+		if (size != (int)_player_listeners.size()) {
+			size = (int)_player_listeners.size();
+
+			k--;
+		}
+	}
+
+	delete event;
 }
 
 }

@@ -94,10 +94,10 @@ bool LHEImageFilter::Transform(uint8_t *data, int width, int height)
 
 		for (int i=0; i<width-1; i++) {
 			int index = (j*width+i)*4;
-			uint8_t a = buffer[index+3],
-							r = buffer[index+2],
-							g = buffer[index+1],
-							b = buffer[index+0];
+			uint8_t a = buffer[index+3];
+							// r = buffer[index+2],
+							// g = buffer[index+1],
+							// b = buffer[index+0];
 
       left = i-_factor;
 			right = i+_factor;

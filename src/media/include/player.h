@@ -28,6 +28,15 @@
 
 namespace jlwuit {
 
+struct lwuit_media_info_t {
+	std::string title;
+	std::string author;
+	std::string album;
+	std::string genre;
+	std::string comments;
+	int year;
+};
+
 /**
  * \brief
  *
@@ -37,7 +46,11 @@ class Player {
 
 	protected:
 		/** \brief */
+		std::vector<PlayerEventListener *> _player_listeners;
+		/** \brief */
 		std::vector<Control *> _controls;
+		/** \brief */
+		lwuit_media_info_t _media_info;
 
 	protected:
 		/**
@@ -58,6 +71,12 @@ class Player {
 		 *
 		 */
 		virtual void Play();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual lwuit_media_info_t GetMediaInfo();
 
 		/**
 		 * \brief Pause media decode.
@@ -102,13 +121,6 @@ class Player {
 		 */
 		virtual void SetLoop(bool b);
 
-		/**
-		 * \brief Return if this player still decoding the media.
-		 *
-		 * \return
-		 */
-		virtual bool IsPlaying();
-		
 		/**
 		 * \brief 
 		 *
