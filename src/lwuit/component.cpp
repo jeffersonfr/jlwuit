@@ -612,8 +612,6 @@ void Component::DoLayout()
 			}
 		}
 	}
-
-	Repaint();
 }
 
 bool Component::Intersect(int x, int y)
@@ -742,7 +740,7 @@ void Component::Repaint(Component *cmp)
 	Invalidate();
 
 	if (_parent != NULL) {
-		_parent->Repaint();
+		_parent->Repaint(cmp);
 	}
 }
 

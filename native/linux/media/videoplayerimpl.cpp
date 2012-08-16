@@ -524,7 +524,10 @@ VideoPlayerImpl::~VideoPlayerImpl()
 
 void VideoPlayerImpl::Callback(void *ctx)
 {
-	reinterpret_cast<jlwuit::Component *>(ctx)->Repaint();
+	// reinterpret_cast<jlwuit::Component *>(ctx)->Repaint();
+	jlwuit::Component *cmp = reinterpret_cast<jlwuit::Component *>(ctx);
+	
+	cmp->Repaint(cmp);
 }
 		
 void VideoPlayerImpl::Play()
