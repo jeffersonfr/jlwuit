@@ -19,94 +19,147 @@
  ***************************************************************************/
 #include "implementation.h"
 #include "scene.h"
-#include "playermanager.h"
 #include "device.h"
+#include "playermanager.h"
 
 #include <stdio.h>
-#include <math.h>
 
-#define GAPX		16
-#define GAPY		16
+#define BOX_NUMS	4
+#define BOX_STEP	32
+#define BOX_SIZE	240
 
-class VideoTest : public jlwuit::Scene {
+struct box_t {
+	jlwuit::Player *player;
+	int dx;
+	int dy;
+};
+
+class MediaStart : public jthread::Thread {
 
 	private:
 		jlwuit::Player *_player;
 
 	public:
-		VideoTest():
+		MediaStart(jlwuit::Player *player)
+		{
+			_player = player;
+		}
+
+		virtual ~MediaStart()
+		{
+		}
+
+		virtual void Run()
+		{
+			_player->Play();
+		}
+
+};
+
+class SceneTest : public jlwuit::Scene {
+
+	private:
+		std::vector<struct box_t *> _boxes;
+
+	public:
+		SceneTest():
 			jlwuit::Scene(0, 0, 1920, 1080)
 		{
-			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(false);
+			jlwuit::lwuit_size_t size = GetSize();
 
-			_player = jlwuit::PlayerManager::CreatePlayer("channels/channel1");
+			for (int i=0; i<BOX_NUMS; i++) {
+				jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("channels/channel1");
+				jlwuit::Component *cmp = player->GetVisualComponent();
 
-			jlwuit::Component *cmp = _player->GetVisualComponent();
+				cmp->SetBounds(random()%(size.width-BOX_SIZE), random()%(size.height-BOX_SIZE), BOX_SIZE, BOX_SIZE);
 
-			cmp->SetBounds(100, 100, 320, 240);
+				Add(cmp);
 
-			Add(cmp);
-			
-			_player->Play();
-				
+				struct box_t *box = new struct box_t;
+
+				box->player = player;
+				box->dx = ((random()%2) == 0)?-1:1;
+				box->dy = ((random()%2) == 0)?-1:1;
+
+				_boxes.push_back(box);
+			}
+
+			SetAnimationDelay(100);
+
 			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 		}
 
-		virtual ~VideoTest()
+		virtual ~SceneTest()
 		{
-			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(true);
+			// TODO:: delete boxes
 		}
 
-		virtual void Paint(jlwuit::Graphics *g)
+		virtual void StartMedia()
 		{
-			jlwuit::Scene::Paint(g);
+			// INFO:: MediaStart starts all players in parallel
+			MediaStart **ms = new MediaStart*[_boxes.size()];
+			int k = 0;
 
-			jlwuit::Component *cmp = _player->GetVisualComponent();
-			jlwuit::lwuit_region_t bounds = cmp->GetBounds();
+			for (std::vector<struct box_t *>::iterator i=_boxes.begin(); i!=_boxes.end(); i++) {
+				ms[k++] = new MediaStart((*i)->player);
 
-			g->SetColor(jlwuit::Color::Red);
-			g->DrawRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
-		}
-
-		virtual bool OnKeyPress(jlwuit::UserEvent *event)
-		{
-			jlwuit::Component *cmp = _player->GetVisualComponent();
-			jlwuit::lwuit_region_t bounds = cmp->GetBounds();
-
-			if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT) {
-				bounds.x = bounds.x - 10;
-
-				if (bounds.x < 0) {
-					bounds.x = 0;
-				}
-			} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT) {
-				bounds.x = bounds.x + 10;
-
-				if ((bounds.x+bounds.width) >= GetWidth()) {
-					bounds.x = GetWidth()-bounds.width-1;
-				}
-			} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_UP) {
-				bounds.y = bounds.y - 10;
-
-				if (bounds.y < 0) {
-					bounds.y = 0;
-				}
-			} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_DOWN) {
-				bounds.y = bounds.y + 10;
-
-				if ((bounds.y+bounds.height) >= GetHeight()) {
-					bounds.y = GetHeight()-bounds.height-1;
-				}
-			} else if (event->GetKeySymbol() == jlwuit::LKS_p) {
-				_player->Pause();
-			} else if (event->GetKeySymbol() == jlwuit::LKS_r) {
-				_player->Resume();
+				ms[k-1]->Start();
 			}
 
-			cmp->SetBounds(bounds);
-			cmp->Repaint();
+			for (int i=0; i<k; i++) {
+				ms[i]->WaitThread();
 
-			return false;
+				delete ms[i];
+			}
+
+			delete [] ms;
+		}
+
+		virtual void StopMedia()
+		{
+			for (std::vector<struct box_t *>::iterator i=_boxes.begin(); i!=_boxes.end(); i++) {
+				(*i)->player->Stop();
+				(*i)->player->Close();
+			}
+		}
+
+		virtual bool Animate()
+		{
+			jlwuit::lwuit_size_t size = GetSize();
+
+			for (std::vector<struct box_t *>::iterator i=_boxes.begin(); i!=_boxes.end(); i++) {
+				struct box_t *box = (*i);
+	
+				jlwuit::Component *cmp = box->player->GetVisualComponent();
+				jlwuit::lwuit_point_t location = cmp->GetLocation();
+
+				location.x = location.x+box->dx*BOX_STEP;
+				location.y = location.y+box->dy*BOX_STEP;
+
+				if (location.x < 0) {
+					location.x = 0;
+					box->dx = 1;
+				}
+
+				if ((location.x+BOX_SIZE) > size.width) {
+					location.x = size.width-BOX_SIZE;
+					box->dx = -1;
+				}
+
+				if (cmp->GetY() < 0) {
+					location.y = 0;
+					box->dy = 1;
+				}
+
+				if ((location.y+BOX_SIZE) > size.height) {
+					location.y = size.height-BOX_SIZE;
+					box->dy = -1;
+				}
+
+				cmp->SetLocation(location);
+			}
+
+			return true;
 		}
 
 };
@@ -115,9 +168,12 @@ int main()
 {
 	jlwuit::Implementation::GetInstance()->Initialize();
 
-	VideoTest app;
+	srand(time(NULL));
+
+	SceneTest app;
 
 	app.Show();
+	app.StartMedia();
 
 	sleep(100000);
 

@@ -35,6 +35,7 @@ class GraphicLayerImpl : public LayerImpl, public Component, public jthread::Thr
 		std::vector<Scene *> _scenes;
 		jthread::Mutex _mutex;
 		jthread::Condition _sem;
+		jlwuit::lwuit_region_t dirty;
 		Image *_buffer;
 		bool _refresh;
 
@@ -44,12 +45,6 @@ class GraphicLayerImpl : public LayerImpl, public Component, public jthread::Thr
 		 *
 		 */
 		virtual void Initialize();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Refresh();
 
 		/**
 		 * \brief

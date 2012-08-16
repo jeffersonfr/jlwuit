@@ -66,7 +66,36 @@ void GraphicLayerImpl::Initialize()
 	Start();
 }
 
-void GraphicLayerImpl::Refresh()
+void GraphicLayerImpl::Run()
+{
+	_window->Show();
+
+	jgui::Graphics *g = _window->GetGraphics();
+	jgui::Image *img = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
+	Graphics *gb = _buffer->GetGraphics();
+
+	g->SetBlittingFlags(jgui::JBF_NOFX);
+	g->Clear();
+
+	while (true) {
+		_mutex.Lock();
+
+		while (_refresh == false) {
+			_sem.Wait(&_mutex);
+		}
+
+		_refresh = false;
+
+		Paint(gb);
+
+		_mutex.Unlock();
+
+		g->DrawImage(img, 0, 0);
+		g->Flip();
+	}
+}
+
+void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 {
 	jthread::AutoLock lock(&_mutex);
 
@@ -79,40 +108,8 @@ void GraphicLayerImpl::Refresh()
 	_sem.Notify();
 }
 
-void GraphicLayerImpl::Run()
-{
-	_window->Show();
-
-	jgui::Graphics *g = _window->GetGraphics();
-	Graphics *gb = _buffer->GetGraphics();
-
-	g->SetBlittingFlags(jgui::JBF_NOFX);
-	g->Clear();
-
-	while (true) {
-		jthread::AutoLock lock(&_mutex);
-
-		while (_refresh == false) {
-			_sem.Wait(&_mutex);
-		}
-
-		Paint(gb);
-
-		_refresh = false;
-
-		g->DrawImage(dynamic_cast<ImageImpl *>(_buffer)->_native_image, 0, 0);
-		g->Flip();
-	}
-}
-
-void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
-{
-	Refresh();
-}
-
 void GraphicLayerImpl::Paint(jlwuit::Graphics *g)
 {
-	// TODO:: sincronizar com LookAndFill::Lock/Unlock()
 	g->Reset();
 	g->Clear();
 

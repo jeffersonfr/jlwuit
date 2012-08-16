@@ -49,6 +49,7 @@ class DialogTest : public jlwuit::Scene {
 		DialogTest():
 			jlwuit::Scene(0, 0, 1920, 1080)
 		{
+			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 		}
 
 		virtual ~DialogTest()
