@@ -23,6 +23,10 @@
 
 namespace jlwuit {
 
+jgui::Graphics *g = NULL;
+jgui::Image *img = NULL;
+Graphics *gb = NULL;
+
 class RootContainerImpl : public RootContainer {
 
 	public:
@@ -63,20 +67,20 @@ void GraphicLayerImpl::Initialize()
 		_window->Show();
 	}
 
+	_window->Show();
+
+	g = _window->GetGraphics();
+	img = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
+	gb = _buffer->GetGraphics();
+
+	g->SetBlittingFlags(jgui::JBF_NOFX);
+	g->Clear();
+
 	Start();
 }
 
 void GraphicLayerImpl::Run()
 {
-	_window->Show();
-
-	jgui::Graphics *g = _window->GetGraphics();
-	jgui::Image *img = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
-	Graphics *gb = _buffer->GetGraphics();
-
-	g->SetBlittingFlags(jgui::JBF_NOFX);
-	g->Clear();
-
 	while (true) {
 		_mutex.Lock();
 
@@ -86,12 +90,16 @@ void GraphicLayerImpl::Run()
 
 		_refresh = false;
 
+		_optirun_mutex.Lock();
+
 		Paint(gb);
 
 		_mutex.Unlock();
 
 		g->DrawImage(img, 0, 0);
 		g->Flip();
+
+		_optirun_mutex.Unlock();
 	}
 }
 
@@ -100,6 +108,25 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 	jthread::AutoLock lock(&_mutex);
 
 	if (_refresh == true) {
+		return;
+	}
+
+	// INFO:: otimization for small updates made by components's call "cmp->Repaint(cmp)"
+	if (cmp != NULL) {
+		int absx = cmp->GetAbsoluteX(),
+				absy = cmp->GetAbsoluteY();
+		int cmpw = cmp->GetWidth(),
+				cmph = cmp->GetHeight();
+
+		_optirun_mutex.Lock();
+
+		Paint(gb);
+
+		g->DrawImage(img, absx, absy, cmpw, cmph, absx, absy);
+		g->Flip(absx, absy, cmpw, cmph);
+
+		_optirun_mutex.Unlock();
+
 		return;
 	}
 

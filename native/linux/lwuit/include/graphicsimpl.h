@@ -147,6 +147,18 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
+		virtual void SetPen(lwuit_pen_t pen);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual lwuit_pen_t GetPen();
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual void Clear();
 
 		/**

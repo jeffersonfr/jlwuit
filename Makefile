@@ -124,8 +124,12 @@ SRC_MEDIA	= \
 
 SRC_IPC		= \
 						ipcclient.o\
+						localipcclient.o\
+						remoteipcclient.o\
 						ipchelper.o\
 						ipcserver.o\
+						localipcserver.o\
+						remoteipcserver.o\
 						ipcexception.o\
 						method.o\
 						response.o\

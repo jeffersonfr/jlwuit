@@ -723,6 +723,8 @@ void Component::Paint(Graphics *g)
 				g->Translate(cx, cy);
 				c->Paint(g);
 				g->Translate(-cx, -cy);
+
+				g->Reset();
 			}
 
 			c->Revalidate();
