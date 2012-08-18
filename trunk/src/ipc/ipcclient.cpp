@@ -18,17 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "ipcclient.h"
-#include "ipchelper.h"
-#include "jlocalsocket.h"
-#include "ipcexception.h"
-#include "response.h"
-#include "jnullpointerexception.h"
 
 namespace jlwuit {
 
-IPCClient::IPCClient(std::string id)
+IPCClient::IPCClient()
 {
-	_id = id;
 }
 
 IPCClient::~IPCClient()
@@ -37,56 +31,7 @@ IPCClient::~IPCClient()
 
 Response * IPCClient::CallMethod(Method *method)
 {
-	if (method == NULL) {
-		throw jcommon::NullPointerException("Method cannot be null");
-	}
-
-	try {
-		jsocket::LocalSocket client(std::string("/tmp/") + _id + ".socket");
-
-		std::string encoded = IPCHelper::Encode(method->what());
-		const char *buffer = encoded.c_str();
-		int length = encoded.size();
-		int r,
-				index = 0,
-				size = 1500;
-
-		while (length > 0) {
-			r = client.Send(buffer+index, size);
-
-			if (r <= 0) {
-				break;
-			}
-
-			length = length - r;
-			index = index + r;
-
-			if (length < size) {
-				size = length;
-			}
-		}
-
-		char rbuffer[65535];
-
-		index = 0;
-
-		try {
-			while ((r = client.Receive(rbuffer+index, 1500)) > 0) {
-				index = index + r;
-			}
-		} catch (jcommon::Exception &e) {
-		}
-
-		client.Close();
-
-		Response *response = new Response();
-
-		response->Initialize(rbuffer);
-
-		return response;
-	} catch (jcommon::Exception &e) {
-		throw IPCException("Send call exception: " + e.what());
-	}
+	return NULL;
 }
 
 }

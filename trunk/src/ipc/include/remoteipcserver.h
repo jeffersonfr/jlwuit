@@ -17,11 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_IPCSERVER_H
-#define LWUIT_IPCSERVER_H
+#ifndef LWUIT_REMOTEIPCSERVER_H
+#define LWUIT_REMOTEIPCSERVER_H
 
-#include "method.h"
-#include "remotecalllistener.h"
+#include "ipcserver.h"
+#include "jserversocket.h"
 
 namespace jlwuit {
 
@@ -30,22 +30,24 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class IPCServer {
+class RemoteIPCServer : public IPCServer {
 
 	private:
+		/** \brief */
+		jsocket::ServerSocket *_server;
 
 	public:
 		/**
 		 * \Constructor.
 		 *
 		 */
-		IPCServer();
+		RemoteIPCServer(int port);
 
 		/**
 		 * \brief Destructor.
 		 *
 		 */
-		virtual ~IPCServer();
+		virtual ~RemoteIPCServer();
 
 		/**
 		 * \brief

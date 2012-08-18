@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "ipcclient.h"
-#include "ipcserver.h"
+#include "localipcclient.h"
+#include "localipcserver.h"
 #include "method.h"
 
 #include "jstringtokenizer.h"
@@ -70,7 +70,7 @@ void usage(char *name)
 
 void server(std::string id)
 {
-	jlwuit::IPCServer server(id);
+	jlwuit::LocalIPCServer server(id);
 	Callback cb;
 
 	while (alive == true) {
@@ -82,7 +82,7 @@ void server(std::string id)
 
 void client(std::string id, jlwuit::Method *method)
 {
-	jlwuit::IPCClient client(id);
+	jlwuit::LocalIPCClient client(id);
 	
 	jlwuit::Response *response = client.CallMethod(method);
 	
