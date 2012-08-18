@@ -131,22 +131,29 @@ void Graphics::SetColor(Color color)
 
 void Graphics::SetHints(lwuit_hints_t hints)
 {
-	_hints = hints;
 }
 
 lwuit_hints_t Graphics::GetHints()
 {
-	return _hints;
+	lwuit_hints_t hints;
+
+	return hints;
 }
 
 void Graphics::SetPen(lwuit_pen_t pen)
 {
-	_pen = pen;
 }
 
 lwuit_pen_t Graphics::GetPen()
 {
-	return _pen;
+	lwuit_pen_t pen;
+
+	pen.join = LLJ_MITER;
+	pen.style = LLS_BUTT;
+	pen.type = LLT_SOLID;
+	pen.size = 0;
+
+	return pen;
 }
 
 void Graphics::DrawLine(int xp, int yp, int xf, int yf)

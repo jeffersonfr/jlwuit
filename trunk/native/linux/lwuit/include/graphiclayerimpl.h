@@ -34,6 +34,7 @@ class GraphicLayerImpl : public LayerImpl, public Component, public jthread::Thr
 	private:
 		std::vector<Scene *> _scenes;
 		jthread::Mutex _mutex;
+		jthread::Mutex _optirun_mutex;
 		jthread::Condition _sem;
 		jlwuit::lwuit_region_t dirty;
 		Image *_buffer;

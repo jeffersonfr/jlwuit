@@ -191,6 +191,75 @@ void GraphicsImpl::Clear()
 	_native_graphics->Clear();
 }
 
+void GraphicsImpl::SetPen(lwuit_pen_t pen)
+{
+	jgui::jline_join_t join = jgui::JLJ_MITER;;
+	jgui::jline_style_t style = jgui::JLS_BUTT;
+
+	if (pen.join == LLJ_BEVEL) {
+		join = jgui::JLJ_BEVEL;
+	} else if (pen.join == LLJ_ROUND) {
+		join = jgui::JLJ_ROUND;
+	} else if (pen.join == LLJ_MITER) {
+		join = jgui::JLJ_MITER;
+	}
+
+	// TODO:: fix
+	if (pen.type == LLT_SOLID) {
+	} else if (pen.type== LLT_DASH) {
+	} else if (pen.type== LLT_DASH_DOT) {
+	} else if (pen.type == LLT_DOT) {
+	}
+
+	if (pen.style == LLS_ROUND) {
+		style = jgui::JLS_ROUND;
+	} else if (pen.style == LLS_BUTT) {
+		style = jgui::JLS_BUTT;
+	} else if (pen.style == LLS_SQUARE) {
+		style = jgui::JLS_SQUARE;
+	}
+
+	_native_graphics->SetLineJoin(join);
+	_native_graphics->SetLineStyle(style);
+	_native_graphics->SetLineWidth(pen.size);
+}
+
+lwuit_pen_t GraphicsImpl::GetPen()
+{
+	jgui::jline_join_t join = _native_graphics->GetLineJoin();
+	jgui::jline_style_t style = _native_graphics->GetLineStyle();
+	lwuit_pen_t pen;
+
+	if (join == jgui::JLJ_BEVEL) {
+		pen.join = LLJ_BEVEL;
+	} else if (join == jgui::JLJ_ROUND) {
+		pen.join = LLJ_ROUND;
+	} else if (join == jgui::JLJ_MITER) {
+		pen.join = LLJ_MITER;
+	}
+
+	// TODO:: fix
+	/*
+	if (type == LLS_SOLID) {
+	} else if (type== LLS_DASH) {
+	} else if (type== LLS_DASH_DOT) {
+	} else if (type == LLS_DOT) {
+	}
+	*/
+
+	if (style == jgui::JLS_ROUND) {
+		pen.style = LLS_ROUND;
+	} else if (style == jgui::JLS_BUTT) {
+		pen.style = LLS_BUTT;
+	} else if (style == jgui::JLS_SQUARE) {
+		pen.style = LLS_SQUARE;
+	}
+
+	pen.size = _native_graphics->GetLineWidth();
+
+	return pen;
+}
+
 void GraphicsImpl::Clear(int xp, int yp, int wp, int hp)
 {
 	_native_graphics->Clear(xp, yp, wp, hp);

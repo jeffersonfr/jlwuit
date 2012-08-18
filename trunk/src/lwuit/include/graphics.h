@@ -87,10 +87,20 @@ enum lwuit_line_join_t {
  *
  */
 enum lwuit_line_style_t {
-	LLS_SOLID			= 0x01,
-	LLS_DASH			= 0x02,
-	LLS_DASH_DOT	= 0x04,
-	LLS_DOT				= 0x08
+	LLS_ROUND			= 0x01,
+	LLS_BUTT			= 0x02,
+	LLS_SQUARE		= 0x04,
+};
+
+/**
+ * \brief
+ *
+ */
+enum lwuit_line_type_t {
+	LLT_SOLID			= 0x01,
+	LLT_DASH			= 0x02,
+	LLT_DASH_DOT	= 0x04,
+	LLT_DOT				= 0x08
 };
 
 /**
@@ -105,16 +115,16 @@ enum lwuit_hints_t {
  *
  */
 struct lwuit_pen_t {
+	lwuit_line_join_t join;
+	lwuit_line_style_t style;
+	lwuit_line_type_t type;
+	int size;
 };
 
 class Image;
 class Font;
 
 class Graphics {
-
-	private:
-		lwuit_hints_t _hints;
-		lwuit_pen_t _pen;
 
 	public:
 		/**
