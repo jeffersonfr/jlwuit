@@ -33,15 +33,13 @@ namespace jlwuit {
 class IPCClient {
 
 	private:
-		/** \brief */
-		std::string _id;
 
 	public:
 		/**
 		 * \Constructor.
 		 *
 		 */
-		IPCClient(std::string id);
+		IPCClient();
 
 		/**
 		 * \brief Destructor.
