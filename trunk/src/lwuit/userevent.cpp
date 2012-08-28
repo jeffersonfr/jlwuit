@@ -29,10 +29,11 @@ UserEvent::UserEvent(lwuit_userevent_type_t type, lwuit_key_modifiers_t modifier
 	_modifiers = modifiers;
 }
 
-UserEvent::UserEvent(lwuit_userevent_type_t type, lwuit_mouse_button_t button, int click_count, int x, int y, double vx, double vy)
+UserEvent::UserEvent(lwuit_userevent_type_t type, lwuit_mouse_button_t button, lwuit_mouse_button_t buttons, int click_count, int x, int y, double vx, double vy)
 {
-	_type = type;
 	_button = button;
+	_buttons = buttons;
+	_type = type;
 	_click_count = click_count;
 	_x = x;
 	_y = y;
@@ -49,7 +50,7 @@ lwuit_userevent_type_t UserEvent::GetType()
 	return _type;
 }
 
-int UserEvent::GetKeySymbol()
+lwuit_key_symbol_t UserEvent::GetKeySymbol()
 {
 	return _symbol;
 }
@@ -65,6 +66,11 @@ lwuit_key_modifiers_t UserEvent::GetModifiers()
 }
 
 lwuit_mouse_button_t UserEvent::GetButton()
+{
+	return _button;
+}
+
+lwuit_mouse_button_t UserEvent::GetButtons()
 {
 	return _button;
 }

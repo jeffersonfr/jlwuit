@@ -65,7 +65,7 @@ int FontImpl::GetDescender()
 
 int FontImpl::GetMaxAdvanced()
 {
-	return _native_font->GetMaxAdvanced();
+	return _native_font->GetMaxAdvance();
 }
 
 int FontImpl::GetLeading()

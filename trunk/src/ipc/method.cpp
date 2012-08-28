@@ -37,7 +37,7 @@ Method::~Method()
 
 void Method::Initialize(std::string str)
 {
-	// INFO:: <method>:[<id=value>[,<id=param>]*]
+	// INFO:: <method>:[<id=value>[;<id=param>]*
 	jcommon::StringTokenizer tokens(IPCHelper::Decode(str), ":", jcommon::JTT_STRING);
 
 	if (tokens.GetSize() == 1) {
