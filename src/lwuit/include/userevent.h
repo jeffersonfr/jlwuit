@@ -253,10 +253,10 @@ enum lwuit_mouse_event_t {
  *
  */
 enum lwuit_mouse_button_t {
-	LMB_UNKNOWN = 0x0,
-	LMB_BUTTON1 = 0x1,
-	LMB_BUTTON2 = 0x2,
-	LMB_BUTTON3 = 0x4,
+	LMB_UNKNOWN = 0x00,
+	LMB_BUTTON1 = 0x01,
+	LMB_BUTTON2 = 0x02,
+	LMB_BUTTON3 = 0x04,
 	LMB_WHEEL 	= 0x08
 };
 
@@ -288,6 +288,8 @@ class UserEvent {
 		lwuit_key_modifiers_t _modifiers;
 		/** \brief */
 		lwuit_mouse_button_t _button;
+		/** \brief */
+		lwuit_mouse_button_t _buttons;
 
 	public:
 		/**
@@ -300,7 +302,7 @@ class UserEvent {
 		 * \brief
 		 *
 		 */
-		UserEvent(lwuit_userevent_type_t type, lwuit_mouse_button_t button, int click_count, int x, int y, double vx, double vy);
+		UserEvent(lwuit_userevent_type_t type, lwuit_mouse_button_t button, lwuit_mouse_button_t buttons, int click_count, int x, int y, double vx, double vy);
 
 		/**
 		 * \brief
@@ -318,7 +320,7 @@ class UserEvent {
 		 * \brief
 		 *
 		 */
-		virtual int GetKeySymbol();
+		virtual lwuit_key_symbol_t GetKeySymbol();
 
 		/**
 		 * \brief
@@ -337,6 +339,12 @@ class UserEvent {
 		 *
 		 */
 		virtual lwuit_mouse_button_t GetButton();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual lwuit_mouse_button_t GetButtons();
 
 		/**
 		 * \brief

@@ -46,25 +46,25 @@ lwuit_key_modifiers_t EventManagerImpl::TranslateKeyModifiers(jgui::jkeyevent_mo
 {
 	lwuit_key_modifiers_t t = LIM_NONE;
 
-	if (modifiers == jgui::JKM_SHIFT) {
+	if (modifiers & jgui::JKM_SHIFT) {
 		t = LIM_SHIFT;
-	} else if (modifiers == jgui::JKM_CONTROL) {
+	} else if (modifiers & jgui::JKM_CONTROL) {
 		t = LIM_CONTROL;
-	} else if (modifiers == jgui::JKM_ALT) {
+	} else if (modifiers & jgui::JKM_ALT) {
 		t = LIM_ALT;
-	} else if (modifiers == jgui::JKM_ALTGR) {
+	} else if (modifiers & jgui::JKM_ALTGR) {
 		t = LIM_ALTGR;
-	} else if (modifiers == jgui::JKM_META) {
+	} else if (modifiers & jgui::JKM_META) {
 		t = LIM_META;
-	} else if (modifiers == jgui::JKM_SUPER) {
+	} else if (modifiers & jgui::JKM_SUPER) {
 		t = LIM_SUPER;
-	} else if (modifiers == jgui::JKM_HYPER) {
+	} else if (modifiers & jgui::JKM_HYPER) {
 		t = LIM_HYPER;
-	} else if (modifiers == jgui::JKM_CAPS_LOCK) {
+	} else if (modifiers & jgui::JKM_CAPS_LOCK) {
 		t = LIM_CAPS_LOCK;
-	} else if (modifiers == jgui::JKM_NUM_LOCK) {
+	} else if (modifiers & jgui::JKM_NUM_LOCK) {
 		t = LIM_NUM_LOCK;
-	} else if (modifiers == jgui::JKM_SCROLL_LOCK) {
+	} else if (modifiers & jgui::JKM_SCROLL_LOCK) {
 		t = LIM_SCROLL_LOCK;
 	}
 
@@ -415,14 +415,14 @@ lwuit_mouse_button_t EventManagerImpl::TranslateMouseButton(jgui::jmouseevent_bu
 {
 	lwuit_mouse_button_t t = LMB_UNKNOWN;
 
-	if (button == jgui::JMB_BUTTON1) {
-		t = LMB_BUTTON1;
-	} else if (button == jgui::JMB_BUTTON2) {
-		t = LMB_BUTTON2;
-	} else if (button == jgui::JMB_BUTTON3) {
-		t = LMB_BUTTON3;
-	} else if (button == jgui::JMB_WHEEL) {
-		t = LMB_WHEEL;
+	if (button & jgui::JMB_BUTTON1) {
+		t = (lwuit_mouse_button_t)(t | LMB_BUTTON1);
+	} else if (button & jgui::JMB_BUTTON2) {
+		t = (lwuit_mouse_button_t)(t | LMB_BUTTON2);
+	} else if (button & jgui::JMB_BUTTON3) {
+		t = (lwuit_mouse_button_t)(t | LMB_BUTTON3);
+	} else if (button & jgui::JMB_WHEEL) {
+		t = (lwuit_mouse_button_t)(t | LMB_WHEEL);
 	}
 
 	return t;
@@ -513,12 +513,12 @@ void EventManagerImpl::KeyPressed(jgui::KeyEvent *event)
 
 void EventManagerImpl::MousePressed(jgui::MouseEvent *event)
 {
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_PRESS, TranslateMouseButton(event->GetButton()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_PRESS, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
 }
 
 void EventManagerImpl::MouseReleased(jgui::MouseEvent *event)
 {
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_RELEASE, TranslateMouseButton(event->GetButton()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_RELEASE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
 }
 
 void EventManagerImpl::MouseMoved(jgui::MouseEvent *event)
@@ -528,7 +528,7 @@ void EventManagerImpl::MouseMoved(jgui::MouseEvent *event)
 				 vx = (event->GetX()-_last_mouse_location.x)/mdiff,
 				 vy = (event->GetY()-_last_mouse_location.y)/mdiff;
 
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_MOVE, TranslateMouseButton(event->GetButton()), event->GetClickCount(), event->GetX(), event->GetY(), vx, vy));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_MOVE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), vx, vy));
 
 	_last_mouse_move = jcommon::Date::CurrentTimeMillis();
 	_last_mouse_location.x = event->GetX();
@@ -537,7 +537,7 @@ void EventManagerImpl::MouseMoved(jgui::MouseEvent *event)
 
 void EventManagerImpl::MouseWheel(jgui::MouseEvent *event)
 {
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_WHEEL, TranslateMouseButton(event->GetButton()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_WHEEL, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
 }
 
 }
