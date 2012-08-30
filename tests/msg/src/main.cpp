@@ -23,6 +23,8 @@
 
 #include <stdio.h>
 
+#define _T(x, g) jlwuit::Toast::Create(this)->SetMessage(x)->SetGravity(g)->Show();
+
 class MessageTest : public jlwuit::Scene {
 
 	private:
@@ -45,39 +47,39 @@ class MessageTest : public jlwuit::Scene {
 		{
 			if (_state == 0) {
 				// top
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + Left")->SetGravity("top left")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + HCenter")->SetGravity("top hcenter")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + Right")->SetGravity("top right")->Show();
+				_T("Toast:: Top + Left", "top left");
+				_T("Toast:: Top + HCenter", "top hcenter");
+				_T("Toast:: Top + Right", "top right");
 
 				// center
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Left + VCenter")->SetGravity("left vcenter")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: HCenter + VCenter")->SetGravity("hcenter vcenter")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Right + VCenter")->SetGravity("right vcenter")->Show(); 
+				_T("Toast:: Left + VCenter", "left vcenter");
+				_T("Toast:: HCenter + VCenter", "hcenter vcenter");
+				_T("Toast:: Right + VCenter", "right vcenter"); 
 
 				// bottom
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + Left")->SetGravity("bottom left")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + HCenter (default)")->Show(); 
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + Right")->SetGravity("bottom right")->Show();
+				_T("Toast:: Bottom + Left", "bottom left");
+				_T("Toast:: Bottom + HCenter (default)", "bottom hcenter"); 
+				_T("Toast:: Bottom + Right", "bottom right");
 			} else if (_state == 5) {
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Top + HFill")->SetGravity("top hfill")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Center + HFill")->SetGravity("vcenter hfill")->Show();
-				jlwuit::Toast::Create(this)->SetMessage("Toast:: Bottom + HFill")->SetGravity("bottom hfill")->Show();
+				_T("Toast:: Top + HFill", "top hfill");
+				_T("Toast:: Center + HFill", "vcenter hfill");
+				_T("Toast:: Bottom + HFill", "bottom hfill");
 			} else if (_state == 10) {
-				jlwuit::Toast::Create(this)->SetMessage(
+				_T(
 					"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt " \
 					"ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " \
 					"laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in " \
 					"voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " \
-					"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-				)->SetGravity("vcenter hfill")->Show();
+					"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+					"vcenter hfill");
 			} else if (_state == 15) {
-				jlwuit::Toast::Create(this)->SetMessage(
+				_T(
 					"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt " \
 					"ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " \
 					"laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in " \
 					"voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " \
-					"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-				)->SetGravity("left vfill")->Show();
+					"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", 
+				  "left vfill");
 			} 
 
 			_state = _state + 1;
