@@ -108,6 +108,7 @@ enum lwuit_line_type_t {
  *
  */
 enum lwuit_hints_t {
+	LHT_NONE
 };
 
 /**

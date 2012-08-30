@@ -135,9 +135,7 @@ void Graphics::SetHints(lwuit_hints_t hints)
 
 lwuit_hints_t Graphics::GetHints()
 {
-	lwuit_hints_t hints;
-
-	return hints;
+	return LHT_NONE;
 }
 
 void Graphics::SetPen(lwuit_pen_t pen)
