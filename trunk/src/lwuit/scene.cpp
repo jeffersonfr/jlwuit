@@ -39,7 +39,7 @@
 	for (std::vector<Component *>::reverse_iterator i=_components.rbegin(); i!=_components.rend(); i++) {	\
 		Component *cmp = (*i);																																							\
 																																																				\
-		if (cmp->IsVisible() == true && cmp->IsEnabled() == true && cmp->Intersect(event->GetX(), event->GetY())) {	\
+		if (cmp->IsVisible() == true && cmp->IsEnabled() == true && cmp->Intersects(event->GetX(), event->GetY())) {	\
 			return cmp->method(event);																																				\
 		}																																																		\
 	}																																																			\
@@ -311,7 +311,7 @@ bool Scene::OnMouseMove(UserEvent *event)
 	Component *cmp = NULL;
 
 	for (std::vector<Component *>::reverse_iterator i=_components.rbegin(); i!=_components.rend(); i++) {	
-		if ((*i)->Intersect(event->GetX(), event->GetY()) == true) {
+		if ((*i)->Intersects(event->GetX(), event->GetY()) == true) {
 			cmp = (*i);
 
 			break;
@@ -330,7 +330,7 @@ bool Scene::OnMouseMove(UserEvent *event)
 		_component = cmp;
 	}
 		
-	if (cmp != NULL && cmp->IsVisible() == true && cmp->IsEnabled() == true && cmp->Intersect(event->GetX(), event->GetY())) {
+	if (cmp != NULL && cmp->IsVisible() == true && cmp->IsEnabled() == true && cmp->Intersects(event->GetX(), event->GetY())) {
 		return cmp->OnMouseMove(event);
 	}
 

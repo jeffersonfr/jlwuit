@@ -526,8 +526,9 @@ void VideoPlayerImpl::Callback(void *ctx)
 {
 	jlwuit::Component *cmp = reinterpret_cast<jlwuit::Component *>(ctx);
 	
-	// cmp->Repaint(cmp); // uses optimized paint
-	cmp->Repaint();
+	if (cmp->IsVisible() != false) {
+		cmp->Repaint();
+	}
 }
 		
 void VideoPlayerImpl::Play()

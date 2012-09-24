@@ -55,6 +55,7 @@ Component::Component(int x, int y, int w, int h)
 
 	_orientation = LCO_LEFT_TO_RIGHT;
 	
+	_is_opaque = false;
 	_is_cycle_root = false;
 	_is_valid = true;
 	_is_focusable = false;
@@ -196,6 +197,16 @@ Component * Component::GetTopLevelAncestor()
 	}
 
 	return NULL;
+}
+
+void Component::SetOpaque(bool b)
+{
+	_is_opaque = b;
+}
+
+bool Component::IsOpaque()
+{
+	return _is_opaque;
 }
 
 bool Component::IsEnabled()
@@ -614,7 +625,7 @@ void Component::DoLayout()
 	}
 }
 
-bool Component::Intersect(int x, int y)
+bool Component::Intersects(int x, int y)
 {
 	if ((x>_location.x && x<(_location.x+_size.width)) && (y>_location.y && y<(_location.y+_size.height))) {
 		return true;
@@ -622,6 +633,21 @@ bool Component::Intersect(int x, int y)
 
 	return false;
 }
+
+bool Component::Intersects(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2)
+{
+	int ax = x1,
+			ay = y1,
+			bx = ax+w1,
+			by = ay+h1;
+	int cx = x2,
+			cy = y2,
+			dx = cx+w2,
+			dy = cy+h2;
+
+	return (((ax > dx)||(bx < cx)||(ay > dy)||(by < cy)) == 0);
+}
+
 
 bool Component::OnKeyDown(UserEvent *event)
 {

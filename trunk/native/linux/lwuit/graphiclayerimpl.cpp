@@ -23,23 +23,31 @@
 
 namespace jlwuit {
 
-jgui::Graphics *g = NULL;
-jgui::Image *img = NULL;
-Graphics *gb = NULL;
+jgui::Graphics *_ng = NULL;
+jgui::Image *_ni = NULL;
+jlwuit::Graphics *_lg = NULL;
 
 class RootContainerImpl : public RootContainer {
 
+	private:
+		GraphicLayerImpl *_layer_impl;
+
 	public:
-		RootContainerImpl(Layer *layer, Component *parent, int x, int y, int w, int h):
+		RootContainerImpl(GraphicLayerImpl *layer, Component *parent, int x, int y, int w, int h):
 			RootContainer(layer, x, y, w, h)
 		{
-			SetParent(parent);
-						
+			_layer_impl = layer;
+
 			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 		}
 
 		virtual ~RootContainerImpl()
 		{
+		}
+
+		virtual void Repaint(jlwuit::Component *cmp)
+		{
+			_layer_impl->Repaint();
 		}
 
 };
@@ -69,12 +77,12 @@ void GraphicLayerImpl::Initialize()
 
 	_window->Show();
 
-	g = _window->GetGraphics();
-	img = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
-	gb = _buffer->GetGraphics();
+	_ng = _window->GetGraphics();
+	_ni = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
+	_lg = _buffer->GetGraphics();
 
-	g->SetBlittingFlags(jgui::JBF_NOFX);
-	g->Clear();
+	_ng->SetBlittingFlags(jgui::JBF_NOFX);
+	_ng->Clear();
 
 	Start();
 }
@@ -89,16 +97,20 @@ void GraphicLayerImpl::Run()
 		}
 
 		_refresh = false;
-
 		_optirun_mutex.Lock();
+		
+		_lg->Reset();
+		_lg->Clear();
 
-		Paint(gb);
+		if (_root_container->IsVisible() == true) {
+			_root_container->InvalidateAll();
+			_root_container->Paint(_lg);
+			_root_container->RevalidateAll();
+		}
 
 		_mutex.Unlock();
-
-		g->DrawImage(img, 0, 0);
-		g->Flip();
-
+		_ng->DrawImage(_ni, 0, 0);
+		_ng->Flip();
 		_optirun_mutex.Unlock();
 	}
 }
@@ -113,19 +125,68 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 
 	// INFO:: otimization for small updates made by components's call "cmp->Repaint(cmp)"
 	if (cmp != NULL) {
-		int absx = cmp->GetAbsoluteX(),
-				absy = cmp->GetAbsoluteY();
-		int cmpw = cmp->GetWidth(),
-				cmph = cmp->GetHeight();
+		lwuit_point_t location = cmp->GetAbsoluteLocation();
+		lwuit_size_t size = cmp->GetSize();
 
-		_optirun_mutex.Lock();
+		jthread::AutoLock lock(&_optirun_mutex);
 
-		Paint(gb);
+		Component *c = cmp,
+			*parent = c;
 
-		g->DrawImage(img, absx, absy, cmpw, cmph, absx, absy);
-		g->Flip(absx, absy, cmpw, cmph);
+		while (c != NULL) {
+			c->Invalidate();
 
-		_optirun_mutex.Unlock();
+			for (std::vector<Component *>::iterator i=c->GetComponents().begin(); i!=c->GetComponents().end(); i++) {
+				lwuit_point_t clocation = c->GetAbsoluteLocation();
+				lwuit_size_t csize = c->GetSize();
+
+				if (cmp->Intersects(location.x, location.y, size.width, size.height, clocation.x, clocation.y, csize.width, csize.height) == true) {
+					c->Invalidate();
+				}
+			}
+
+			parent = c;
+
+			if (c->IsOpaque() == true) {
+				break;
+			}
+
+			c = c->GetParent();
+		}
+
+		/*
+		jgui::Image *ni = jgui::Image::CreateImage(size.width, size.height, jgui::JPF_ARGB, size.width, size.height);
+		jlwuit::Image *li = new ImageImpl(ni);
+		jlwuit::Graphics *lg = li->GetGraphics();
+
+		if (_parent->IsVisible() == true) {
+			lwuit_point_t t = parent->GetAbsoluteLocation();
+
+			lg->Translate(t.x, t.y);
+			_parent->Paint(lg);
+			lg->Translate(-t.x, -t.y);
+			_parent->Revalidate();
+		}
+
+		_ng->DrawImage(ni, location.x, location.y);
+		_ng->Flip(location.x, location.y, size.width, size.height);
+		
+		delete li;
+		*/
+
+		_lg->SetClip(location.x, location.y, size.width, size.height);
+
+		if (_parent->IsVisible() == true) {
+			lwuit_point_t t = parent->GetAbsoluteLocation();
+
+			_lg->Translate(t.x, t.y);
+			_parent->Paint(_lg);
+			_lg->Translate(-t.x, -t.y);
+			_parent->Revalidate();
+		}
+
+		_ng->DrawImage(_ni, location.x, location.y);
+		_ng->Flip(location.x, location.y, size.width, size.height);
 
 		return;
 	}
@@ -133,18 +194,6 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 	_refresh = true;
 
 	_sem.Notify();
-}
-
-void GraphicLayerImpl::Paint(jlwuit::Graphics *g)
-{
-	g->Reset();
-	g->Clear();
-
-	if (_root_container->IsVisible() == true) {
-		_root_container->InvalidateAll();
-		_root_container->Paint(g);
-		_root_container->RevalidateAll();
-	}
 }
 
 }
