@@ -130,42 +130,46 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 
 		jthread::AutoLock lock(&_optirun_mutex);
 
-		Component *c = cmp,
-			*parent = c;
+		Component *parent = cmp,
+			*last_parent = parent;
 
-		while (c != NULL) {
-			c->Invalidate();
+		while (parent != NULL) {
+			lwuit_point_t plocation = parent->GetAbsoluteLocation();
 
-			for (std::vector<Component *>::iterator i=c->GetComponents().begin(); i!=c->GetComponents().end(); i++) {
-				lwuit_point_t clocation = c->GetAbsoluteLocation();
-				lwuit_size_t csize = c->GetSize();
+			parent->Invalidate();
 
-				if (cmp->Intersects(location.x, location.y, size.width, size.height, clocation.x, clocation.y, csize.width, csize.height) == true) {
+			for (std::vector<Component *>::iterator i=parent->GetComponents().begin(); i!=parent->GetComponents().end(); i++) {
+				Component *c = (*i);
+				lwuit_region_t t = c->GetBounds();
+
+				if (cmp->Intersects(location.x, location.y, size.width, size.height, plocation.x+t.x, plocation.y+t.y, t.width, t.height) == true) {
 					c->Invalidate();
 				}
 			}
 
-			parent = c;
+			last_parent = parent;
 
-			if (c->IsOpaque() == true) {
+			if (parent->IsOpaque() == true) {
 				break;
 			}
 
-			c = c->GetParent();
+			parent = parent->GetParent();
 		}
+
+		parent = last_parent;
 
 		/*
 		jgui::Image *ni = jgui::Image::CreateImage(size.width, size.height, jgui::JPF_ARGB, size.width, size.height);
 		jlwuit::Image *li = new ImageImpl(ni);
 		jlwuit::Graphics *lg = li->GetGraphics();
 
-		if (_parent->IsVisible() == true) {
+		if (parent->IsVisible() == true) {
 			lwuit_point_t t = parent->GetAbsoluteLocation();
 
 			lg->Translate(t.x, t.y);
-			_parent->Paint(lg);
+			parent->Paint(lg);
 			lg->Translate(-t.x, -t.y);
-			_parent->Revalidate();
+			parent->Revalidate();
 		}
 
 		_ng->DrawImage(ni, location.x, location.y);
@@ -176,13 +180,13 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 
 		_lg->SetClip(location.x, location.y, size.width, size.height);
 
-		if (_parent->IsVisible() == true) {
+		if (parent->IsVisible() == true) {
 			lwuit_point_t t = parent->GetAbsoluteLocation();
 
 			_lg->Translate(t.x, t.y);
-			_parent->Paint(_lg);
+			parent->Paint(_lg);
 			_lg->Translate(-t.x, -t.y);
-			_parent->Revalidate();
+			parent->Revalidate();
 		}
 
 		_ng->DrawImage(_ni, location.x, location.y);
