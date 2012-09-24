@@ -72,12 +72,6 @@ class GraphicLayerImpl : public LayerImpl, public Component, public jthread::Thr
 		 */
 		virtual void Repaint(Component *cmp = NULL);
 		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Paint(Graphics *g);
-		
 };
 
 }

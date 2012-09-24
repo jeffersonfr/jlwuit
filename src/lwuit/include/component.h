@@ -100,6 +100,7 @@ class Component : public UserEventListener, public Animation {
 			_is_focusable,
 			_enabled,
 			_is_valid,
+			_is_opaque,
 			_is_cycle_root;
 		lwuit_component_alignment_t _alignment_x,
 			_alignment_y;
@@ -224,7 +225,25 @@ class Component : public UserEventListener, public Animation {
 		 * \brief
 		 *
 		 */
-		bool Intersect(int x, int y);
+		virtual bool Intersects(int x, int y);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetOpaque(bool b);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsOpaque();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Intersects(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
 
 		/**
 		 * \brief
