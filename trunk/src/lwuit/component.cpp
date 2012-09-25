@@ -270,10 +270,25 @@ void Component::SetCyclicFocus(bool b)
 
 lwuit_point_t Component::GetAbsoluteLocation()
 {
+	Component *parent = GetParent();
+
 	lwuit_point_t t;
-	
-	t.x = 0;
-	t.y = 0;
+
+	t.x = _location.x;
+	t.y = _location.y;
+
+	if ((void *)parent == NULL) {
+		return t;
+	}
+
+	do {
+		if (parent->GetParent() != NULL) {
+			t.x = t.x + parent->GetX();	
+			t.y = t.y + parent->GetY();	
+		}
+
+		parent = parent->GetParent();
+	} while ((void *)parent != NULL);
 
 	return t;
 }

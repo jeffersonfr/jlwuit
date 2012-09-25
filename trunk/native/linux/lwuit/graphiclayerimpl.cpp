@@ -47,7 +47,7 @@ class RootContainerImpl : public RootContainer {
 
 		virtual void Repaint(jlwuit::Component *cmp)
 		{
-			_layer_impl->Repaint();
+			_layer_impl->Repaint(cmp);
 		}
 
 };
@@ -97,6 +97,7 @@ void GraphicLayerImpl::Run()
 		}
 
 		_refresh = false;
+
 		_optirun_mutex.Lock();
 		
 		_lg->Reset();
@@ -123,7 +124,7 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 		return;
 	}
 
-	// INFO:: otimization for small updates made by components's call "cmp->Repaint(cmp)"
+	// INFO:: otimization for small updates made by static components that call "Repaint(cmp)"
 	if (cmp != NULL) {
 		lwuit_point_t location = cmp->GetAbsoluteLocation();
 		lwuit_size_t size = cmp->GetSize();
@@ -158,27 +159,8 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 
 		parent = last_parent;
 
-		/*
-		jgui::Image *ni = jgui::Image::CreateImage(size.width, size.height, jgui::JPF_ARGB, size.width, size.height);
-		jlwuit::Image *li = new ImageImpl(ni);
-		jlwuit::Graphics *lg = li->GetGraphics();
-
-		if (parent->IsVisible() == true) {
-			lwuit_point_t t = parent->GetAbsoluteLocation();
-
-			lg->Translate(t.x, t.y);
-			parent->Paint(lg);
-			lg->Translate(-t.x, -t.y);
-			parent->Revalidate();
-		}
-
-		_ng->DrawImage(ni, location.x, location.y);
-		_ng->Flip(location.x, location.y, size.width, size.height);
-		
-		delete li;
-		*/
-
-		_lg->SetClip(location.x, location.y, size.width, size.height);
+		_lg->Reset();
+		_lg->Clear(location.x, location.y, size.width, size.height);
 
 		if (parent->IsVisible() == true) {
 			lwuit_point_t t = parent->GetAbsoluteLocation();
@@ -189,7 +171,7 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 			parent->Revalidate();
 		}
 
-		_ng->DrawImage(_ni, location.x, location.y);
+		_ng->DrawImage(_ni, location.x, location.y, size.width, size.height, location.x, location.y);
 		_ng->Flip(location.x, location.y, size.width, size.height);
 
 		return;
