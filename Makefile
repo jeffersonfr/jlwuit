@@ -23,7 +23,7 @@ CCFLAGS		+= \
 						-I/usr/local/include \
 						`pkg-config --cflags jlibcpp` \
 
-LDFLAGS		= \
+LDFLAGS		+= \
 						-L$(LIBDIR) \
 						`pkg-config --libs jlibcpp` \
 						`pkg-config --libs libxine` \

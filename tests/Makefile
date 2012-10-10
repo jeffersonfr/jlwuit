@@ -5,7 +5,6 @@ MODULES = \
 			dlg \
 			dump \
 			filter \
-			http \
 			gui \
 			ipc \
 		  layers \

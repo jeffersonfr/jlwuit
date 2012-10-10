@@ -87,10 +87,14 @@ class SceneTest : public jlwuit::Scene {
 			SetAnimationDelay(100);
 
 			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
+
+			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(false);
 		}
 
 		virtual ~SceneTest()
 		{
+			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(true);
+
 			// TODO:: delete boxes
 		}
 

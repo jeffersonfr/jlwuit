@@ -47,8 +47,8 @@ void GraphicsImpl::Reset()
 {
 	_native_graphics->Reset();
 	
-	SetCompositeFlags(jlwuit::LCF_NONE);
-	SetDrawingFlags(jlwuit::LDF_NOFX);
+	SetCompositeFlags(jlwuit::LCF_SRC_OVER);
+	SetDrawingFlags(jlwuit::LDF_BLEND);
 	SetBlittingFlags(jlwuit::LBF_ALPHACHANNEL);
 }
 

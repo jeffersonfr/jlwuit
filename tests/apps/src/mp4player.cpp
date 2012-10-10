@@ -357,7 +357,6 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 	}
 
 	laf->DrawBox(g, NULL, 1*(w+GAPX)+GAPX, 1*TEXT_SPAN+GAPY, w, h);
-	g->Clear(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
 
 	int x = (1920-1*180-2*150-2*120-4*GAPX)/2,
 			y = bounds.height-180-10*GAPY;
@@ -376,6 +375,8 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 	pause->SetImageFocus("./icons/pause_check.png");
 	*/
 	
+	g->Clear(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
+
 	if (_index == -1) {
 		laf->DrawTextBox(g, NULL, "medium", "Insert a usb device", GAPX, bounds.height/2, sw, TEXT_SIZE);
 	} else if (_index == -2) {
