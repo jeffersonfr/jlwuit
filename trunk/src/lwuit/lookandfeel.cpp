@@ -247,7 +247,7 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int x, in
 	}
 
 	// jgui::Graphics internamente muda esse valor no reset
-	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	// g->SetCompositeFlags(jlwuit::LCF_NONE);
 	g->DrawImage(image, x, y, w, h);
 }
 
@@ -260,7 +260,7 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, i
 	}
 
 	// jgui::Graphics internamente muda esse valor no reset
-	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	// g->SetCompositeFlags(jlwuit::LCF_NONE);
 	g->DrawImage(image, sx, sy, sw, sh, x, y, w, h);
 }
 

@@ -25,6 +25,9 @@ CCFLAGS		+= \
 						-I$(INCDIR) \
 						-I$(SRCDIR)/$(INCDIR) \
 
+LDFLAGS		+= \
+						-lpng \
+
 ARFLAGS		= \
 						rc \
 
