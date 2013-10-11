@@ -21,6 +21,7 @@
 #include "scene.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 class UIManager : public jlwuit::Scene {
 

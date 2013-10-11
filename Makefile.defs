@@ -27,6 +27,7 @@ CCFLAGS		+= \
 
 LDFLAGS		+= \
 						-lpng \
+						-ldl \
 
 ARFLAGS		= \
 						rc \

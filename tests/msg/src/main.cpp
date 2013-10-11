@@ -22,6 +22,7 @@
 #include "toast.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 #define _T(x, g) jlwuit::Toast::Create(this)->SetMessage(x)->SetGravity(g)->Show();
 

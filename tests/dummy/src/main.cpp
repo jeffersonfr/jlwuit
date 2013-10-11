@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <unistd.h>
 
 class DummyTest : public jlwuit::Scene {
 

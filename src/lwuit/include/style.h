@@ -23,7 +23,7 @@
 #include "color.h"
 #include "stylelistener.h"
 #include "image.h"
-#include "parammapper.h"
+#include "jparammapper.h"
 
 #include <vector>
 
@@ -34,7 +34,7 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Style : public jlwuit::ParamMapper {
+class Style : public jcommon::ParamMapper {
 
 	private:
 		std::vector<StyleListener *> _style_listeners;

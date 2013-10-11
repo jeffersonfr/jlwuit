@@ -23,6 +23,8 @@
 #include "image.h"
 #include "imageio.h"
 
+#include <unistd.h>
+
 class Dump : public jlwuit::Component {
 
 	private:

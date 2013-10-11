@@ -15,7 +15,6 @@ CCFLAGS		+= \
 						-Isrc/image/$(INCDIR) \
 						-Isrc/lwuit/$(INCDIR) \
 						-Isrc/media/$(INCDIR) \
-						-Isrc/ipc/$(INCDIR) \
 						-Isrc/prefs/$(INCDIR) \
 						-Isrc/usb/$(INCDIR) \
 						-Isrc/net/$(INCDIR) \
@@ -122,19 +121,6 @@ SRC_MEDIA	= \
 						videosizecontrol.o\
 						volumecontrol.o\
 
-SRC_IPC		= \
-						ipcclient.o\
-						localipcclient.o\
-						remoteipcclient.o\
-						ipchelper.o\
-						ipcserver.o\
-						localipcserver.o\
-						remoteipcserver.o\
-						ipcexception.o\
-						method.o\
-						response.o\
-						remotecalllistener.o\
-
 SRC_PREFS	= \
 						preferences.o\
 						document.o\
@@ -151,14 +137,13 @@ SRC_NET		= \
 						httpstatuschanged.o\
 
 SRC_UTIL	= \
-						parammapper.o\
+						reference.o\
 
 OBJS			= \
 						$(addprefix src/apps/, $(SRC_APPS)) \
 						$(addprefix src/db/, $(SRC_DB)) \
 						$(addprefix src/net/, $(SRC_HTTP)) \
 						$(addprefix src/image/, $(SRC_IMAGE)) \
-						$(addprefix src/ipc/, $(SRC_IPC)) \
 						$(addprefix src/lwuit/, $(SRC_LWUIT)) \
 						$(addprefix src/media/, $(SRC_MEDIA)) \
 						$(addprefix src/prefs/, $(SRC_PREFS)) \
@@ -195,7 +180,7 @@ install: uninstall
 	@install -d -o nobody -m 755 $(PREFIX)/$(MODULE)/sounds && install -o nobody -m 644 resources/sounds/* $(PREFIX)/$(MODULE)/sounds
 	@$(ECHO) "Installing include files in $(PREFIX)/include/$(MODULE) $(OK)" && mkdir -p $(PREFIX)/include/$(MODULE)
 	@install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)
-	@for i in apps db net image lwuit media ipc prefs usb util; do \
+	@for i in apps db net image lwuit media prefs usb util; do \
 		install -d -o nobody -m 755 $(PREFIX)/include/$(MODULE)/$$i && install -o nobody -m 644 src/$$i/include/* $(PREFIX)/include/$(MODULE)/$$i ; \
 	done
 	@$(ECHO) "Installing $(EXE) in $(PREFIX)/lib/lib$(MODULE).so $(OK)"

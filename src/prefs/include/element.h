@@ -20,7 +20,7 @@
 #ifndef LWUIT_PREFERENCENODE_H
 #define LWUIT_PREFERENCENODE_H
 
-#include "parammapper.h"
+#include "jparammapper.h"
 
 #include <string>
 #include <map>
@@ -32,7 +32,7 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Element : public ParamMapper {
+class Element : public jcommon::ParamMapper {
 
 	private:
 		/** \brief Comment */

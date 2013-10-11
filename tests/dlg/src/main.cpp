@@ -22,6 +22,7 @@
 #include "dialog.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 class Sample : public jlwuit::Dialog {
 
