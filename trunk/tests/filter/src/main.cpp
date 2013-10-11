@@ -35,6 +35,7 @@
 #include "silverimagefilter.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 #define GAPX		16
 #define GAPY		8

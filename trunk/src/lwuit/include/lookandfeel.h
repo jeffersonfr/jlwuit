@@ -108,7 +108,7 @@ class LookAndFeel {
 		 * \brief
 		 *
 		 */
-		static void LoadImage(std::string resource_id, std::string path);
+		static void LoadImage(std::string resource_id, std::string path, int wp = -1, int hp = -1);
 		
 		/**
 		 * \brief
@@ -132,7 +132,7 @@ class LookAndFeel {
 		 * \brief
 		 *
 		 */
-		void SetType(lwuit_lookandfeel_status_t type);
+		virtual void SetType(lwuit_lookandfeel_status_t type);
 
 		/**
 		 * \brief
@@ -144,50 +144,74 @@ class LookAndFeel {
 		 * \brief
 		 *
 		 */
-		void DrawBorder(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size = 1);
+		virtual void DrawBorder(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size = 1);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawBox(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size = 1);
+		virtual void DrawBox(jlwuit::Graphics *g, jlwuit::Style *style, int x, int y, int w, int h, int border_size = 1);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawProgressBar(jlwuit::Graphics *g, jlwuit::Style *style, int value, int x, int y, int w, int h);
+		virtual void DrawProgressBar(jlwuit::Graphics *g, jlwuit::Style *style, int value, int x, int y, int w, int h);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		int TextSize(std::string font_id, std::string text);
+		virtual int TextSize(std::string font_id, std::string text);
 
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawText(jlwuit::Graphics *g, jlwuit::Style *style, std::string font_id, std::string text, int x, int y, int w, int h, jlwuit::lwuit_horizontal_align_t halign = jlwuit::LHA_CENTER, jlwuit::lwuit_vertical_align_t valign = jlwuit::LVA_CENTER);
+		virtual void DrawText(jlwuit::Graphics *g, jlwuit::Style *style, std::string font_id, std::string text, int x, int y, int w, int h, jlwuit::lwuit_horizontal_align_t halign = jlwuit::LHA_CENTER, jlwuit::lwuit_vertical_align_t valign = jlwuit::LVA_CENTER);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawTextBox(jlwuit::Graphics *g, jlwuit::Style *style, std::string font_id, std::string text, int x, int y, int w, int h, 
+		virtual void DrawTextBox(jlwuit::Graphics *g, jlwuit::Style *style, std::string font_id, std::string text, int x, int y, int w, int h, 
 				jlwuit::lwuit_horizontal_align_t halign = jlwuit::LHA_CENTER, jlwuit::lwuit_vertical_align_t valign = jlwuit::LVA_CENTER);
 		
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawImage(jlwuit::Graphics *g, std::string image_id, int x, int y, int w, int h);
+		virtual jlwuit::Font * GetFontByID(std::string id);
 
 		/**
 		 * \brief
 		 *
 		 */
-		void DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, int sy, int sw, int sh, int x, int y, int w, int h);
+		virtual jlwuit::Image * GetImageByID(std::string id);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void DrawImage(jlwuit::Graphics *g, std::string image_id, int x, int y);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void DrawImage(jlwuit::Graphics *g, std::string image_id, int x, int y, int w, int h);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, int sy, int sw, int sh, int x, int y);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, int sy, int sw, int sh, int x, int y, int w, int h);
 
 };
 

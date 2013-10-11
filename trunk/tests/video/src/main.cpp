@@ -23,30 +23,35 @@
 #include "playermanager.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 #define BOX_NUMS	4
 #define BOX_STEP	32
 #define BOX_SIZE	240
 
-struct box_t {
-	jlwuit::Player *player;
-	int dx;
-	int dy;
-};
-
 class MediaStart : public jthread::Thread {
 
-	private:
+	public:
 		jlwuit::Player *_player;
+		int _dx;
+		int _dy;
 
 	public:
-		MediaStart(jlwuit::Player *player)
+		MediaStart(jlwuit::Player *player, int dx, int dy)
 		{
 			_player = player;
+			_dx = dx;
+			_dy = dy;
 		}
 
 		virtual ~MediaStart()
 		{
+			delete _player;
+		}
+
+		virtual void Release()
+		{
+			_player->Stop();
 		}
 
 		virtual void Run()
@@ -59,7 +64,7 @@ class MediaStart : public jthread::Thread {
 class SceneTest : public jlwuit::Scene {
 
 	private:
-		std::vector<struct box_t *> _boxes;
+		std::vector<MediaStart *> _players;
 
 	public:
 		SceneTest():
@@ -68,20 +73,14 @@ class SceneTest : public jlwuit::Scene {
 			jlwuit::lwuit_size_t size = GetSize();
 
 			for (int i=0; i<BOX_NUMS; i++) {
-				jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("channels/channel1");
+				jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("channels/channel2");
 				jlwuit::Component *cmp = player->GetVisualComponent();
 
 				cmp->SetBounds(random()%(size.width-BOX_SIZE), random()%(size.height-BOX_SIZE), BOX_SIZE, BOX_SIZE);
 
 				Add(cmp);
 
-				struct box_t *box = new struct box_t;
-
-				box->player = player;
-				box->dx = ((random()%2) == 0)?-1:1;
-				box->dy = ((random()%2) == 0)?-1:1;
-
-				_boxes.push_back(box);
+				_players.push_back(new MediaStart(player, ((random()%2) == 0)?-1:1, ((random()%2) == 0)?-1:1));
 			}
 
 			SetAnimationDelay(100);
@@ -95,35 +94,29 @@ class SceneTest : public jlwuit::Scene {
 		{
 			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(true);
 
-			// TODO:: delete boxes
+			for (int i=0; i<(int)_players.size(); i++) {
+				MediaStart *media = _players[i];
+
+				media->WaitThread();
+
+				delete media;
+			}
 		}
 
 		virtual void StartMedia()
 		{
 			// INFO:: MediaStart starts all players in parallel
-			MediaStart **ms = new MediaStart*[_boxes.size()];
 			int k = 0;
 
-			for (std::vector<struct box_t *>::iterator i=_boxes.begin(); i!=_boxes.end(); i++) {
-				ms[k++] = new MediaStart((*i)->player);
-
-				ms[k-1]->Start();
+			for (std::vector<MediaStart *>::iterator i=_players.begin(); i!=_players.end(); i++) {
+				(*i)->Start();
 			}
-
-			for (int i=0; i<k; i++) {
-				ms[i]->WaitThread();
-
-				delete ms[i];
-			}
-
-			delete [] ms;
 		}
 
 		virtual void StopMedia()
 		{
-			for (std::vector<struct box_t *>::iterator i=_boxes.begin(); i!=_boxes.end(); i++) {
-				(*i)->player->Stop();
-				(*i)->player->Close();
+			for (std::vector<MediaStart *>::iterator i=_players.begin(); i!=_players.end(); i++) {
+				(*i)->Release();
 			}
 		}
 
@@ -131,33 +124,33 @@ class SceneTest : public jlwuit::Scene {
 		{
 			jlwuit::lwuit_size_t size = GetSize();
 
-			for (std::vector<struct box_t *>::iterator i=_boxes.begin(); i!=_boxes.end(); i++) {
-				struct box_t *box = (*i);
+			for (std::vector<MediaStart *>::iterator i=_players.begin(); i!=_players.end(); i++) {
+				MediaStart *media = (*i);
 	
-				jlwuit::Component *cmp = box->player->GetVisualComponent();
+				jlwuit::Component *cmp = media->_player->GetVisualComponent();
 				jlwuit::lwuit_point_t location = cmp->GetLocation();
 
-				location.x = location.x+box->dx*BOX_STEP;
-				location.y = location.y+box->dy*BOX_STEP;
+				location.x = location.x+media->_dx*BOX_STEP;
+				location.y = location.y+media->_dy*BOX_STEP;
 
 				if (location.x < 0) {
 					location.x = 0;
-					box->dx = 1;
+					media->_dx = 1;
 				}
 
 				if ((location.x+BOX_SIZE) > size.width) {
 					location.x = size.width-BOX_SIZE;
-					box->dx = -1;
+					media->_dx = -1;
 				}
 
-				if (cmp->GetY() < 0) {
+				if (location.y < 0) {
 					location.y = 0;
-					box->dy = 1;
+					media->_dy = 1;
 				}
 
 				if ((location.y+BOX_SIZE) > size.height) {
 					location.y = size.height-BOX_SIZE;
-					box->dy = -1;
+					media->_dy = -1;
 				}
 
 				cmp->SetLocation(location);
@@ -177,9 +170,11 @@ int main()
 	SceneTest app;
 
 	app.Show();
-	app.StartMedia();
 
-	sleep(100000);
+	app.StartMedia();
+	sleep(10);
+	app.StopMedia();
+	sleep(10);
 
 	return 0;
 }

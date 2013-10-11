@@ -6,7 +6,6 @@ MODULES = \
 			dump \
 			filter \
 			gui \
-			ipc \
 		  layers \
 			msg \
 			prefs \

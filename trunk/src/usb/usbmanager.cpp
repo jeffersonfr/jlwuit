@@ -25,6 +25,7 @@
 #include <algorithm>
 
 #include <fcntl.h>
+#include <unistd.h>
 
 #define USB_MOUNT_POINT	"/mnt/usb"
 

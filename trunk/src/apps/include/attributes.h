@@ -20,7 +20,7 @@
 #ifndef LWUIT_ATTRIBUTES_H
 #define LWUIT_ATTRIBUTES_H
 
-#include "parammapper.h"
+#include "jparammapper.h"
 
 #include <string>
 
@@ -31,7 +31,7 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Attributes : public ParamMapper {
+class Attributes : public jcommon::ParamMapper {
 
 	public:
 		/**

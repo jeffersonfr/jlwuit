@@ -22,6 +22,7 @@
 #include "device.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 #define BOX_NUMS	64
 #define BOX_STEP	32

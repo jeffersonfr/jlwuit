@@ -140,7 +140,9 @@ void PhotoSlider::EntryUSBDevice(jlwuit::USBStatusEvent *event)
 
 		try {
 			jio::File file(current_mount_point);
-			std::vector<std::string> files = file.ListFiles();
+			std::vector<std::string> files;
+			
+			file.ListFiles(&files);
 
 			for (std::vector<std::string>::iterator i=files.begin(); i!=files.end(); i++) {
 				std::string s = (*i);

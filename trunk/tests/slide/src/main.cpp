@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <unistd.h>
 
 #define GAPX		16
 #define GAPY		16
@@ -85,7 +86,7 @@ class SlideComponent : public jlwuit::Component {
 
 		virtual bool OnMouseLongPress(jlwuit::UserEvent *event)
 		{
-			jlwuit::Toast::Create((jlwuit::Scene *)GetParent())->SetMessage("Long Press")->Show(); 
+			jlwuit::Toast::Create(this)->SetMessage("Long Press")->Show(); 
 
 			return false;
 		}

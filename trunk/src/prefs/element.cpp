@@ -43,7 +43,7 @@ std::string Element::GetName()
 	return _name;
 }
 
-ParamMapper * Element::GetAttributes()
+jcommon::ParamMapper * Element::GetAttributes()
 {
 	return &_attributes;
 }

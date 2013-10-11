@@ -39,7 +39,6 @@ Player * PlayerManager::CreatePlayer(std::string url) throw (MediaException)
 	if (jurl.GetProtocol() == "isdtv") {
 		return new ISDTVPlayerImpl();
 	} else {
-		printf(":::: %s\n", jurl.GetPath().c_str());
 		return new VideoPlayerImpl(jurl.GetPath());
 	}
 

@@ -20,6 +20,8 @@
 #include "lookandfeel.h"
 #include "font.h"
 
+#include <stdio.h>
+
 namespace jlwuit {
 
 LookAndFeel *LookAndFeel::_instance = NULL;
@@ -54,9 +56,33 @@ LookAndFeel * LookAndFeel::GetInstance()
 	return _instance;
 }
 
-void LookAndFeel::LoadImage(std::string resource_id, std::string path)
+void LookAndFeel::LoadImage(std::string resource_id, std::string path, int wp, int hp)
 {
-	AddReference(&_images, resource_id, (int *)Image::CreateImage(path));
+	Image *image = Image::CreateImage(path); 
+
+	if (image == NULL) {
+		return;
+	}
+
+	lwuit_size_t size = image->GetSize();
+
+	if (wp > 0) {
+		size.width = wp;
+	}
+	
+	if (hp > 0) {
+		size.height = hp;
+	}
+	
+	if (wp > 0 || hp > 0) {
+		Image *tmp = image;
+		
+		image = image->Scaled(size.width, size.height);
+
+		delete tmp;
+	}
+
+	AddReference(&_images, resource_id, (int *)image);
 }
 
 void LookAndFeel::LoadFont(std::string resource_id, std::string name, int size)
@@ -238,6 +264,31 @@ void LookAndFeel::DrawTextBox(jlwuit::Graphics *g, jlwuit::Style *style, std::st
 	DrawText(g, style, font_id, text, x+margin.left, y, w-margin.left-margin.right, h, halign, valign);
 }
 
+jlwuit::Font * LookAndFeel::GetFontByID(std::string id)
+{
+	return (jlwuit::Font *)GetReference(&_fonts, id);
+}
+
+jlwuit::Image * LookAndFeel::GetImageByID(std::string id)
+{
+	return (jlwuit::Image *)GetReference(&_images, id);
+}
+
+void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int x, int y)
+{
+	jlwuit::Image *image = (jlwuit::Image *)GetReference(&_images, image_id);
+
+	if (image == NULL) {
+		return;
+	}
+
+	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
+
+	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	g->DrawImage(image, x, y);
+	g->SetCompositeFlags(t);
+}
+
 void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int x, int y, int w, int h)
 {
 	jlwuit::Image *image = (jlwuit::Image *)GetReference(&_images, image_id);
@@ -246,9 +297,26 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int x, in
 		return;
 	}
 
-	// jgui::Graphics internamente muda esse valor no reset
-	// g->SetCompositeFlags(jlwuit::LCF_NONE);
+	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
+
+	g->SetCompositeFlags(jlwuit::LCF_NONE);
 	g->DrawImage(image, x, y, w, h);
+	g->SetCompositeFlags(t);
+}
+
+void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, int sy, int sw, int sh, int x, int y)
+{
+	jlwuit::Image *image = (jlwuit::Image *)GetReference(&_images, image_id);
+
+	if (image == NULL) {
+		return;
+	}
+
+	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
+
+	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	g->DrawImage(image, sx, sy, sw, sh, x, y);
+	g->SetCompositeFlags(t);
 }
 
 void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, int sy, int sw, int sh, int x, int y, int w, int h)
@@ -259,9 +327,11 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, i
 		return;
 	}
 
-	// jgui::Graphics internamente muda esse valor no reset
-	// g->SetCompositeFlags(jlwuit::LCF_NONE);
+	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
+
+	g->SetCompositeFlags(jlwuit::LCF_NONE);
 	g->DrawImage(image, sx, sy, sw, sh, x, y, w, h);
+	g->SetCompositeFlags(t);
 }
 
 }
