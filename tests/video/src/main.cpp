@@ -22,6 +22,8 @@
 #include "device.h"
 #include "playermanager.h"
 
+#include "jautolock.h"
+
 #include <stdio.h>
 #include <unistd.h>
 
@@ -52,6 +54,8 @@ class MediaStart : public jthread::Thread {
 		virtual void Release()
 		{
 			_player->Stop();
+				
+			WaitThread();
 		}
 
 		virtual void Run()
@@ -65,6 +69,8 @@ class SceneTest : public jlwuit::Scene {
 
 	private:
 		std::vector<MediaStart *> _players;
+		jthread::Mutex _mutex;
+		bool _is_playing;
 
 	public:
 		SceneTest():
@@ -88,16 +94,18 @@ class SceneTest : public jlwuit::Scene {
 			GetStyle()->SetIntegerParam("bg.color", 0x00000000);
 
 			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(false);
+			
+			_is_playing = false;
 		}
 
 		virtual ~SceneTest()
 		{
 			jlwuit::Device::GetDefaultScreen()->GetLayerByID("background")->SetEnabled(true);
 
+			jthread::AutoLock lock(&_mutex);
+
 			for (int i=0; i<(int)_players.size(); i++) {
 				MediaStart *media = _players[i];
-
-				media->WaitThread();
 
 				delete media;
 			}
@@ -105,23 +113,39 @@ class SceneTest : public jlwuit::Scene {
 
 		virtual void StartMedia()
 		{
+			jthread::AutoLock lock(&_mutex);
+
 			// INFO:: MediaStart starts all players in parallel
 			int k = 0;
 
 			for (std::vector<MediaStart *>::iterator i=_players.begin(); i!=_players.end(); i++) {
 				(*i)->Start();
 			}
+			
+			_is_playing = true;
 		}
 
 		virtual void StopMedia()
 		{
+			jthread::AutoLock lock(&_mutex);
+
 			for (std::vector<MediaStart *>::iterator i=_players.begin(); i!=_players.end(); i++) {
 				(*i)->Release();
 			}
+
+			RemoveAll();
+
+			_is_playing = false;
 		}
 
 		virtual bool Animate()
 		{
+			jthread::AutoLock lock(&_mutex);
+
+			if (_is_playing == false) {
+				return false;
+			}
+
 			jlwuit::lwuit_size_t size = GetSize();
 
 			for (std::vector<MediaStart *>::iterator i=_players.begin(); i!=_players.end(); i++) {
