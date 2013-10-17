@@ -618,7 +618,7 @@ void VideoPlayerImpl::SetCurrentTime(uint64_t time)
 	jthread::AutoLock lock(&_mutex);
 
 	if (_provider != NULL) {
-		_provider->SeekTo(_provider, time/1000LL);
+		_provider->SeekTo(_provider, (double)time/1000.0);
 	}
 }
 
@@ -632,7 +632,7 @@ uint64_t VideoPlayerImpl::GetCurrentTime()
 		_provider->GetPos(_provider, &time);
 	}
 
-	return time*1000LL;
+	return (uint64_t)(time*1000LL);
 }
 
 uint64_t VideoPlayerImpl::GetMediaTime()
@@ -645,7 +645,7 @@ uint64_t VideoPlayerImpl::GetMediaTime()
 		_provider->GetLength(_provider, &time);
 	}
 
-	return time*1000LL;
+	return (uint64_t)(time*1000LL);
 }
 
 void VideoPlayerImpl::SetLoop(bool b)
