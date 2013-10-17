@@ -119,9 +119,7 @@ void MP3Player::ReleasePlayer()
 		_player = NULL;
 	}
 
-	if (IsRunning() == true) {
-		WaitThread();
-	}
+	WaitThread();
 }
 
 bool MP3Player::Animate()
@@ -144,15 +142,25 @@ bool MP3Player::Animate()
 void MP3Player::Run()
 {
 	while (true) {
-		jthread::AutoLock lock(&_mutex);
+		uint64_t mediatime = 0;
+		uint64_t currenttime = 0;
 
-		if (_player == NULL || _player->GetMediaTime() == 0) {
-			break;
+		{
+			jthread::AutoLock lock(&_mutex);
+
+			if (_player == NULL) {
+				break;
+			}
+
+			mediatime = _player->GetMediaTime();
+			currenttime = _player->GetCurrentTime();
 		}
 
-		_progress = (100*_player->GetCurrentTime())/_player->GetMediaTime();
+		if (mediatime != 0LL) {
+			_progress = (100*currenttime)/mediatime;
 
-		Repaint();
+			Repaint();
+		}
 
 		usleep(1);
 	}
