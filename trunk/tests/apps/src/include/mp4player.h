@@ -30,8 +30,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-namespace jlwuit {
-
 class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 
 	private:
@@ -212,8 +210,6 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		virtual void RemoveUSBDevice(jlwuit::USBStatusEvent *event);
 
 };
-
-}
 
 #endif
 

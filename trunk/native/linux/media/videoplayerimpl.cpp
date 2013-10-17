@@ -48,7 +48,8 @@ class VideoComponentImpl : public jlwuit::Component {
 
 	public:
 		VideoComponentImpl(int x, int y, int w, int h, int iw, int ih):
-			jlwuit::Component(x, y, w, h)
+			jlwuit::Component(x, y, w, h),
+			_mutex(jthread::JMT_RECURSIVE)
 		{
 			_buffer = new jlwuit::ImageImpl(_image = jgui::Image::CreateImage(w, h, jgui::JPF_ARGB, iw, ih));
 
@@ -497,11 +498,11 @@ VideoPlayerImpl::VideoPlayerImpl(std::string file)
 		_has_video = true;
 		_aspect = mdsc.video.aspect;
 
-		_component = new VideoComponentImpl(0, 0, sdsc.width, sdsc.height, sdsc.width, sdsc.height);
-
 		_controls.push_back(new VideoSizeControlImpl(this));
 		_controls.push_back(new VideoFormatControlImpl(this));
 	}
+
+	_component = new VideoComponentImpl(0, 0, sdsc.width, sdsc.height, sdsc.width, sdsc.height);
 
 	Start();
 }
@@ -600,24 +601,38 @@ void VideoPlayerImpl::Close()
 
 	_is_closed = true;
 
+	WaitThread();
+
 	if (_provider != NULL) {
-		_events->Release(_events);
+		// INFO:: cause crashes when release and create players
+		//_events->Release(_events);
 		_events = NULL;
 
 		_provider->Release(_provider);
 		_provider = NULL;
 	}
-
-	WaitThread();
 }
 
-void VideoPlayerImpl::SetMediaTime(uint64_t time)
+void VideoPlayerImpl::SetCurrentTime(uint64_t time)
 {
 	jthread::AutoLock lock(&_mutex);
 
 	if (_provider != NULL) {
 		_provider->SeekTo(_provider, time/1000LL);
 	}
+}
+
+uint64_t VideoPlayerImpl::GetCurrentTime()
+{
+	jthread::AutoLock lock(&_mutex);
+
+	double time = 0.0;
+
+	if (_provider != NULL) {
+		_provider->GetPos(_provider, &time);
+	}
+
+	return time*1000LL;
 }
 
 uint64_t VideoPlayerImpl::GetMediaTime()
@@ -627,7 +642,7 @@ uint64_t VideoPlayerImpl::GetMediaTime()
 	double time = 0.0;
 
 	if (_provider != NULL) {
-		_provider->GetPos(_provider, &time);
+		_provider->GetLength(_provider, &time);
 	}
 
 	return time*1000LL;

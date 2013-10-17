@@ -116,7 +116,13 @@ class VideoPlayerImpl : public jlwuit::Player, public jthread::Thread {
 		 * \brief
 		 *
 		 */
-		virtual void SetMediaTime(uint64_t i);
+		virtual void SetCurrentTime(uint64_t i);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual uint64_t GetCurrentTime();
 
 		/**
 		 * \brief

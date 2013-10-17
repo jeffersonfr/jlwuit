@@ -29,8 +29,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-namespace jlwuit {
-
 class Display : public jlwuit::Component {
 
 	private:
@@ -124,7 +122,5 @@ class Calc : public jlwuit::Scene {
 		virtual void Paint(jlwuit::Graphics *g);
 		
 };
-
-}
 
 #endif 

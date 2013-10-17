@@ -71,8 +71,13 @@ void Player::Close()
 {
 }
 
-void Player::SetMediaTime(uint64_t i)
+void Player::SetCurrentTime(uint64_t i)
 {
+}
+
+uint64_t Player::GetCurrentTime()
+{
+	return -1LL;
 }
 
 uint64_t Player::GetMediaTime()

@@ -23,14 +23,13 @@
 #include "scene.h"
 #include "player.h"
 #include "usbstatuslistener.h"
+#include "screensaver.h"
 
 #include <string>
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-
-namespace jlwuit {
 
 enum lwuit_player_action_t {
 	LPA_PLAY, 
@@ -42,13 +41,17 @@ enum lwuit_player_action_t {
 	LPA_FASTFORWARD
 };
 
-class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
+class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener, public jthread::Thread {
 
 	private:
 		/** \brief */
 		std::vector<std::string> _musics;
 		/** \brief */
+		jthread::Mutex _mutex;
+		/** \brief */
 		jlwuit::Player *_player;
+		/** \brief */
+		ScreenSaver *_screensaver;
 		/** \brief */
 		std::string _track;
 		/** \brief */
@@ -66,7 +69,9 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		/** \brief */
 		int _progress;
 		/** \brief */
-		int _action;
+		lwuit_player_action_t _action;
+		/** \brief */
+		lwuit_player_action_t _state;
 		/** \brief */
 		int _screen_saver_timeout;
 		/** \brief */
@@ -86,6 +91,12 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 *
 		 */
 		virtual ~MP3Player();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void ReleasePlayer();
 
 		/**
 		 * \brief
@@ -145,12 +156,6 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 * \brief
 		 *
 		 */
-		virtual void TransitionState(bool flag);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual void SetMusicDurationString(std::string length);
 
 		/**
@@ -175,30 +180,6 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 * \brief
 		 *
 		 */
-		virtual void SetProgress(double value);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetElapsedTime(int hour, int minute, int second);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void ResetElapsedTime();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetFullTime(std::string time);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual bool Animate();
 
 		/**
@@ -206,6 +187,12 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 *
 		 */
 		virtual void Paint(jlwuit::Graphics *g);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Run();
 
 		/**
 		 * \brief
@@ -226,8 +213,6 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		virtual void RemoveUSBDevice(jlwuit::USBStatusEvent *event);
 
 };
-
-}
 
 #endif
 
