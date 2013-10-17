@@ -33,8 +33,6 @@
 #define MARGIN_TOP		(TEXT_GAPY+TEXT_SIZE+TEXT_GAPY)
 #define MARGIN_BOTTOM	TEXT_GAPY
 
-namespace jlwuit {
-
 PhotoSlider::PhotoSlider():
 	jlwuit::Scene(0, 0, 1920, 1080)
 {
@@ -65,6 +63,9 @@ void PhotoSlider::Paint(jlwuit::Graphics *g)
 	} else {
 		laf->DrawBox(g, NULL, MARGIN_LEFT, TEXT_GAPY, sw, TEXT_SIZE);
 		laf->DrawText(g, NULL, "large", "Image Viewer", MARGIN_LEFT, TEXT_GAPY, sw, TEXT_SIZE);
+		
+		laf->DrawBox(g, NULL, MARGIN_LEFT, bounds.height-TEXT_SIZE-TEXT_GAPY, sw, TEXT_SIZE);
+		laf->DrawText(g, NULL, "large", "use direction arrows to view photos", MARGIN_LEFT, bounds.height-TEXT_SIZE-TEXT_GAPY, sw, TEXT_SIZE);
 	}
 
 	if (_images.size() == 0) {
@@ -80,6 +81,8 @@ void PhotoSlider::Paint(jlwuit::Graphics *g)
 	float fw = iw,
 				fh = ih,
 				scale = 0.0;
+
+	sh = sh - (TEXT_SIZE+TEXT_GAPY);
 
 	if (iw > sw) {
 		fw = sw;
@@ -192,6 +195,4 @@ void PhotoSlider::RemoveUSBDevice(jlwuit::USBStatusEvent *event)
 	_images.clear();
 
 	Repaint();
-}
-
 }

@@ -30,8 +30,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-namespace jlwuit {
-
 class PhotoSlider : public jlwuit::Scene, public jthread::Thread, public jlwuit::USBStatusListener {
 
 	private:
@@ -50,7 +48,5 @@ class PhotoSlider : public jlwuit::Scene, public jthread::Thread, public jlwuit:
 		virtual void RemoveUSBDevice(jlwuit::USBStatusEvent *event);
 
 };
-
-}
 
 #endif

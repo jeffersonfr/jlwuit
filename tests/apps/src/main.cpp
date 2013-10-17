@@ -74,19 +74,19 @@ class AppSwitch : public jlwuit::Scene {
 			}
 
 			if (event->GetKeySymbol() == jlwuit::LKS_1) {
-				StartActivity(new jlwuit::Calc(100, 100));
+				StartActivity(new Calc(100, 100));
 
 				return true;
 			} else if (event->GetKeySymbol() == jlwuit::LKS_2) {
-				StartActivity(new jlwuit::PhotoSlider());
+				StartActivity(new PhotoSlider());
 
 				return true;
 			} else if (event->GetKeySymbol() == jlwuit::LKS_3) {
-				StartActivity(new jlwuit::MP3Player());
+				StartActivity(new MP3Player());
 
 				return true;
 			} else if (event->GetKeySymbol() == jlwuit::LKS_4) {
-				StartActivity(new jlwuit::MP4Player());
+				StartActivity(new MP4Player());
 
 				return true;
 			}

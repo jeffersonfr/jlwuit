@@ -21,8 +21,12 @@
 #include "usbmanager.h"
 #include "playermanager.h"
 #include "videosizecontrol.h"
+#include "device.h"
+#include "toast.h"
 #include "jfile.h"
 #include "jioexception.h"
+
+#define _T(x) jlwuit::Toast::Create(this)->SetMessage(x)->SetGravity("bottom hcenter")->Show();
 
 #define GAPX		16
 #define GAPY		16
@@ -34,20 +38,21 @@
 
 #define SCREEN_SAVER_TIMEOUT	60
 
-namespace jlwuit {
-
 MP3Player::MP3Player():
 	jlwuit::Scene(0, 0, 1920, 1080)
 {
 	_progress = 0;
 	_index = -1;
-	_action = LPA_STOP;
+	_action = LPA_PLAY;
+	_state = LPA_STOP;
 	_player = NULL;
 
 	_screen_saver_timeout = 0;
 	_screen_saver_state = 0;
 	_image.x = 0;
 	_image.y = 0;
+
+	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->SetEnabled(false);
 
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 
@@ -64,18 +69,29 @@ MP3Player::MP3Player():
 
 	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
+
+	_screensaver = new ScreenSaver(this);
+
+	_screensaver->Start();
 }
 
 MP3Player::~MP3Player()
 {
+	_screensaver->Release();
+
+	delete _screensaver;
+	_screensaver = NULL;
+
 	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Stop();
 
 	Hide();
 
 	if (_player != NULL) {
-		delete _player;
-		_player = NULL;
+		_player->Stop();
+		_player->Close();
+
+		ReleasePlayer();
 	}
 	
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
@@ -84,12 +100,28 @@ MP3Player::~MP3Player()
 		player->Play();
 	}
 	
+	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->SetEnabled(true);
+	
 	jlwuit::LookAndFeel::ReleaseImage("rewind");
 	jlwuit::LookAndFeel::ReleaseImage("stop");
 	jlwuit::LookAndFeel::ReleaseImage("play");
 	jlwuit::LookAndFeel::ReleaseImage("pause");
 	jlwuit::LookAndFeel::ReleaseImage("forward");
 	jlwuit::LookAndFeel::ReleaseImage("logo");
+}
+
+void MP3Player::ReleasePlayer()
+{
+	{
+		jthread::AutoLock lock(&_mutex);
+
+		delete _player;
+		_player = NULL;
+	}
+
+	if (IsRunning() == true) {
+		WaitThread();
+	}
 }
 
 bool MP3Player::Animate()
@@ -107,6 +139,23 @@ bool MP3Player::Animate()
 	}
 
 	return true;
+}
+
+void MP3Player::Run()
+{
+	while (true) {
+		jthread::AutoLock lock(&_mutex);
+
+		if (_player == NULL || _player->GetMediaTime() == 0) {
+			break;
+		}
+
+		_progress = (100*_player->GetCurrentTime())/_player->GetMediaTime();
+
+		Repaint();
+
+		usleep(1);
+	}
 }
 
 void MP3Player::Paint(jlwuit::Graphics *g)
@@ -151,29 +200,58 @@ void MP3Player::Paint(jlwuit::Graphics *g)
 	laf->DrawTextBox(g, NULL, "medium", _comments, 1*(w+GAPX)+boxw+2*GAPX, 6*TEXT_SPAN+2*GAPY, w-boxw-2*GAPX, TEXT_SIZE, jlwuit::LHA_LEFT);
 
 	// draw items
-	int dindex = 0;
-
-	if (_index > num_items) {
-		dindex = _index-num_items;
-	}
-
 	for (int i=0; i<num_items; i++) {
 		laf->DrawBorder(g, NULL, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 	}
 
-	for (int i=dindex; i<num_items && i<(int)_musics.size(); i++) {
-		laf->DrawText(g, NULL, "medium", _musics[i+dindex], 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
+	if (_index >= 0) {
+		num_items = num_items + _index;
+
+		if (num_items > (int)_musics.size()) {
+			num_items = (int)_musics.size();
+		}
+
+		for (int k=_index; k<num_items; k++) {
+			std::string music = _musics[k];
+			std::string::size_type n = music.rfind("/");
+
+			if (n != std::string::npos) {
+				music = music.substr(n+1);
+			}
+
+			int i = k-_index;
+
+			if (k == _index) {
+				laf->SetType(jlwuit::LST_FOCUS);
+				laf->DrawBox(g, NULL, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
+				laf->SetType(jlwuit::LST_NORMAL);
+			}
+
+			laf->DrawText(g, NULL, "medium", music, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
+		}
 	}
 
 	int x = (1920-1*180-2*150-2*120-4*GAPX)/2,
 			y = bounds.height-180-10*GAPY;
 
-	laf->DrawImage(g, "rewind", x, y + (180-120)/2, 120, 120);
-	laf->DrawImage(g, "stop", x + (120+GAPX), y + (180-150)/2, 150, 150);
-	laf->DrawImage(g, "play", x + (120+150+2*GAPX), y, 180 + (180-180)/2, 180);
-	laf->DrawImage(g, "pause", x + (120+150+180+3*GAPX), y + (180-150)/2, 150, 150);
-	laf->DrawImage(g, "forward", x + (120+2*150+180+4*GAPX), y + (180-120)/2, 120, 120);
+	laf->DrawImage(g, "rewind", x, y+(180-120)/2, 120, 120);
+	laf->DrawImage(g, "stop", x+(120+GAPX), y + (180-150)/2, 150, 150);
+	laf->DrawImage(g, "play", x+(120+150+2*GAPX), y, 180 + (180-180)/2, 180);
+	laf->DrawImage(g, "pause", x+(120+150+180+3*GAPX), y + (180-150)/2, 150, 150);
+	laf->DrawImage(g, "forward", x+(120+2*150+180+4*GAPX), y + (180-120)/2, 120, 120);
 	
+	if (_action == LPA_PREVIOUS) {
+		laf->DrawBorder(g, NULL, x, y+(180-120)/2, 120, 120);
+	} else if (_action == LPA_STOP) {
+		laf->DrawBorder(g, NULL, x+(120+GAPX), y + (180-150)/2, 150, 150);
+	} else if (_action == LPA_PLAY) {
+		laf->DrawBorder(g, NULL, x+(120+150+2*GAPX), y, 180 + (180-180)/2, 180);
+	} else if (_action == LPA_PAUSE) {
+		laf->DrawBorder(g, NULL, x+(120+150+180+3*GAPX), y + (180-150)/2, 150, 150);
+	} else if (_action == LPA_NEXT) {
+		laf->DrawBorder(g, NULL, x+(120+2*150+180+4*GAPX), y + (180-120)/2, 120, 120);
+	}
+
 	// laf->DrawBorder(g, NULL, 5*GAPX, bounds.height-6*GAPY, bounds.width-10*GAPX, GAPY);
 	laf->DrawProgressBar(g, NULL, _progress, 5*GAPX, bounds.height-6*GAPY, bounds.width-10*GAPX, GAPY);
 	
@@ -194,21 +272,61 @@ bool MP3Player::OnKeyDown(jlwuit::UserEvent *event)
 {
 	_screen_saver_timeout = 0;
 
-	/*
-	if (event->GetKeySymbol() == jlwuit::JKS_ENTER) {
-		tuner::Locator locator(_musics[playListBox->GetCurrentIndex()]);
+	if (_index < 0 || _musics.size() == 0) {
+		return false;
+	}
 
-		if (_player != NULL) {
-			delete _player;
-		}
+	lwuit_player_action_t actions[5] = {
+		LPA_PREVIOUS,
+		LPA_STOP,
+		LPA_PLAY,
+		LPA_PAUSE,
+		LPA_NEXT
+	};
+	int actions_size = 5;
+	int action = 0;
+	
+	for (int i=0; i<actions_size; i++) {
+		if (_action == actions[i]) {
+			action = i;
 
-		_player = media::PlayerManager::GetInstance()->CreatePlayer(&locator);
-
-		if (_player != NULL) {
-			_player->Play();
+			break;
 		}
 	}
-	*/
+
+	_screensaver->Resume();
+	
+	if (event->GetKeySymbol() == jlwuit::LKS_ENTER) {
+		if (_action == LPA_PREVIOUS) {
+			GoPrevious();
+		} else if (_action == LPA_STOP) {
+			GoStop();
+		} else if (_action == LPA_PLAY) {
+			GoPlay();
+		} else if (_action == LPA_PAUSE) {
+			GoPause();
+		} else if (_action == LPA_NEXT) {
+			GoNext();
+		}
+	} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT) {
+		action = action - 1;
+
+		if (action < 0) {
+			action = actions_size-1;
+		}
+	} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT) {
+		action = action + 1;
+
+		if (action >= actions_size) {
+			action = 0;
+		}
+	} else {
+		return false;
+	}
+
+	_action = actions[action];
+
+	Repaint();
 
 	return true;
 }
@@ -223,28 +341,30 @@ void MP3Player::GoRight()
 
 void MP3Player::GoPrevious()
 {
-	/*
-	int index = playListBox->GetCurrentIndex();
+	_index = _index - 1;
 
-	if(index == 0) {
-		playListBox->SetCurrentIndex(playListBox->GetItemsSize()-1);
-	} else {
-		playListBox->SetCurrentIndex(index-1);
+	if (_index < 0) {
+		_index = 0;
+		// _index = _musics.size()-1;
 	}
-	*/
+
+	if (_state == LPA_PLAY) {
+		GoPlay();
+	}
 }
 
 void MP3Player::GoNext()
 {
-	/*
-	int index = playListBox->GetCurrentIndex();
+	_index = _index + 1;
 
-	if(index == playListBox->GetItemsSize()-1) {
-		playListBox->SetCurrentIndex(0);
-	} else {
-		playListBox->SetCurrentIndex(index+1);
+	if (_index >= (int)_musics.size()) {
+		// _index = 0;
+		_index = (int)_musics.size()-1;
 	}
-	*/
+
+	if (_state == LPA_PLAY) {
+		GoPlay();
+	}
 }
 
 void MP3Player::GoTo(int index)
@@ -254,40 +374,59 @@ void MP3Player::GoTo(int index)
 
 void MP3Player::GoPlay()
 {
-	_action = LPA_PLAY;
+	std::string music = _musics[_index];
 
-	// watch->Resume();
+	if (_state == LPA_PAUSE) {
+		_player->Resume();
+
+		_state = LPA_PLAY;
+
+		return;
+	}
+
+	// INFO:: chamar Stop ou Close estah quebrando a criacao de novos players
+	if (_player != NULL) {
+		ReleasePlayer();
+	}
+
+	_player = jlwuit::PlayerManager::CreatePlayer(music);
+
+	if (_player != NULL) {
+		_player->Play();
+
+		Start();
+	
+		_state = LPA_PLAY;
+	} else {
+		ReleasePlayer();
+
+		_T("Media cannot be played"); 
+	}
 }
 
 void MP3Player::GoStop()
 {
-	_action = LPA_STOP;
+	if (_player != NULL) {
+		_player->Stop();
+		_player->Close();
 
-	// watch->Reset();
-	// watch->Pause();
+		ReleasePlayer();
+	}
+		
+	_state = LPA_STOP;
 }
 
 void MP3Player::GoPause()
 {
-	_action = LPA_PAUSE;
+	if (_player != NULL) {
+		_player->Pause();
 	
-	// watch->Pause();
+		_state = LPA_PAUSE;
+	}
 }
 
 void MP3Player::GoInfo()
 {
-}
-
-void MP3Player::TransitionState(bool flag)
-{
-	/*
-	if(flag == true) {
-		watch->Pause();
-		watch->Reset();
-	} else {
-		watch->Resume();
-	}
-	*/
 }
 
 void MP3Player::SetMusicDurationString(std::string length)
@@ -324,40 +463,6 @@ int MP3Player::GetAction()
 	return _action;
 }
 
-void MP3Player::SetProgress(double value)
-{
-	_progress = value;
-}
-
-void MP3Player::SetElapsedTime(int hour, int minute, int second)
-{
-	/*
-	watch->SetHours(hour);
-	watch->SetMinutes(minute);
-	watch->SetSeconds(second);
-	*/
-}
-
-void MP3Player::ResetElapsedTime()
-{
-	// watch->Reset();
-}
-
-void MP3Player::SetFullTime(std::string time)
-{
-	/*
-	total_time->SetText(time);
-	if(time.size() == 8)
-	{
-		watch->SetMaxCount(atoi(time.substr(0, 2).c_str()), atoi(time.substr(3, 5).c_str()), atoi(time.substr(6, 8).c_str()));
-	}
-	else
-	{
-		watch->SetMaxCount(0, atoi(time.substr(0, 2).c_str()), atoi(time.substr(3, 5).c_str()));
-	}
-	*/
-}
-
 void MP3Player::EntryUSBDevice(jlwuit::USBStatusEvent *event)
 {
 	std::vector<std::string> folders;
@@ -391,8 +496,9 @@ void MP3Player::EntryUSBDevice(jlwuit::USBStatusEvent *event)
 						std::string audio = (current_mount_point + "/" + s);
 
 						if (audio.size() > 4 && (
-									strcasecmp((const char *)audio.c_str()+audio.size()-3, "png") == 0 || 
-									strcasecmp((const char *)audio.c_str()+audio.size()-3, "jpg") == 0
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "mp3") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "ogg") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "wav") == 0
 									)) {
 
 							_musics.push_back(audio);
@@ -421,6 +527,4 @@ void MP3Player::RemoveUSBDevice(jlwuit::USBStatusEvent *event)
 	_musics.clear();
 
 	Repaint();
-}
-
 }

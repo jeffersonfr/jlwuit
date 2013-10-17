@@ -15,6 +15,7 @@ OBJS 		= \
 					photoslider.o\
 					mp3player.o\
 					mp4player.o\
+					screensaver.o\
 	   
 include ../../Makefile.defs
 include ../../Makefile.build

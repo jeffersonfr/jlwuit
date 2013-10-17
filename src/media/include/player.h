@@ -106,10 +106,16 @@ class Player {
 		 * \brief Seeks media forward or back.
 		 *
 		 */
-		virtual void SetMediaTime(uint64_t time);
+		virtual void SetCurrentTime(uint64_t time);
 
 		/**
 		 * \brief Gets current media time.
+		 *
+		 */
+		virtual uint64_t GetCurrentTime();
+
+		/**
+		 * \brief Gets full media time.
 		 *
 		 */
 		virtual uint64_t GetMediaTime();

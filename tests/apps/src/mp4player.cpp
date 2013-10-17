@@ -38,8 +38,6 @@
 
 #define NUM_ITEMS			5
 
-namespace jlwuit {
-
 MP4Player::MP4Player():
 	jlwuit::Scene(0, 0, 1920, 1080)
 {
@@ -53,12 +51,16 @@ MP4Player::MP4Player():
 	_image.x = 0;
 	_image.y = 0;
 
+	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->SetEnabled(false);
+
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 
 	if (player != NULL) {
+		player->Stop();
+
+		/*
 		VideoSizeControl *control = (VideoSizeControl *)player->GetControl("video.size");
 		
-		player->Stop();
 
 		if (control != NULL) {
 			int w = (GetWidth()-3*GAPX)/2,
@@ -66,6 +68,7 @@ MP4Player::MP4Player():
 
 			control->SetDestination(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
 		}
+		*/
 	}
 	
 	jlwuit::LookAndFeel::LoadImage("rewind", "images/rewind.png");
@@ -94,14 +97,18 @@ MP4Player::~MP4Player()
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
 
 	if (player != NULL) {
+		player->Play();
+
+		/*
 		VideoSizeControl *control = (VideoSizeControl *)player->GetControl("video.size");
 
 		if (control != NULL) {
 			control->SetDestination(0, 0, 1920, 1080);
 		}
-		
-		player->Play();
+		*/
 	}
+
+	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->SetEnabled(true);
 
 	jlwuit::LookAndFeel::ReleaseImage("rewind");
 	jlwuit::LookAndFeel::ReleaseImage("stop");
@@ -451,6 +458,4 @@ void MP4Player::RemoveUSBDevice(jlwuit::USBStatusEvent *event)
 	}
 
 	Repaint();
-}
-
 }

@@ -33,8 +33,6 @@
 #define MARGIN_TOP		BUTTON_GAPY+BUTTON_HEIGHT+BUTTON_GAPY
 #define MARGIN_BOTTOM	BUTTON_GAPY
 
-namespace jlwuit {
-
 std::string buttons[] = { 
 	"7", "8", "9", "/", "C",
 	"4", "5", "6", "x", "raiz",
@@ -599,7 +597,5 @@ void Calc::Paint(jlwuit::Graphics *g)
 	
 		laf->DrawText(g, NULL, "medium", buttons[i], bounds.x+MARGIN_LEFT+x*(BUTTON_WIDTH+BUTTON_GAPX), bounds.y+MARGIN_TOP+y*(BUTTON_HEIGHT+BUTTON_GAPY), BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
-
-}
 
 }
