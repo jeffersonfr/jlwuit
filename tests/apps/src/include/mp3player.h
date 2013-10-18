@@ -23,6 +23,7 @@
 #include "scene.h"
 #include "player.h"
 #include "usbstatuslistener.h"
+#include "toast.h"
 #include "screensaver.h"
 
 #include <string>
@@ -30,6 +31,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+
+#define _T(x) jlwuit::Toast::Create(this)->SetMessage(x)->SetGravity("bottom hcenter")->Show();
+
+#define GAPX		16
+#define GAPY		16
+
+#define IMAGE_SIZE		100
+
+#define TEXT_SIZE			80
+#define TEXT_SPAN			(TEXT_SIZE+GAPY)
+
+#define NUM_ITEMS			5
 
 enum lwuit_player_action_t {
 	LPA_PLAY, 
@@ -72,12 +85,6 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener, public
 		lwuit_player_action_t _action;
 		/** \brief */
 		lwuit_player_action_t _state;
-		/** \brief */
-		int _screen_saver_timeout;
-		/** \brief */
-		int _screen_saver_state;
-		/** \brief */
-		jlwuit::lwuit_point_t _image;
 
 	public:
 		/**

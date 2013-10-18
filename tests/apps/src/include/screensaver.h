@@ -39,12 +39,14 @@ class ScreenSaver : public jlwuit::Dialog, public jthread::Thread {
 		int _logo_dx;
 		int _logo_dy;
 		bool _is_released;
+		bool _is_freeze;
 
 	public:
-		ScreenSaver(jlwuit::Scene *scene);
+		ScreenSaver(jlwuit::Scene *scene, std::string logo);
 		
 		virtual ~ScreenSaver();
 
+		virtual void Freeze();
 		virtual void Resume();
 		virtual void Release();
 

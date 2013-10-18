@@ -28,12 +28,13 @@
 #define LOGO_STEPX		16
 #define LOGO_STEPY		16
 
-ScreenSaver::ScreenSaver(jlwuit::Scene *scene):
+ScreenSaver::ScreenSaver(jlwuit::Scene *scene, std::string logo):
 	jlwuit::Dialog(scene)
 {
 	jlwuit::lwuit_region_t bounds = scene->GetBounds();
 
 	_is_released = false;
+	_is_freeze = false;
 	_time = TIME_DEFAULT;
 
 	_logo_x = random()%bounds.width/2;
@@ -44,17 +45,23 @@ ScreenSaver::ScreenSaver(jlwuit::Scene *scene):
 
 	SetBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 	
-	jlwuit::LookAndFeel::LoadImage("logo", "images/mp3-logo.png");
+	jlwuit::LookAndFeel::LoadImage("logo", logo);
 }
 
 ScreenSaver::~ScreenSaver()
 {
-	jlwuit::LookAndFeel::ReleaseImage("rewind");
+	jlwuit::LookAndFeel::ReleaseImage("logo");
+}
+
+void ScreenSaver::Freeze()
+{
+	_is_freeze = true;
 }
 
 void ScreenSaver::Resume()
 {
 	_time = TIME_DEFAULT;
+	_is_freeze = false;
 }
 
 void ScreenSaver::Release()
@@ -104,7 +111,9 @@ void ScreenSaver::Paint(jlwuit::Graphics *g)
 void ScreenSaver::Run()
 {
 	while (_is_released == false) {
-		_time = _time - TIME_STEP;
+		if (_is_freeze == false) {
+			_time = _time - TIME_STEP;
+		}
 
 		usleep(TIME_STEP);
 

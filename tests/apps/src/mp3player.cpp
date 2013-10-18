@@ -22,21 +22,8 @@
 #include "playermanager.h"
 #include "videosizecontrol.h"
 #include "device.h"
-#include "toast.h"
 #include "jfile.h"
 #include "jioexception.h"
-
-#define _T(x) jlwuit::Toast::Create(this)->SetMessage(x)->SetGravity("bottom hcenter")->Show();
-
-#define GAPX		16
-#define GAPY		16
-
-#define IMAGE_SIZE		100
-
-#define TEXT_SIZE			80
-#define TEXT_SPAN			(TEXT_SIZE+GAPY)
-
-#define SCREEN_SAVER_TIMEOUT	60
 
 MP3Player::MP3Player():
 	jlwuit::Scene(0, 0, 1920, 1080)
@@ -46,11 +33,6 @@ MP3Player::MP3Player():
 	_action = LPA_PLAY;
 	_state = LPA_STOP;
 	_player = NULL;
-
-	_screen_saver_timeout = 0;
-	_screen_saver_state = 0;
-	_image.x = 0;
-	_image.y = 0;
 
 	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->SetEnabled(false);
 
@@ -65,12 +47,11 @@ MP3Player::MP3Player():
 	jlwuit::LookAndFeel::LoadImage("play", "images/play.png");
 	jlwuit::LookAndFeel::LoadImage("pause", "images/pause.png");
 	jlwuit::LookAndFeel::LoadImage("forward", "images/forward.png");
-	jlwuit::LookAndFeel::LoadImage("logo", "images/mp3-logo.png");
 
 	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
 
-	_screensaver = new ScreenSaver(this);
+	_screensaver = new ScreenSaver(this, "images/mp3-logo.png");
 
 	_screensaver->Start();
 }
@@ -107,7 +88,6 @@ MP3Player::~MP3Player()
 	jlwuit::LookAndFeel::ReleaseImage("play");
 	jlwuit::LookAndFeel::ReleaseImage("pause");
 	jlwuit::LookAndFeel::ReleaseImage("forward");
-	jlwuit::LookAndFeel::ReleaseImage("logo");
 }
 
 void MP3Player::ReleasePlayer()
@@ -124,19 +104,7 @@ void MP3Player::ReleasePlayer()
 
 bool MP3Player::Animate()
 {
-	_screen_saver_state = 0;
-	_screen_saver_timeout = _screen_saver_timeout + 1;
-
-	if (_screen_saver_timeout >= SCREEN_SAVER_TIMEOUT) {
-		std::cout << "Screen Saver" << std::endl;
-
-		_screen_saver_state = 1;
-
-		_image.x = random()%(1920-640);
-		_image.y = random()%(1080-240);
-	}
-
-	return true;
+	return false;
 }
 
 void MP3Player::Run()
@@ -179,12 +147,6 @@ void MP3Player::Paint(jlwuit::Graphics *g)
 	int boxw = (w-2*GAPX)/4;
 
 	laf->DrawBox(g, NULL, 0, 0, bounds.width, bounds.height);
-
-	if (_screen_saver_state == 1) {
-		laf->DrawImage(g, "logo", _image.x, _image.y, 640, 240);
-
-		return;
-	}
 
 	laf->DrawText(g, NULL, "medium", "MP3 Player", 0, GAPY, bounds.width, TEXT_SIZE);
 
@@ -278,8 +240,6 @@ void MP3Player::Paint(jlwuit::Graphics *g)
 
 bool MP3Player::OnKeyDown(jlwuit::UserEvent *event)
 {
-	_screen_saver_timeout = 0;
-
 	if (_index < 0 || _musics.size() == 0) {
 		return false;
 	}

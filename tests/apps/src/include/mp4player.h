@@ -20,9 +20,7 @@
 #ifndef LWUIT_MP4PLAYER_H
 #define LWUIT_MP4PLAYER_H
 
-#include "scene.h"
-#include "usbstatuslistener.h"
-#include "player.h"
+#include "mp3player.h"
 
 #include <string>
 
@@ -30,27 +28,25 @@
 #include <unistd.h>
 #include <stdio.h>
 
-class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
+class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener, public jthread::Thread {
 
 	private:
 		/** \brief */
 		std::vector<std::string> _videos;
 		/** \brief */
+		jthread::Mutex _mutex;
+		/** \brief */
 		jlwuit::Player *_player;
 		/** \brief */
 		int _progress;
 		/** \brief */
-		// ListBox *playListBox;
+		ScreenSaver *_screensaver;
 		/** \brief */
-		int _action;
+		lwuit_player_action_t _action;
+		/** \brief */
+		lwuit_player_action_t _state;
 		/** \brief */
 		int _index;
-		/** \brief */
-		int _screen_saver_timeout;
-		/** \brief */
-		int _screen_saver_state;
-		/** \brief */
-		jlwuit::lwuit_point_t _image;
 
 	public:
 		/**
@@ -65,6 +61,12 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 */
 		virtual ~MP4Player();
 		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void ReleasePlayer();
+
 		/**
 		 * \brief
 		 *
@@ -123,18 +125,6 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 * \brief
 		 *
 		 */
-		virtual void TransitionState(bool flag);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetMusicDurationString(std::string length);
-		
-		/**
-		 * \brief
-		 *
-		 */
 		virtual void SetPlayList(std::vector<std::string> playList, int playListIndex);
 		
 		/**
@@ -149,36 +139,6 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener {
 		 */
 		virtual int GetAction();
 		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void RestartScreenSaverCount();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetProgress(double value);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetElapsedTime(int hour, int minute, int second);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void ResetElapsedTime();
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetFullTime(std::string time);
-
 		/**
 		 * \brief
 		 *

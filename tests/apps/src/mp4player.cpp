@@ -26,30 +26,14 @@
 #include "jfile.h"
 #include "jioexception.h"
 
-#define GAPX		16
-#define GAPY		16
-
-#define IMAGE_SIZE		100
-
-#define TEXT_SIZE			80
-#define TEXT_SPAN			(TEXT_SIZE+GAPY)
-
-#define SCREEN_SAVER_TIMEOUT	60
-
-#define NUM_ITEMS			5
-
 MP4Player::MP4Player():
 	jlwuit::Scene(0, 0, 1920, 1080)
 {
 	_progress = 0;
 	_index = -1;
-	_action = LPA_STOP;
+	_action = LPA_PLAY;
+	_state = LPA_STOP;
 	_player = NULL;
-
-	_screen_saver_timeout = 0;
-	_screen_saver_state = 0;
-	_image.x = 0;
-	_image.y = 0;
 
 	jlwuit::Device::GetDefaultScreen()->GetLayerByID("video")->SetEnabled(false);
 
@@ -76,22 +60,32 @@ MP4Player::MP4Player():
 	jlwuit::LookAndFeel::LoadImage("play", "images/play.png");
 	jlwuit::LookAndFeel::LoadImage("pause", "images/pause.png");
 	jlwuit::LookAndFeel::LoadImage("forward", "images/forward.png");
-	jlwuit::LookAndFeel::LoadImage("logo", "images/mp4-logo.png");
 
 	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
+	
+	_screensaver = new ScreenSaver(this, "images/mp4-logo.png");
+
+	_screensaver->Start();
 }
 
 MP4Player::~MP4Player()
 {
+	_screensaver->Release();
+
+	delete _screensaver;
+	_screensaver = NULL;
+
 	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Stop();
 
 	Hide();
 
 	if (_player != NULL) {
-		delete _player;
-		_player = NULL;
+		_player->Stop();
+		_player->Close();
+
+		ReleasePlayer();
 	}
 	
 	jlwuit::Player *player = jlwuit::PlayerManager::CreatePlayer("isdtv://0");
@@ -115,41 +109,77 @@ MP4Player::~MP4Player()
 	jlwuit::LookAndFeel::ReleaseImage("play");
 	jlwuit::LookAndFeel::ReleaseImage("pause");
 	jlwuit::LookAndFeel::ReleaseImage("forward");
-	jlwuit::LookAndFeel::ReleaseImage("logo");
+}
+
+void MP4Player::ReleasePlayer()
+{
+	{
+		jthread::AutoLock lock(&_mutex);
+
+		delete _player;
+		_player = NULL;
+	}
+
+	WaitThread();
 }
 
 bool MP4Player::OnKeyDown(jlwuit::UserEvent *event)
 {
-	_screen_saver_timeout = 0;
+	if (_index < 0 || _videos.size() == 0) {
+		return false;
+	}
 
-	/*
-	RestartScreenSaverCount();
+	lwuit_player_action_t actions[5] = {
+		LPA_PREVIOUS,
+		LPA_STOP,
+		LPA_PLAY,
+		LPA_PAUSE,
+		LPA_NEXT
+	};
+	int actions_size = 5;
+	int action = 0;
+	
+	for (int i=0; i<actions_size; i++) {
+		if (_action == actions[i]) {
+			action = i;
 
-	if (event->GetKeySymbol() == jlwuit::LKS_ENTER) {
-		tuner::Locator locator(_videos[playListBox->GetCurrentIndex()]);
-
-		if (_player != NULL) {
-			jlwuit::Component *c = ((media::VideoPlayer *)_player)->GetComponent();
-
-			Remove(c);
-
-			delete _player;
-		}
-
-		_player = media::PlayerManager::CreatePlayer(&locator);
-
-		if (_player != NULL) {
-			jlwuit::Component *c = ((media::VideoPlayer *)_player)->GetComponent();
-
-			c->SetBounds(video->GetX(), video->GetY(), video->GetWidth(), video->GetHeight());
-			c->RaiseToTop();
-
-			Add(c);
-
-			_player->Play();
+			break;
 		}
 	}
-	*/
+
+	_screensaver->Resume();
+	
+	if (event->GetKeySymbol() == jlwuit::LKS_ENTER) {
+		if (_action == LPA_PREVIOUS) {
+			GoPrevious();
+		} else if (_action == LPA_STOP) {
+			GoStop();
+		} else if (_action == LPA_PLAY) {
+			GoPlay();
+		} else if (_action == LPA_PAUSE) {
+			GoPause();
+		} else if (_action == LPA_NEXT) {
+			GoNext();
+		}
+	} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT) {
+		action = action - 1;
+
+		if (action < 0) {
+			action = actions_size-1;
+		}
+	} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT) {
+		action = action + 1;
+
+		if (action >= actions_size) {
+			action = 0;
+		}
+	} else {
+		return false;
+	}
+
+	_action = actions[action];
+
+	Repaint();
 
 	return true;
 }
@@ -164,84 +194,105 @@ void MP4Player::GoRight()
 
 void MP4Player::GoPrevious()
 {
-	/*
-	int index = playListBox->GetCurrentIndex();
+	_index = _index - 1;
 
-	if(index == 0) {
-		playListBox->SetCurrentIndex(playListBox->GetItemsSize()-1);
-	} else {
-		playListBox->SetCurrentIndex(index-1);
+	if (_index < 0) {
+		_index = 0;
+		// _index = _videos.size()-1;
 	}
-	*/
+
+	if (_state == LPA_PLAY) {
+		GoPlay();
+	}
 }
 
 void MP4Player::GoNext()
 {
-	/*
-	int index = playListBox->GetCurrentIndex();
+	_index = _index + 1;
 
-	if(index == playListBox->GetItemsSize()-1) {
-		playListBox->SetCurrentIndex(0);
-	} else {
-		playListBox->SetCurrentIndex(index+1);
+	if (_index >= (int)_videos.size()) {
+		// _index = 0;
+		_index = (int)_videos.size()-1;
 	}
-	*/
+
+	if (_state == LPA_PLAY) {
+		GoPlay();
+	}
 }
 
 void MP4Player::GoTo(int index)
 {
-	// playListBox->SetSelected(index);
 }
 
 void MP4Player::GoPlay()
 {
-	_action = LPA_PLAY;
+	std::string music = _videos[_index];
 
-	// watch->Resume();
+	if (_state == LPA_PAUSE) {
+		_player->Resume();
+
+		_state = LPA_PLAY;
+
+		return;
+	}
+
+	// INFO:: chamar Stop ou Close estah quebrando a criacao de novos players
+	if (_player != NULL) {
+		ReleasePlayer();
+	}
+
+	_player = jlwuit::PlayerManager::CreatePlayer(music);
+
+	if (_player != NULL) {
+		jlwuit::Component *cmp = _player->GetVisualComponent();
+
+		jlwuit::lwuit_region_t bounds = GetBounds();
+		int sw = bounds.width-2*GAPX,
+				sh = bounds.height-2*GAPY;
+		int w = (sw-GAPX)/2,
+				h = (NUM_ITEMS+1)*TEXT_SPAN+GAPY;
+
+		cmp->SetBounds(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
+
+		Add(cmp);
+
+		_player->Play();
+
+		Start();
+	
+		_state = LPA_PLAY;
+
+		_screensaver->Freeze();
+	} else {
+		ReleasePlayer();
+
+		_T("Media cannot be played"); 
+	}
 }
 
 void MP4Player::GoStop()
 {
-	_action = LPA_STOP;
+	if (_player != NULL) {
+		_player->Stop();
+		_player->Close();
 
-	// watch->Reset();
-	// watch->Pause();
+		ReleasePlayer();
+	}
+		
+	_state = LPA_STOP;
 }
 
 void MP4Player::GoPause()
 {
-	_action = LPA_PAUSE;
+	if (_player != NULL) {
+		_player->Pause();
 	
-	// watch->Pause();
+		_state = LPA_PAUSE;
+	}
 }
 
 void MP4Player::GoInfo()
 {
-}
-
-void MP4Player::TransitionState(bool flag)
-{
-	/*
-	if (flag == true) {
-		watch->Pause();
-		watch->Reset();
-	} else {
-		watch->Resume();
-	}
-	*/
-}
-
-void MP4Player::SetMusicDurationString(std::string length)
-{
-	//Atualizar GUI para exibir a duração da música
-}
-
-void MP4Player::RestartScreenSaverCount()
-{
-	/*
-	_screen_saver->Stop();
-	_screen_saver->Show();
-	*/
 }
 
 void MP4Player::SetPlayList(std::vector<std::string> playList, int playListIndex)
@@ -273,55 +324,9 @@ int MP4Player::GetAction()
 	return _action;
 }
 
-void MP4Player::SetProgress(double value)
-{
-	_progress = value;
-}
-
-void MP4Player::SetElapsedTime(int hour, int minute, int second)
-{
-	/*
-	watch->SetHours(hour);
-	watch->SetMinutes(minute);
-	watch->SetSeconds(second);
-	*/
-}
-
-void MP4Player::ResetElapsedTime()
-{
-	// watch->Reset();
-}
-
-void MP4Player::SetFullTime(std::string time)
-{
-	/*
-	total_time->SetText(time);
-	if(time.size() == 8)
-	{
-		watch->SetMaxCount(atoi(time.substr(0, 2).c_str()), atoi(time.substr(3, 5).c_str()), atoi(time.substr(6, 8).c_str()));
-	}
-	else
-	{
-		watch->SetMaxCount(0, atoi(time.substr(0, 2).c_str()), atoi(time.substr(3, 5).c_str()));
-	}
-	*/
-}
-
 bool MP4Player::Animate()
 {
-	_screen_saver_state = 0;
-	_screen_saver_timeout = _screen_saver_timeout + 1;
-
-	if (_screen_saver_timeout >= SCREEN_SAVER_TIMEOUT) {
-		std::cout << "Screen Saver" << std::endl;
-
-		_screen_saver_state = 1;
-
-		_image.x = random()%(1920-640);
-		_image.y = random()%(1080-240);
-	}
-
-	return true;
+	return false;
 }
 
 void MP4Player::Paint(jlwuit::Graphics *g)
@@ -331,36 +336,48 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 
 	int sw = bounds.width-2*GAPX,
 			sh = bounds.height-2*GAPY;
-	int w = (sw-GAPX)/2,
+	int num_items = 5,
+			w = (sw-GAPX)/2,
 			h = (NUM_ITEMS+1)*TEXT_SPAN+GAPY;
 	int boxw = (w-2*GAPX)/4;
 
 	laf->DrawBox(g, NULL, 0, 0, bounds.width, bounds.height);
 	
-	if (_screen_saver_state == 1) {
-		laf->DrawImage(g, "logo", _image.x, _image.y, 640, 240);
-
-		return;
-	}
-
 	laf->DrawText(g, NULL, "medium", "MP4 Player", 0, GAPY, bounds.width, TEXT_SIZE);
 
 	laf->DrawBox(g, NULL, 0*(w+GAPX)+GAPX, 1*TEXT_SPAN+GAPY, w, h);
 	laf->DrawText(g, NULL, "medium", "Videos", 0*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 
 	// draw items
-	int dindex = 0;
-
-	if (_index > NUM_ITEMS) {
-		dindex = _index-NUM_ITEMS;
-	}
-
-	for (int i=0; i<NUM_ITEMS; i++) {
+	for (int i=0; i<num_items; i++) {
 		laf->DrawBorder(g, NULL, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
 	}
 
-	for (int i=dindex; i<NUM_ITEMS && i<(int)_videos.size(); i++) {
-		laf->DrawText(g, NULL, "medium", _videos[i+dindex], 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
+	if (_index >= 0) {
+		num_items = num_items + _index;
+
+		if (num_items > (int)_videos.size()) {
+			num_items = (int)_videos.size();
+		}
+
+		for (int k=_index; k<num_items; k++) {
+			std::string music = _videos[k];
+			std::string::size_type n = music.rfind("/");
+
+			if (n != std::string::npos) {
+				music = music.substr(n+1);
+			}
+
+			int i = k-_index;
+
+			if (k == _index) {
+				laf->SetType(jlwuit::LST_FOCUS);
+				laf->DrawBox(g, NULL, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
+				laf->SetType(jlwuit::LST_NORMAL);
+			}
+
+			laf->DrawText(g, NULL, "medium", music, 0*(w+GAPX)+2*GAPX, (i+2)*TEXT_SPAN+2*GAPY, w-2*GAPX, TEXT_SIZE);
+		}
 	}
 
 	laf->DrawBox(g, NULL, 1*(w+GAPX)+GAPX, 1*TEXT_SPAN+GAPY, w, h);
@@ -374,15 +391,21 @@ void MP4Player::Paint(jlwuit::Graphics *g)
 	laf->DrawImage(g, "pause", x + (120+150+180+3*GAPX), y + (180-150)/2, 150, 150);
 	laf->DrawImage(g, "forward", x + (120+2*150+180+4*GAPX), y + (180-120)/2, 120, 120);
 	
+	if (_action == LPA_PREVIOUS) {
+		laf->DrawBorder(g, NULL, x, y+(180-120)/2, 120, 120);
+	} else if (_action == LPA_STOP) {
+		laf->DrawBorder(g, NULL, x+(120+GAPX), y + (180-150)/2, 150, 150);
+	} else if (_action == LPA_PLAY) {
+		laf->DrawBorder(g, NULL, x+(120+150+2*GAPX), y, 180 + (180-180)/2, 180);
+	} else if (_action == LPA_PAUSE) {
+		laf->DrawBorder(g, NULL, x+(120+150+180+3*GAPX), y + (180-150)/2, 150, 150);
+	} else if (_action == LPA_NEXT) {
+		laf->DrawBorder(g, NULL, x+(120+2*150+180+4*GAPX), y + (180-120)/2, 120, 120);
+	}
+
 	laf->DrawProgressBar(g, NULL, _progress, 5*GAPX, bounds.height-6*GAPY, bounds.width-10*GAPX, GAPY);
 	
-	/*
-	stop->SetImageFocus("./icons/stop_check.png");
-	play->SetImageFocus("./icons/play_check.png");
-	pause->SetImageFocus("./icons/pause_check.png");
-	*/
-	
-	g->Clear(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
+	// g->Clear(1*(w+GAPX)+2*GAPX, 1*TEXT_SPAN+2*GAPY, w-2*GAPX, h-2*GAPY);
 
 	if (_index == -1) {
 		laf->DrawTextBox(g, NULL, "medium", "Insert a usb device", GAPX, bounds.height/2, sw, TEXT_SIZE);
@@ -424,8 +447,13 @@ void MP4Player::EntryUSBDevice(jlwuit::USBStatusEvent *event)
 						std::string audio = (current_mount_point + "/" + s);
 
 						if (audio.size() > 4 && (
-									strcasecmp((const char *)audio.c_str()+audio.size()-3, "png") == 0 || 
-									strcasecmp((const char *)audio.c_str()+audio.size()-3, "jpg") == 0
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "mpg") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-4, "mpeg") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "mp4") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-4, "mpeg4") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-2, "ts") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "avi") == 0 || 
+									strcasecmp((const char *)audio.c_str()+audio.size()-3, "agg") == 0 
 									)) {
 
 							_videos.push_back(audio);
