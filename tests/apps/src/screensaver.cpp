@@ -43,8 +43,6 @@ ScreenSaver::ScreenSaver(jlwuit::Scene *scene, std::string logo):
 	_logo_dx = 1;
 	_logo_dy = 1;
 
-	SetBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-	
 	jlwuit::LookAndFeel::LoadImage("logo", logo);
 }
 
@@ -110,6 +108,9 @@ void ScreenSaver::Paint(jlwuit::Graphics *g)
 
 void ScreenSaver::Run()
 {
+	Hide();
+	SetBounds(0, 0, GetWidth(), GetHeight());
+
 	while (_is_released == false) {
 		if (_is_freeze == false) {
 			_time = _time - TIME_STEP;

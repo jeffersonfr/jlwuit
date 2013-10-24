@@ -50,10 +50,6 @@ MP3Player::MP3Player():
 
 	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
 	jlwuit::USBManager::GetInstance()->Start();
-
-	_screensaver = new ScreenSaver(this, "images/mp3-logo.png");
-
-	_screensaver->Start();
 }
 
 MP3Player::~MP3Player()
@@ -88,6 +84,17 @@ MP3Player::~MP3Player()
 	jlwuit::LookAndFeel::ReleaseImage("play");
 	jlwuit::LookAndFeel::ReleaseImage("pause");
 	jlwuit::LookAndFeel::ReleaseImage("forward");
+}
+
+void MP3Player::Initialize()
+{
+	_screensaver = new ScreenSaver(this, "images/mp3-logo.png");
+
+	_screensaver->Start();
+}
+
+void MP3Player::Finalize()
+{
 }
 
 void MP3Player::ReleasePlayer()
@@ -262,7 +269,7 @@ bool MP3Player::OnKeyDown(jlwuit::UserEvent *event)
 		}
 	}
 
-	_screensaver->Resume();
+	// _screensaver->Resume();
 	
 	if (event->GetKeySymbol() == jlwuit::LKS_ENTER) {
 		if (_action == LPA_PREVIOUS) {

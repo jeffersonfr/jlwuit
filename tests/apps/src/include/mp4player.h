@@ -65,6 +65,18 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener, public
 		 * \brief
 		 *
 		 */
+		virtual void Initialize();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Finalize();
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual void ReleasePlayer();
 
 		/**
@@ -168,6 +180,12 @@ class MP4Player : public jlwuit::Scene, public jlwuit::USBStatusListener, public
 		 *
 		 */
 		virtual void RemoveUSBDevice(jlwuit::USBStatusEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Run();
 
 };
 
