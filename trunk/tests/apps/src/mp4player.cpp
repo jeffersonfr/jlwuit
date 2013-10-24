@@ -60,25 +60,10 @@ MP4Player::MP4Player():
 	jlwuit::LookAndFeel::LoadImage("play", "images/play.png");
 	jlwuit::LookAndFeel::LoadImage("pause", "images/pause.png");
 	jlwuit::LookAndFeel::LoadImage("forward", "images/forward.png");
-
-	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
-	jlwuit::USBManager::GetInstance()->Start();
-	
-	_screensaver = new ScreenSaver(this, "images/mp4-logo.png");
-
-	_screensaver->Start();
 }
 
 MP4Player::~MP4Player()
 {
-	_screensaver->Release();
-
-	delete _screensaver;
-	_screensaver = NULL;
-
-	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
-	jlwuit::USBManager::GetInstance()->Stop();
-
 	Hide();
 
 	if (_player != NULL) {
@@ -109,6 +94,32 @@ MP4Player::~MP4Player()
 	jlwuit::LookAndFeel::ReleaseImage("play");
 	jlwuit::LookAndFeel::ReleaseImage("pause");
 	jlwuit::LookAndFeel::ReleaseImage("forward");
+}
+
+void MP4Player::Initialize()
+{
+	jlwuit::USBManager::GetInstance()->RegisterUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->Start();
+	
+	/*
+	_screensaver = new ScreenSaver(this, "images/mp4-logo.png");
+
+	_screensaver->SetBounds(0, 0, GetWidth(), GetHeight());
+	_screensaver->Start();
+	*/
+}
+
+void MP4Player::Finalize()
+{
+	/*
+	_screensaver->Release();
+
+	delete _screensaver;
+	_screensaver = NULL;
+	*/
+
+	jlwuit::USBManager::GetInstance()->RemoveUSBStatusListener(this);
+	jlwuit::USBManager::GetInstance()->Stop();
 }
 
 void MP4Player::ReleasePlayer()
@@ -147,7 +158,7 @@ bool MP4Player::OnKeyDown(jlwuit::UserEvent *event)
 		}
 	}
 
-	_screensaver->Resume();
+	// _screensaver->Resume();
 	
 	if (event->GetKeySymbol() == jlwuit::LKS_ENTER) {
 		if (_action == LPA_PREVIOUS) {
@@ -262,7 +273,7 @@ void MP4Player::GoPlay()
 	
 		_state = LPA_PLAY;
 
-		_screensaver->Freeze();
+		// _screensaver->Freeze();
 	} else {
 		ReleasePlayer();
 
@@ -487,3 +498,8 @@ void MP4Player::RemoveUSBDevice(jlwuit::USBStatusEvent *event)
 
 	Repaint();
 }
+
+void MP4Player::Run()
+{
+}
+

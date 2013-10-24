@@ -103,6 +103,18 @@ class MP3Player : public jlwuit::Scene, public jlwuit::USBStatusListener, public
 		 * \brief
 		 *
 		 */
+		virtual void Initialize();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Finalize();
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual void ReleasePlayer();
 
 		/**
