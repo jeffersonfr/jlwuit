@@ -59,14 +59,12 @@ class DialogTest : public jlwuit::Scene {
 
 		virtual bool Animate()
 		{
-			jlwuit::Dialog *dlg = new Sample(this);
+			Sample dlg(this);
 
-			dlg->Show();
+			dlg.Show();
 			sleep(2);
-			dlg->Hide();
+			dlg.Hide();
 			sleep(2);
-
-			delete dlg;
 
 			return false;
 		}
