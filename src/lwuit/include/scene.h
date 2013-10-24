@@ -90,6 +90,18 @@ class Scene : public Component, public jthread::TimerTask {
 		 * \brief
 		 *
 		 */
+		virtual void Initialize();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Finalize();
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual void StartActivity(Scene *scene);
 
 		/**

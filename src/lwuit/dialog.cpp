@@ -24,7 +24,8 @@
 
 namespace jlwuit {
 	
-Dialog::Dialog(Component *cmp)
+Dialog::Dialog(Component *cmp):
+	Component()
 {
 	if (cmp == NULL || dynamic_cast<RootContainer *>(cmp->GetTopLevelAncestor()) == NULL) {
 		cmp = RootContainer::GetContainer(Device::GetDefaultScreen()->GetLayerByID("graphics"));
@@ -40,11 +41,12 @@ Dialog::Dialog(Component *cmp)
 
 Dialog::~Dialog()
 {
-	_root->UnregisterDialog(this);
-	
 	jthread::TimerTask::Cancel();
+
 	_timer.RemoveSchedule(this);
 	_timer.Stop();
+	
+	_root->UnregisterDialog(this);
 }
 
 void Dialog::SetTimeout(int ms)

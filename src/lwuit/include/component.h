@@ -111,7 +111,19 @@ class Component : public UserEventListener, public Animation {
 		 * \Constructor.
 		 *
 		 */
-		Component(int x = 0, int y = 0, int w = 0, int h = 0);
+		Component(lwuit_region_t bounds);
+
+		/**
+		 * \Constructor.
+		 *
+		 */
+		Component(lwuit_point_t location, lwuit_size_t size);
+
+		/**
+		 * \Constructor.
+		 *
+		 */
+		Component(int x = 0, int y = 0, int width = 0, int height = 0);
 
 		/**
 		 * \brief Destructor.
