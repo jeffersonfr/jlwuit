@@ -65,9 +65,19 @@ Scene::~Scene()
 	jthread::AutoLock lock(&_mutex); 																														\
 
 	if (_activity != NULL) {
+		_activity->Finalize();
+
 		delete _activity;
 		_activity = NULL;
 	}
+}
+
+void Scene::Initialize()
+{
+}
+
+void Scene::Finalize()
+{
 }
 
 void Scene::InitImpl()
@@ -106,6 +116,8 @@ void Scene::StartActivity(Scene *scene)
 	}
 
 	if (_activity != NULL) {
+		_activity->Finalize();
+
 		delete _activity;
 		_activity = NULL;
 	}
@@ -113,6 +125,8 @@ void Scene::StartActivity(Scene *scene)
 	SetVisible(false);
 
 	_activity = scene;
+
+	_activity->Initialize();
 	_activity->SetVisible(true);
 }
 
@@ -215,6 +229,7 @@ bool Scene::OnKeyDown(UserEvent *event)
 	if (_activity != NULL) {
 		if (event->GetKeySymbol() == LKS_BACK) {
 			_activity->Hide();
+			_activity->Finalize();
 			
 			delete _activity;
 			_activity = NULL;

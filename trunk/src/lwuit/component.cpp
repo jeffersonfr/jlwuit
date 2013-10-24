@@ -28,7 +28,19 @@
 
 #include <algorithm>
 
+#include <stdio.h>
+
 namespace jlwuit {
+
+Component::Component(lwuit_region_t bounds)
+{
+	Component(bounds.x, bounds.y, bounds.width, bounds.height);
+}
+
+Component::Component(lwuit_point_t location, lwuit_size_t size)
+{
+	Component(location.x, location.y, size.width, size.height);
+}
 
 Component::Component(int x, int y, int w, int h)
 {
@@ -69,6 +81,7 @@ Component::Component(int x, int y, int w, int h)
 	_margins.bottom = 0;
 
 	_style = new Style(); 
+
 	_style->Copy(LookAndFeel::GetInstance()->GetDefaultStyle());
 }
 
@@ -361,8 +374,23 @@ void Component::SetNextComponentFocus(Component *left, Component *right, Compone
 
 void Component::SetBounds(int x, int y, int w, int h)
 {
-	SetLocation(x, y);
-	SetSize(w, h);
+	_location.x = x;
+	_location.y = y;
+
+	if (_size.width != w || _size.height != h) {
+		_size.width = w;
+		_size.height = h;
+
+		if (_size.width < 1) {
+			_size.width = 1;
+		}
+
+		if (_size.height < 1) {
+			_size.height = 1;
+		}
+	}
+
+	Repaint();
 }
 
 void Component::SetBounds(struct lwuit_point_t point, struct lwuit_size_t size)
@@ -379,6 +407,8 @@ void Component::SetLocation(int x, int y)
 {
 	_location.x = x;
 	_location.y = y;
+
+	Repaint();
 }
 
 void Component::SetLocation(struct lwuit_point_t point)

@@ -86,33 +86,30 @@ void RootContainer::PaintDialogs(Graphics *g)
 		Dialog *c = (*i);
 
 		if (c->IsVisible() == true) {
-			int cx = c->GetX(),
-					cy = c->GetY(),
-					cw = c->GetWidth(),
-					ch = c->GetHeight();
+			lwuit_region_t bounds = c->GetBounds();
 
-			if (cx > clip.width) {
-				cx = clip.width;
+			if (bounds.x > clip.width) {
+				bounds.x = clip.width;
 			}
 
-			if (cy > clip.height) {
-				cy = clip.height;
+			if (bounds.y > clip.height) {
+				bounds.y = clip.height;
 			}
 
-			if (cw > (clip.width-cx)) {
-				cw = clip.width-cx;
+			if (bounds.width > (clip.width-bounds.x)) {
+				bounds.width = clip.width-bounds.x;
 			}
 
-			if (ch > (clip.height-cy)) {
-				ch = clip.height-cy;
+			if (bounds.height > (clip.height-bounds.y)) {
+				bounds.height = clip.height-bounds.y;
 			}
 
-			if (cw > 0 && ch > 0) {
-				g->Translate(cx, cy);
-				g->SetClip(0, 0, cw-1, ch-1);
+			if (bounds.width > 0 && bounds.height > 0) {
+				g->Translate(bounds.x, bounds.y);
+				g->SetClip(0, 0, bounds.width-1, bounds.height-1);
 				c->Paint(g);
 				g->ReleaseClip();
-				g->Translate(-cx, -cy);
+				g->Translate(-bounds.x, -bounds.y);
 			}
 		}
 	}
