@@ -20,6 +20,7 @@
 #include "videolayerimpl.h"
 #include "imageimpl.h"
 #include "jgfxhandler.h"
+#include "preferences.h"
 #include "jautolock.h"
 
 namespace jlwuit {
@@ -43,9 +44,18 @@ void VideoLayerImpl::Initialize()
 		_window->Show();
 	}
 
-	SetFile("channels/channel0");
+	jlwuit::Document *ds = jlwuit::Preferences::Create("system");
+	jlwuit::Element *es = ds->GetElementByIndex(0);
+	jlwuit::Document *dc = jlwuit::Preferences::Create("channels");
+	jlwuit::Element *ec = dc->GetElementByIndex(es->GetIntegerParam("channel"));
+
+	if (ec->GetTextParam("type") == "local") {
+		SetFile(ec->GetTextParam("path"));
 	
-	Play();
+		Play();
+	} else {
+		std::cout << "Video source <" << ec->GetTextParam("type") << "> not supported !" << std::endl;
+	}
 }
 
 void VideoLayerImpl::Callback(void *ctx)

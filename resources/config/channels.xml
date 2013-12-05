@@ -1,5 +1,6 @@
 <channels>
-	<channel type="local">
+	<channel>
+		<param key="type" value="local" />
 		<param key="mime" value="video/mpeg" />
 		<param key="path" value="channels/channel0" />
 	</channel>
