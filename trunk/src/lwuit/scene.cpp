@@ -21,6 +21,7 @@
 #include "device.h"
 #include "eventmanager.h"
 #include "implementation.h"
+#include "exception.h"
 #include "jstringtokenizer.h"
 #include "jstringutils.h"
 
@@ -70,6 +71,8 @@ Scene::~Scene()
 		delete _activity;
 		_activity = NULL;
 	}
+	
+	Implementation::GetInstance()->UnregisterScene(this);
 }
 
 void Scene::Initialize()
@@ -132,6 +135,9 @@ void Scene::StartActivity(Scene *scene)
 
 void Scene::SendToLayer(std::string layer)
 {
+	if (layer == "background" || layer == "video") {
+		throw Exception("Scene can not be attributed to non-graphic layers");
+	}
 }
 
 void Scene::SetAnimationDelay(int ms)
@@ -155,71 +161,6 @@ void Scene::Show()
 void Scene::Hide()
 {
 	SetVisible(false);
-}
-
-std::string Scene::GetState()
-{
-	return _state;
-}
-
-void Scene::SetState(std::string state)
-{
-	_state = state;
-}
-
-bool Scene::MatchToken(std::string current_state, std::string state)
-{
-	if (state.find("*") != std::string::npos) { 
-		return true;
-	} else if (current_state == state) {
-		return true;
-	}
-
-	return false;
-}
-
-bool Scene::MatchState(std::string state)
-{
-	jcommon::StringTokenizer tokens1(_state, "."),
-		tokens2(state, ".");
-
-	if (tokens1.GetSize() != tokens2.GetSize()) {
-		return false;
-	}
-
-	for (int i=0; i<tokens1.GetSize(); i++) {
-		std::string token1 = jcommon::StringUtils::Trim(tokens1.GetToken(i)),
-			token2 = jcommon::StringUtils::Trim(tokens2.GetToken(i));
-
-		if (token2.find("[") != std::string::npos) {
-			int i1 = token2.find("["),
-				i2 = token2.rfind("]");
-
-			if (i1 != i2) {
-				jcommon::StringTokenizer tokens(token2.substr(i1+1, i2-1), ",");
-
-				bool b = false;
-
-				for (int j=0; j<tokens.GetSize(); j++) {
-					std::string token = jcommon::StringUtils::Trim(tokens.GetToken(j));
-
-					if (MatchToken(token1, token) == true) {
-						b = true;
-					}
-				}
-
-				if (b == false) {
-					return false;
-				}
-			}
-		} else {
-			if (MatchToken(token1, token2) == false) {
-				return false;
-			}
-		}
-	}
-
-	return true;
 }
 
 bool Scene::OnKeyDown(UserEvent *event)

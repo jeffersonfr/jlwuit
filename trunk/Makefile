@@ -138,6 +138,7 @@ SRC_NET		= \
 
 SRC_UTIL	= \
 						reference.o\
+						state.o\
 
 OBJS			= \
 						$(addprefix src/apps/, $(SRC_APPS)) \

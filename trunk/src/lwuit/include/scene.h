@@ -45,16 +45,8 @@ class Scene : public Component, public jthread::TimerTask {
 		Component *_component;
 		/** \brief */
 		jthread::Timer _timer;
-		/** \brief */
-		std::string _state;
 
 	private:
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool MatchToken(std::string current_token, std::string token);
-
 		/**
 		 * \brief
 		 *
@@ -133,24 +125,6 @@ class Scene : public Component, public jthread::TimerTask {
 		 *
 		 */
 		virtual void Hide();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual std::string GetState();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetState(std::string state);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool MatchState(std::string state);
 
 		/**
 		 * \brief
