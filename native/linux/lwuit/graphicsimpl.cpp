@@ -68,16 +68,6 @@ lwuit_point_t GraphicsImpl::Translate()
 	return lt;
 }
 
-void GraphicsImpl::Rotate(double radians)
-{
-	_native_graphics->Rotate(radians);
-}
-
-double GraphicsImpl::Rotate()
-{
-	return _native_graphics->Rotate();
-}
-
 void GraphicsImpl::ClipRect(int xp, int yp, int wp, int hp)
 {
 	_native_graphics->ClipRect(xp, yp, wp, hp);
