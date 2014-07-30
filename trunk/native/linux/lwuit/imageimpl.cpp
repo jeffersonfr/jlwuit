@@ -47,9 +47,14 @@ Graphics * ImageImpl::GetGraphics()
 	return _graphics;
 }
 
-Image * ImageImpl::Scaled(int wp, int hp)
+Image * ImageImpl::Scale(int wp, int hp)
 {
-	return new ImageImpl(_native_image->Scaled(wp, hp));
+	return new ImageImpl(_native_image->Scale(wp, hp));
+}
+
+Image * ImageImpl::Rotate(double radians, bool resize)
+{
+	return new ImageImpl(_native_image->Rotate(radians, resize));
 }
 
 Image * ImageImpl::SubImage(int xp, int yp, int wp, int hp)

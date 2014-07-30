@@ -75,18 +75,6 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void Rotate(double radians);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual double Rotate();
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual void ClipRect(int xp, int yp, int wp, int hp);
 
 		/**

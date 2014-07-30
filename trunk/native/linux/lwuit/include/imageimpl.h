@@ -93,7 +93,13 @@ class ImageImpl : public Image {
 		 * \brief
 		 *
 		 */
-		virtual Image * Scaled(int wp, int hp);
+		virtual Image * Scale(int wp, int hp);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Image * Rotate(double radians, bool resize = true);
 
 		/**
 		 * \brief
