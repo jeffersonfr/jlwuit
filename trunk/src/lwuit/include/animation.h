@@ -63,6 +63,12 @@ class Animation {
 		 */
 		virtual void SetAnimationDelay(int delay);
 
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Paint(Graphics *g);
+
 };
 
 }

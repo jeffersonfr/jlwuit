@@ -53,6 +53,11 @@ int FontImpl::GetSize()
 	return _native_font->GetSize();
 }
 
+int FontImpl::GetLineSize()
+{
+	return _native_font->GetLineSize();
+}
+
 int FontImpl::GetAscender()
 {
 	return _native_font->GetAscender();

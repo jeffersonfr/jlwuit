@@ -75,6 +75,12 @@ class Font {
 		 * \brief
 		 *
 		 */
+		virtual int GetLineSize();
+		
+		/**
+		 * \brief
+		 *
+		 */
 		virtual int GetSize();
 		
 		/**
