@@ -80,6 +80,12 @@ class FontImpl : public Font {
 		 * \brief
 		 *
 		 */
+		virtual int GetLineSize();
+		
+		/**
+		 * \brief
+		 *
+		 */
 		virtual int GetAscender();
 		
 		/**

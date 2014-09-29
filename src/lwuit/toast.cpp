@@ -181,7 +181,7 @@ void Toast::Show()
 		w = width;
 	}
 
-	h = nlines * _font->GetSize() + 2*GAPY;
+	h = nlines * _font->GetLineSize() + 2*GAPY;
 
 	int x = GAPX,
 			y = GAPY;
@@ -233,7 +233,7 @@ void Toast::Paint(Graphics *g)
 	g->SetColor(style->GetColor("fg.color"));
 
 	for (int i=0; i<(int)_lines.size(); i++) {
-		g->DrawString(_lines[i], 0, GAPY+i*_font->GetSize(), bounds.width, _font->GetSize());
+		g->DrawString(_lines[i], 0, GAPY+i*_font->GetLineSize(), bounds.width, _font->GetLineSize());
 	}
 }
 

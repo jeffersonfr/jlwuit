@@ -43,4 +43,8 @@ int Animation::GetAnimationDelay()
 	return -1;
 }
 
+void Animation::Paint(Graphics *g)
+{
+}
+
 }

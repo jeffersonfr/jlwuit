@@ -10,7 +10,7 @@ $(EXE): $(SRCS)
 	@$(CXX) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
 
 .c.o: $<  
-	$(CC) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
+	@$(CC) $(CCFLAGS) -c $< -o $@ && $(ECHO) "Compiling $< ...  $(OK)" 
 
 strip:
 	@$(ECHO) "Strip $(EXE)...  $(OK)"

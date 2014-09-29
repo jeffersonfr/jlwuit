@@ -55,6 +55,11 @@ int Font::GetSize()
 	return -1;
 }
 
+int Font::GetLineSize()
+{
+	return -1;
+}
+
 int Font::GetAscender()
 {
 	return -1;

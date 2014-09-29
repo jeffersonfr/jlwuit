@@ -22,6 +22,7 @@
 
 #include "component.h"
 #include "lookandfeel.h"
+#include "transition.h"
 
 #include "jtimer.h"
 
@@ -43,6 +44,14 @@ class Scene : public Component, public jthread::TimerTask {
 		Scene *_activity;
 		/** \brief */
 		Component *_component;
+		/** \brief */
+		Transition *_transition_in;
+		/** \brief */
+		Transition *_transition_out;
+		/** \brief */
+		Transition *_default_transition_in;
+		/** \brief */
+		Transition *_default_transition_out;
 		/** \brief */
 		jthread::Timer _timer;
 
@@ -113,6 +122,30 @@ class Scene : public Component, public jthread::TimerTask {
 		 *
 		 */
 		virtual int GetAnimationDelay();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetTransitionIn(Transition *transition);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetTransitionOut(Transition *transition);
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Transition * GetTransitionIn();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Transition * GetTransitionOut();
 
 		/**
 		 * \brief

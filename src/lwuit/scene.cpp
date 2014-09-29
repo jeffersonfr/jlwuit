@@ -21,6 +21,7 @@
 #include "device.h"
 #include "eventmanager.h"
 #include "implementation.h"
+#include "fadetransition.h"
 #include "exception.h"
 #include "jstringtokenizer.h"
 #include "jstringutils.h"
@@ -55,6 +56,11 @@ Scene::Scene(int x, int y, int w, int h):
 	_activity = NULL;
 	_component = NULL;
 
+	_transition_in = NULL;
+	_transition_out = NULL;
+	_default_transition_in = new FadeTransition();
+	_default_transition_out = new FadeTransition();
+
 	SetAnimationDelay(1000);
 	SetVisible(false);
 	
@@ -64,7 +70,6 @@ Scene::Scene(int x, int y, int w, int h):
 Scene::~Scene()
 {
 	jthread::AutoLock lock(&_mutex); 																														\
-
 	if (_activity != NULL) {
 		_activity->Finalize();
 
@@ -73,6 +78,18 @@ Scene::~Scene()
 	}
 	
 	Implementation::GetInstance()->UnregisterScene(this);
+
+	delete _default_transition_in;
+	delete _default_transition_out;
+
+	if (_transition_in != NULL) {
+		delete _transition_in;
+	}
+
+	if (_transition_out != NULL) {
+		delete _transition_out;
+	}
+
 }
 
 void Scene::Initialize()
@@ -148,6 +165,34 @@ void Scene::SetAnimationDelay(int ms)
 int Scene::GetAnimationDelay()
 {
 	return jthread::TimerTask::GetDelay()/1000LL;
+}
+
+void Scene::SetTransitionIn(Transition *transition)
+{
+	_transition_in = transition;
+}
+
+void Scene::SetTransitionOut(Transition *transition)
+{
+	_transition_out = transition;
+}
+
+Transition * Scene::GetTransitionIn()
+{
+	if (_transition_in != NULL) {
+		return _transition_in;
+	}
+
+	return _default_transition_in;
+}
+
+Transition * Scene::GetTransitionOut()
+{
+	if (_transition_out != NULL) {
+		return _transition_out;
+	}
+
+	return _default_transition_out;
 }
 
 void Scene::Show()
