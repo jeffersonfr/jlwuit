@@ -77,7 +77,7 @@ void LookAndFeel::LoadImage(std::string resource_id, std::string path, int wp, i
 	if (wp > 0 || hp > 0) {
 		Image *tmp = image;
 		
-		image = image->Scaled(size.width, size.height);
+		image = image->Scale(size.width, size.height);
 
 		delete tmp;
 	}

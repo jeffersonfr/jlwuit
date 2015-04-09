@@ -111,19 +111,17 @@ void PhotoSlider::Paint(jlwuit::Graphics *g)
 
 bool PhotoSlider::OnKeyDown(jlwuit::UserEvent *event)
 {
-	if (_images.size() == 0) {
-		return false;
-	}
-
-	if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT) {
-		if (--_index < 0) {
-			_index = _images.size()-1;
+	if (_images.size() > 0) {
+		if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_LEFT) {
+			if (--_index < 0) {
+				_index = _images.size()-1;
+			}
+		} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT) {
+			_index = (_index+1)%_images.size();
 		}
-	} else if (event->GetKeySymbol() == jlwuit::LKS_CURSOR_RIGHT) {
-		_index = (_index+1)%_images.size();
-	}
 
-	Repaint();
+		Repaint();
+	}
 
 	return true;
 }

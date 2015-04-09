@@ -110,7 +110,7 @@ class LinuxImplementation : public jlwuit::Implementation {
 		 * \brief
 		 *
 		 */
-		virtual Image * CreateImage(uint8_t *data, int size);
+		virtual Image * CreateImage(char *data, int size);
 
 		/**
 		 * \brief

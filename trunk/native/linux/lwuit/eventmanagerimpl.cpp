@@ -470,58 +470,67 @@ void EventManagerImpl::DispatchUserEvent(UserEvent *event)
 	delete event;
 }
 
-void EventManagerImpl::KeyPressed(jgui::KeyEvent *event)
+bool EventManagerImpl::KeyPressed(jgui::KeyEvent *event)
 {
-	if (event->GetType() == jgui::JKT_PRESSED) {
-		struct event_t *t = _events[TranslateKeySymbol(event->GetSymbol())];
+	struct event_t *t = _events[TranslateKeySymbol(event->GetSymbol())];
 
-		if ((void *)t == NULL) {
-			t = new struct event_t;
+	if ((void *)t == NULL) {
+		t = new struct event_t;
 
-			t->key_down = false;
-			t->start_time = -1L;
-		}
-
-		if (t->key_down == false) {
-			_events[TranslateKeySymbol(event->GetSymbol())] = t;
-
-			t->key_down = true;
-			t->start_time = time(NULL);
-
-			DispatchUserEvent(new UserEvent(LWT_KEY_DOWN, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
-		}
-
-		long current_time = time(NULL);
-
-		if ((current_time-t->start_time) >= LONG_PRESS_TIME) {
-			t->start_time = time(NULL);
-
-			DispatchUserEvent(new UserEvent(LWT_KEY_LONGPRESS, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
-		}
-
-		DispatchUserEvent(new UserEvent(LWT_KEY_PRESS, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
-	} else if (event->GetType() == jgui::JKT_RELEASED) {
-		struct event_t *t = _events[TranslateKeySymbol(event->GetSymbol())];
-
-		if ((void *)t != NULL) {
-			t->key_down = false;
-
-			DispatchUserEvent(new UserEvent(LWT_KEY_UP, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
-		}
+		t->key_down = false;
+		t->start_time = -1L;
 	}
+
+	if (t->key_down == false) {
+		_events[TranslateKeySymbol(event->GetSymbol())] = t;
+
+		t->key_down = true;
+		t->start_time = time(NULL);
+
+		DispatchUserEvent(new UserEvent(LWT_KEY_DOWN, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
+	}
+
+	long current_time = time(NULL);
+
+	if ((current_time-t->start_time) >= LONG_PRESS_TIME) {
+		t->start_time = time(NULL);
+
+		DispatchUserEvent(new UserEvent(LWT_KEY_LONGPRESS, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
+	}
+
+	DispatchUserEvent(new UserEvent(LWT_KEY_PRESS, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
+
+	return true;
 }
 
-void EventManagerImpl::MousePressed(jgui::MouseEvent *event)
+bool EventManagerImpl::KeyReleased(jgui::KeyEvent *event)
+{
+	struct event_t *t = _events[TranslateKeySymbol(event->GetSymbol())];
+
+	if ((void *)t != NULL) {
+		t->key_down = false;
+
+		DispatchUserEvent(new UserEvent(LWT_KEY_UP, TranslateKeyModifiers(event->GetModifiers()), event->GetKeyCode(), TranslateKeySymbol(event->GetSymbol())));
+	}
+
+	return true;
+}
+
+bool EventManagerImpl::MousePressed(jgui::MouseEvent *event)
 {
 	DispatchUserEvent(new UserEvent(LWT_MOUSE_PRESS, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
+
+	return true;
 }
 
-void EventManagerImpl::MouseReleased(jgui::MouseEvent *event)
+bool EventManagerImpl::MouseReleased(jgui::MouseEvent *event)
 {
 	DispatchUserEvent(new UserEvent(LWT_MOUSE_RELEASE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
+
+	return true;
 }
 
-void EventManagerImpl::MouseMoved(jgui::MouseEvent *event)
+bool EventManagerImpl::MouseMoved(jgui::MouseEvent *event)
 {
 	double tdiff = (double)(jcommon::Date::CurrentTimeMillis()-_last_mouse_move),
 				 mdiff = (tdiff > -10 && tdiff < 10)?10:tdiff,
@@ -533,11 +542,15 @@ void EventManagerImpl::MouseMoved(jgui::MouseEvent *event)
 	_last_mouse_move = jcommon::Date::CurrentTimeMillis();
 	_last_mouse_location.x = event->GetX();
 	_last_mouse_location.y = event->GetY();
+
+	return true;
 }
 
-void EventManagerImpl::MouseWheel(jgui::MouseEvent *event)
+bool EventManagerImpl::MouseWheel(jgui::MouseEvent *event)
 {
 	DispatchUserEvent(new UserEvent(LWT_MOUSE_WHEEL, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), event->GetX(), event->GetY(), 0.0, 0.0));
+
+	return true;
 }
 
 }
