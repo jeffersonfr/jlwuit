@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "image.h"
 #include "implementation.h"
+#include <stdio.h>
 
 namespace jlwuit {
 
@@ -45,7 +46,7 @@ Image * Image::CreateImage(uint32_t *data, int wp, int hp)
 	return Implementation::GetInstance()->CreateImage(data, wp, hp);
 }
 
-Image * Image::CreateImage(uint8_t *data, int size)
+Image * Image::CreateImage(char *data, int size)
 {
 	return Implementation::GetInstance()->CreateImage(data, size);
 }
@@ -65,7 +66,7 @@ Graphics * Image::GetGraphics()
 	return NULL;
 }
 
-Image * Image::Scaled(int wp, int hp)
+Image * Image::Scale(int wp, int hp)
 {
 	return NULL;
 }

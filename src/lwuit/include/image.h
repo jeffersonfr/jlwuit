@@ -70,7 +70,7 @@ class Image {
 		 * \brief
 		 *
 		 */
-		static Image * CreateImage(uint8_t *data, int size);
+		static Image * CreateImage(char *data, int size);
 
 		/**
 		 * \brief
@@ -94,7 +94,7 @@ class Image {
 		 * \brief
 		 *
 		 */
-		virtual Image * Scaled(int wp, int hp);
+		virtual Image * Scale(int wp, int hp);
 
 		/**
 		 * \brief

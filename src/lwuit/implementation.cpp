@@ -86,7 +86,7 @@ Image * Implementation::CreateImage(uint32_t *data, int width, int height)
 	return NULL;
 }
 
-Image * Implementation::CreateImage(uint8_t *data, int size)
+Image * Implementation::CreateImage(char *data, int size)
 {
 	return NULL;
 }

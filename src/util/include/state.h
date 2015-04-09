@@ -17,142 +17,62 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_IMPLEMENTATION_H
-#define LWUIT_IMPLEMENTATION_H
+#ifndef LWUIT_STATE_H
+#define LWUIT_STATE_H
 
-#include "defines.h"
-
-#include "jmutex.h"
+#include <string>
+#include <vector>
 
 namespace jlwuit {
-
-class EventManager;
-class RootContainer;
-class Layer;
-class Image;
-class Scene;
-class Font;
-class Dialog;
 
 /**
  * \brief
  *
  * \author Jeff Ferr
  */
-class Implementation {
+class State {
 
 	private:
-		static Implementation *_instance;
+		/** \brief */
+		std::string _state;
 
-	protected:
+	private:
 		/**
 		 * \brief
 		 *
 		 */
-		Implementation();
+		virtual bool MatchToken(std::string current_token, std::string token);
 
 	public:
 		/**
 		 * \brief
 		 *
 		 */
-		virtual ~Implementation();
+		State();
 
 		/**
 		 * \brief
 		 *
 		 */
-		static Implementation * GetInstance();
+		virtual ~State();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void Initialize();
+		virtual std::string GetState();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void Deinitialize();
+		virtual void SetState(std::string state);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual RootContainer * GetContainer(Layer *layer);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual EventManager * GetEventManager();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Font * CreateFont(std::string name, lwuit_font_attributes_t attr, int height);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool GetImageSize(std::string img, int *width, int *height);
-	
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * CreateImage(int width, int height, lwuit_pixelformat_t pixelformat);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * CreateImage(uint32_t *data, int width, int height);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * CreateImage(char *data, int size);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * CreateImage(std::string file);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * CreateImage(Image *image);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void RegisterScene(Scene *scene);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void UnregisterScene(Scene *scene);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Lock();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Unlock();
+		virtual bool MatchState(std::string state);
 
 };
 

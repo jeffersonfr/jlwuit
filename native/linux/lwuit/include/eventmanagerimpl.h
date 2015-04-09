@@ -71,31 +71,37 @@ class EventManagerImpl : public EventManager, public jgui::KeyListener, public j
 		 * \brief
 		 *
 		 */
-		virtual void KeyPressed(jgui::KeyEvent *event);
+		virtual bool KeyPressed(jgui::KeyEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MousePressed(jgui::MouseEvent *event);
+		virtual bool KeyReleased(jgui::KeyEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MouseReleased(jgui::MouseEvent *event);
+		virtual bool MousePressed(jgui::MouseEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MouseMoved(jgui::MouseEvent *event);
+		virtual bool MouseReleased(jgui::MouseEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MouseWheel(jgui::MouseEvent *event);
+		virtual bool MouseMoved(jgui::MouseEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool MouseWheel(jgui::MouseEvent *event);
 		
 		/**
 		 * \brief

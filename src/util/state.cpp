@@ -17,94 +17,86 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef LWUIT_INDEXEDIMAGE_H
-#define LWUIT_INDEXEDIMAGE_H
+#include "state.h"
+#include "jstringtokenizer.h"
+#include "jstringutils.h"
 
-#include "image.h"
-
-#include <vector>
-
-#include <stdint.h>
-#include <string.h>
+#include <stdio.h>
 
 namespace jlwuit {
 
-/**
- * \brief
- *
- * \author Jeff Ferr
- */
-class IndexedImage : public Image {
+State::State()
+{
+}
 
-	private:
-		/** \brief */
-		std::vector<int> _palette;
-		/** \brief */
-		Image *_image;
+State::~State()
+{
+}
 
-	public:
-		/**
-		 * \brief
-		 *
-		 */
-		IndexedImage(Image *image, int colors = 255);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual ~IndexedImage();
+std::string State::GetState()
+{
+	return _state;
+}
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * GetDrawable();
+void State::SetState(std::string state)
+{
+	_state = state;
+}
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual std::vector<int> & GetPalette();
+bool State::MatchToken(std::string current_state, std::string state)
+{
+	if (state.find("*") != std::string::npos) { 
+		return true;
+	} else if (current_state == state) {
+		return true;
+	}
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Graphics * GetGraphics();
+	return false;
+}
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * Scale(int wp, int hp);
+bool State::MatchState(std::string state)
+{
+	jcommon::StringTokenizer tokens1(_state, "."),
+		tokens2(state, ".");
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual Image * SubImage(int xp, int yp, int wp, int hp);
+	if (tokens1.GetSize() != tokens2.GetSize()) {
+		return false;
+	}
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp);
-		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_pixelformat_t GetPixelFormat();
+	for (int i=0; i<tokens1.GetSize(); i++) {
+		std::string token1 = jcommon::StringUtils::Trim(tokens1.GetToken(i)),
+			token2 = jcommon::StringUtils::Trim(tokens2.GetToken(i));
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual struct lwuit_size_t GetSize();
+		if (token2.find("[") != std::string::npos) {
+			int i1 = token2.find("["),
+				i2 = token2.rfind("]");
 
-};
+			if (i1 != i2) {
+				jcommon::StringTokenizer tokens(token2.substr(i1+1, i2-1), ",");
+
+				bool b = false;
+
+				for (int j=0; j<tokens.GetSize(); j++) {
+					std::string token = jcommon::StringUtils::Trim(tokens.GetToken(j));
+
+					if (MatchToken(token1, token) == true) {
+						b = true;
+					}
+				}
+
+				if (b == false) {
+					return false;
+				}
+			}
+		} else {
+			if (MatchToken(token1, token2) == false) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
 
 }
 
-#endif 

@@ -661,9 +661,9 @@ Graphics * IndexedImage::GetGraphics()
 	return _image->GetGraphics();
 }
 
-Image * IndexedImage::Scaled(int wp, int hp)
+Image * IndexedImage::Scale(int wp, int hp)
 {
-	return _image->Scaled(wp, hp);
+	return _image->Scale(wp, hp);
 }
 
 Image * IndexedImage::SubImage(int xp, int yp, int wp, int hp)

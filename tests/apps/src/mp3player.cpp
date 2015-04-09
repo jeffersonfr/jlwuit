@@ -248,7 +248,7 @@ void MP3Player::Paint(jlwuit::Graphics *g)
 bool MP3Player::OnKeyDown(jlwuit::UserEvent *event)
 {
 	if (_index < 0 || _musics.size() == 0) {
-		return false;
+		return true;
 	}
 
 	lwuit_player_action_t actions[5] = {
@@ -295,8 +295,6 @@ bool MP3Player::OnKeyDown(jlwuit::UserEvent *event)
 		if (action >= actions_size) {
 			action = 0;
 		}
-	} else {
-		return false;
 	}
 
 	_action = actions[action];

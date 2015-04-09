@@ -198,7 +198,7 @@ Image * LinuxImplementation::CreateImage(uint32_t *data, int width, int height)
 	return NULL;
 }
 
-Image * LinuxImplementation::CreateImage(uint8_t *data, int size)
+Image * LinuxImplementation::CreateImage(char *data, int size)
 {
 	try {
 		return new ImageImpl(jgui::Image::CreateImage(data, size));
