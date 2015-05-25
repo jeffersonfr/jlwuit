@@ -50,25 +50,7 @@ class Transition : public Animation {
 		 * \brief
 		 *
 		 */
-		virtual bool IsRunning();
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual bool Animate();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Start();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Stop();
 
 		/**
 		 * \brief

@@ -17,25 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#include "cliptransition.h"
 
 namespace jlwuit {
 
-Transition::Transition():
+ClipTransition::ClipTransition():
 	Animation()
 {
 }
 
-Transition::~Transition()
+ClipTransition::~ClipTransition()
 {
 }
 
-bool Transition::Animate()
+bool ClipTransition::IsRunning()
 {
 	return false;
 }
 
-void Transition::Paint(Component *cmp, Graphics *g)
+bool ClipTransition::Animate()
+{
+	return false;
+}
+
+void ClipTransition::Start()
+{
+}
+
+void ClipTransition::Stop()
+{
+}
+
+void ClipTransition::Paint(Component *cmp, Graphics *g)
 {
 }
 

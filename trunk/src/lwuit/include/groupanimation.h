@@ -17,26 +17,77 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#ifndef LWUIT_GROUPANIMATION_H
+#define LWUIT_GROUPANIMATION_H
+
+#include "graphics.h"
+
+#include <vector>
 
 namespace jlwuit {
 
-Transition::Transition():
-	Animation()
-{
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class GroupAnimation {
+
+	protected:
+		std::vector<Animation *> _animations;
+
+	protected:
+		/**
+		 * \brief
+		 *
+		 */
+		GroupAnimation();
+
+	public:
+		/**
+		 * \brief
+		 *
+		 */
+		virtual ~GroupAnimation();
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool AddAnimation(Animation *animation);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Remove(Animation *animation);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool RemoveAll();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Reset();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Animate();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual std::vector<Animation *> & GetAnimations();
+
+};
+
 }
 
-Transition::~Transition()
-{
-}
-
-bool Transition::Animate()
-{
-	return false;
-}
-
-void Transition::Paint(Component *cmp, Graphics *g)
-{
-}
-
-}
+#endif

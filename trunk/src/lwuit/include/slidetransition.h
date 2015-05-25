@@ -31,13 +31,14 @@ namespace jlwuit {
  */
 class SlideTransition : public Transition {
 
-	public:
+	protected:
 		/**
 		 * \brief
 		 *
 		 */
 		SlideTransition();
 
+	public:
 		/**
 		 * \brief
 		 *
@@ -48,25 +49,7 @@ class SlideTransition : public Transition {
 		 * \brief
 		 *
 		 */
-		virtual bool IsRunning();
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual bool Animate();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Start();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Stop();
 
 		/**
 		 * \brief

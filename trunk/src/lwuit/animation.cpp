@@ -17,12 +17,14 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#include "animation.h"
 
 namespace jlwuit {
 
 Animation::Animation()
 {
+	_delay = 0;
+	_interval = 2000;
 }
 
 Animation::~Animation()
@@ -34,17 +36,24 @@ bool Animation::Animate()
 	return false;
 }
 
-void Animation::SetAnimationDelay(int delay)
+void Animation::SetDelay(int n)
 {
+	_delay = n;
 }
 
-int Animation::GetAnimationDelay()
+int Animation::GetDelay()
 {
-	return -1;
+	return _delay;
 }
 
-void Animation::Paint(Graphics *g)
+void Animation::SetInterval(int n)
 {
+	_interval = n;
+}
+
+int Animation::GetInterval()
+{
+	return _interval;
 }
 
 }

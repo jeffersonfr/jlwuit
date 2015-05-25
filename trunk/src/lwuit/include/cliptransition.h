@@ -17,26 +17,67 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#ifndef LWUIT_CLIPTRANSITION_H
+#define LWUIT_CLIPTRANSITION_H
+
+#include "animation.h"
+#include "component.h"
 
 namespace jlwuit {
 
-Transition::Transition():
-	Animation()
-{
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class ClipTransition : public Animation {
+
+	protected:
+		/**
+		 * \brief
+		 *
+		 */
+		ClipTransition();
+
+	public:
+		/**
+		 * \brief
+		 *
+		 */
+		virtual ~ClipTransition();
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsRunning();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Animate();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Start();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Stop();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Paint(Component *cmp, Graphics *g);
+
+};
+
 }
 
-Transition::~Transition()
-{
-}
-
-bool Transition::Animate()
-{
-	return false;
-}
-
-void Transition::Paint(Component *cmp, Graphics *g)
-{
-}
-
-}
+#endif

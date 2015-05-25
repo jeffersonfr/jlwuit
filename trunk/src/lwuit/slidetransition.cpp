@@ -30,22 +30,9 @@ SlideTransition::~SlideTransition()
 {
 }
 
-bool SlideTransition::IsRunning()
-{
-	return false;
-}
-
 bool SlideTransition::Animate()
 {
 	return false;
-}
-
-void SlideTransition::Start()
-{
-}
-
-void SlideTransition::Stop()
-{
 }
 
 void SlideTransition::Paint(Component *cmp, Graphics *g)
