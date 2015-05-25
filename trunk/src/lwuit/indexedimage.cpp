@@ -651,7 +651,7 @@ Image * IndexedImage::GetDrawable()
 	return _image;
 }
 
-std::vector<int> & IndexedImage::GetPalette()
+std::vector<int> IndexedImage::GetPalette()
 {
 	return _palette;
 }

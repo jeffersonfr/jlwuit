@@ -19,75 +19,113 @@
  ***************************************************************************/
 #include "groupanimation.h"
 
+#include <algorithm>
+
 namespace jlwuit {
 
-GroupAnimation::GroupAnimation()
+GroupAnimation::GroupAnimation(janimation_mode_t mode, bool stack)
 {
+	_mode = mode;
+	_stack = stack;
 }
 
 GroupAnimation::~GroupAnimation()
 {
 }
 
-void AddAnimation(Animation *animation)
+janimation_mode_t GroupAnimation::GetMode()
 {
-	std::vector<Animation *>::iterator i = std::find(_animations.begin(), _animations.end(), animation);
+	return _mode;
+}
+
+void GroupAnimation::Add(Animation *animation)
+{
+	std::map<Animation *, bool>::iterator i = _animations.find(animation);
 
 	if (i == _animations.end()) {
-		_animtions.push_back(animation);
+		_animations[animation] = true;
 	}
 }
 
-void Remove(Animation *animation)
+void GroupAnimation::Remove(Animation *animation)
 {
-	std::vector<Animation *>::iterator i = std::find(_animations.begin(), _animations.end(), animation);
+	std::map<Animation *, bool>::iterator i = _animations.find(animation);
 
 	if (i != _animations.end()) {
-		_animtions.erase(animation);
+		_animations.erase(i);
 	}
 }
 
-void RemoveAll()
+void GroupAnimation::RemoveAll()
 {
 	_animations.clear();
 }
 
-void Reset()
+void GroupAnimation::Reset()
 {
-	for (std::vector<Animation *>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
-		Animation *animation = (*i);
+	for (std::map<Animation *, bool>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
+		Animation *animation = i->first;
 
 		animation->Reset();
 	}
 }
 
-std::vector<Animation *> & GetAnimations()
+std::vector<Animation *> GroupAnimation::GetAnimations()
 {
-	return _animations;
+	std::vector<Animation *> t;
+
+	for (std::map<Animation *, bool>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
+		Animation *animation = i->first;
+
+		t.push_back(animation);
+	}
+
+	return t;
 }
 
 bool GroupAnimation::Animate()
 {
-	for (std::vector<Animation *>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
-		Animation *animation = (*i);
+	if (_animations.size() == 0) {
+		return false;
+	}
 
-		animation->Animate();
+	if (_mode == JAM_SERIAL) {
+		for (std::map<Animation *, bool>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
+			Animation *animation = i->first;
+
+			if (i->second == false) {
+				if (_stack == true) {
+					animation->Animate();
+				}
+			} else {
+				i->second = animation->Animate();
+
+				return true;
+			}
+		}
+	} else if (_mode == JAM_PARALLEL) {
+		bool any = false;
+
+		for (std::map<Animation *, bool>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
+			Animation *animation = i->first;
+
+			if (i->second == false) {
+				if (_stack == true) {
+					animation->Animate();
+				}
+			} else {
+				i->second = animation->Animate();
+
+				any = true;
+			}
+		}
+
+		if (any == true) {
+			return true;
+		}
 	}
 
 	return false;
-}
-
-void GroupAnimation::SetAnimationDelay(int delay)
-{
-}
-
-int GroupAnimation::GetAnimationDelay()
-{
-	return -1;
-}
-
-void GroupAnimation::Paint(Graphics *g)
-{
 }
 
 }

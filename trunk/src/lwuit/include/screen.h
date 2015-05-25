@@ -54,7 +54,7 @@ class Screen {
 		 * \brief
 		 *
 		 */
-		virtual std::vector<Layer *> & GetLayers();
+		virtual std::vector<Layer *> GetLayers();
 
 		/**
 		 * \brief

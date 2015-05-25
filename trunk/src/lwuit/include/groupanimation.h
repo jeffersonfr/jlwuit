@@ -20,30 +20,43 @@
 #ifndef LWUIT_GROUPANIMATION_H
 #define LWUIT_GROUPANIMATION_H
 
-#include "graphics.h"
+#include "animation.h"
 
 #include <vector>
+#include <map>
 
 namespace jlwuit {
+
+enum janimation_mode_t {
+	JAM_SERIAL,
+	JAM_PARALLEL
+};
 
 /**
  * \brief
  *
  * \author Jeff Ferr
  */
-class GroupAnimation {
+class GroupAnimation : public Animation {
 
 	protected:
-		std::vector<Animation *> _animations;
+		/** \brief */
+		std::map<Animation *, bool> _animations;
+		/** \brief */
+		janimation_mode_t _mode;
+		/** \brief */
+		bool _stack;
 
-	protected:
+	public:
 		/**
 		 * \brief
 		 *
+		 * \param mode serial or parallel
+		 * \param stack if true, continues painting animations even if they have already finalized
+		 *
 		 */
-		GroupAnimation();
+		GroupAnimation(janimation_mode_t mode, bool stack);
 
-	public:
 		/**
 		 * \brief
 		 *
@@ -54,25 +67,31 @@ class GroupAnimation {
 		 * \brief
 		 *
 		 */
-		virtual bool AddAnimation(Animation *animation);
+		virtual janimation_mode_t GetMode();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool Remove(Animation *animation);
+		virtual void Add(Animation *animation);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool RemoveAll();
+		virtual void Remove(Animation *animation);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool Reset();
+		virtual void RemoveAll();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Reset();
 
 		/**
 		 * \brief
@@ -84,7 +103,7 @@ class GroupAnimation {
 		 * \brief
 		 *
 		 */
-		virtual std::vector<Animation *> & GetAnimations();
+		virtual std::vector<Animation *> GetAnimations();
 
 };
 
