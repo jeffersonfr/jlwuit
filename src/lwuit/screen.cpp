@@ -31,7 +31,7 @@ Screen::~Screen()
 {
 }
 
-std::vector<Layer *> & Screen::GetLayers()
+std::vector<Layer *> Screen::GetLayers()
 {
 	return _layers;
 }

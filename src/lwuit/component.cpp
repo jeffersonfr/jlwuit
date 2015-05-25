@@ -840,7 +840,7 @@ void Component::SetInsets(int left, int top, int right, int bottom)
 
 void Component::Add(Component *c, int index)
 {
-	if (index < 0 || index > (int)GetComponents().size()) {
+	if (index < 0 || index > (int)_components.size()) {
 		throw Exception("Index out of range");
 	}
 
@@ -875,12 +875,12 @@ void Component::Add(Component *c, int index)
 
 void Component::Add(Component *c)
 {
-	Add(c, GetComponents().size());
+	Add(c, _components.size());
 }
 
 void Component::Add(Component *c, GridBagConstraints *constraints)
 {
-	Add(c, GetComponents().size());
+	Add(c, _components.size());
 
 	if (_layout != NULL) {
 		GridBagLayout *layout = dynamic_cast<GridBagLayout *>(_layout);
@@ -893,7 +893,7 @@ void Component::Add(Component *c, GridBagConstraints *constraints)
 
 void Component::Add(Component *c, std::string align)
 {
-	Add(c, GetComponents().size());
+	Add(c, _components.size());
 
 	if (_layout != NULL) {
 		BorderLayout *layout = dynamic_cast<BorderLayout *>(_layout);
@@ -1001,7 +1001,7 @@ void Component::RemoveAll()
 	Repaint();
 }
 
-std::vector<Component *> & Component::GetComponents()
+std::vector<Component *> Component::GetComponents()
 {
 	return _components;
 }

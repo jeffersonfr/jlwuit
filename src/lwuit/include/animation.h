@@ -61,6 +61,12 @@ class Animation {
 		 * \brief
 		 *
 		 */
+		virtual void Reset();
+
+		/**
+		 * \brief
+		 *
+		 */
 		virtual void SetDelay(int n);
 
 		/**

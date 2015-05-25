@@ -621,7 +621,7 @@ class Component : public UserEventListener, public Animation {
 		 * \brief
 		 *
 		 */
-		virtual std::vector<Component *> & GetComponents();
+		virtual std::vector<Component *> GetComponents();
 
 		/**
 		 * \brief

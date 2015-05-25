@@ -130,7 +130,7 @@ void GridBagLayout::RemoveLayoutComponent(Component *comp)
 
 int64_t * GridBagLayout::PreInitMaximumArraySizes(Component *parent)
 {
-	std::vector<Component *> &components = parent->GetComponents();
+	std::vector<Component *> components = parent->GetComponents();
 
 	Component *comp;
 	GridBagConstraints *constraints;
@@ -190,7 +190,7 @@ int64_t * GridBagLayout::PreInitMaximumArraySizes(Component *parent)
 
 GridBagLayoutInfo * GridBagLayout::GetLayoutInfo(Component *parent, int sizeflag) 
 {
-	std::vector<Component *> &components = parent->GetComponents();
+	std::vector<Component *> components = parent->GetComponents();
 
 	// WARN:: sync parent
 	GridBagLayoutInfo *r;
@@ -1109,7 +1109,7 @@ struct lwuit_size_t GridBagLayout::GetMinSize(Component *parent, GridBagLayoutIn
 
 void GridBagLayout::ArrangeGrid(Component *parent) 
 {
-	std::vector<Component *> &components = parent->GetComponents();
+	std::vector<Component *> components = parent->GetComponents();
 
 	Component *comp;
 	GridBagConstraints *constraints;

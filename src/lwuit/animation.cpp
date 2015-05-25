@@ -36,6 +36,10 @@ bool Animation::Animate()
 	return false;
 }
 
+void Animation::Reset()
+{
+}
+
 void Animation::SetDelay(int n)
 {
 	_delay = n;

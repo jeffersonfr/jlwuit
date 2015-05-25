@@ -122,7 +122,7 @@ class UserEventListener {
 		 *
 		 * \return
 		 */
-		virtual std::vector<lwuit_key_symbol_t> & GetKeys();
+		virtual std::vector<lwuit_key_symbol_t> GetKeys();
 
 		/**
 		 * \brief

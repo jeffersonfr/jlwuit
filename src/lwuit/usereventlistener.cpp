@@ -110,7 +110,7 @@ void UserEventListener::RemoveAll()
 	_keys.clear();
 }
 
-std::vector<lwuit_key_symbol_t> & UserEventListener::GetKeys()
+std::vector<lwuit_key_symbol_t> UserEventListener::GetKeys()
 {
 	return _keys;
 }
