@@ -17,25 +17,24 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#include "staticimageanimation.h"
 
 namespace jlwuit {
 
-Transition::Transition():
-	Animation()
+StaticImageAnimation::StaticImageAnimation()
 {
 }
 
-Transition::~Transition()
+StaticImageAnimation::~StaticImageAnimation()
 {
 }
 
-bool Transition::Animate()
+bool StaticImageAnimation::Animate()
 {
 	return false;
 }
 
-void Transition::Paint(Component *cmp, Graphics *g)
+void StaticImageAnimation::Paint(Graphics *g)
 {
 }
 

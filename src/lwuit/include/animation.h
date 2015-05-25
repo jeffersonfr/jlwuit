@@ -31,6 +31,12 @@ namespace jlwuit {
  */
 class Animation {
 
+	private:
+		/** \brief */
+		int _delay;
+		/** \brief */
+		int _interval;
+
 	protected:
 		/**
 		 * \brief
@@ -55,19 +61,25 @@ class Animation {
 		 * \brief
 		 *
 		 */
-		virtual int GetAnimationDelay();
+		virtual void SetDelay(int n);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void SetAnimationDelay(int delay);
+		virtual int GetDelay();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void Paint(Graphics *g);
+		virtual void SetInterval(int n);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual int GetInterval();
 
 };
 

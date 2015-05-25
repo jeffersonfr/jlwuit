@@ -17,26 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#ifndef LWUIT_SEQUENCEIMAGERANIMATION_H
+#define LWUIT_SEQUENCEIMAGEANIMATION_H
+
+#include "animation.h"
+#include "component.h"
 
 namespace jlwuit {
 
-Transition::Transition():
-	Animation()
-{
+/**
+ * \brief
+ *
+ * \author Jeff Ferr
+ */
+class SequenceImageAnimation : public Component {
+
+	protected:
+		/**
+		 * \brief
+		 *
+		 */
+		SequenceImageAnimation();
+
+	public:
+		/**
+		 * \brief
+		 *
+		 */
+		virtual ~SequenceImageAnimation();
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool Animate();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Paint(Graphics *g);
+
+};
+
 }
 
-Transition::~Transition()
-{
-}
-
-bool Transition::Animate()
-{
-	return false;
-}
-
-void Transition::Paint(Component *cmp, Graphics *g)
-{
-}
-
-}
+#endif

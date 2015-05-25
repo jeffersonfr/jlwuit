@@ -17,25 +17,24 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#include "sequenceimageanimation.h"
 
 namespace jlwuit {
 
-Transition::Transition():
-	Animation()
+SequenceImageAnimation::SequenceImageAnimation()
 {
 }
 
-Transition::~Transition()
+SequenceImageAnimation::~SequenceImageAnimation()
 {
 }
 
-bool Transition::Animate()
+bool SequenceImageAnimation::Animate()
 {
 	return false;
 }
 
-void Transition::Paint(Component *cmp, Graphics *g)
+void SequenceImageAnimation::Paint(Graphics *g)
 {
 }
 

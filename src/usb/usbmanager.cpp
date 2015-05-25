@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <algorithm>
 
+#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -32,6 +33,8 @@
 #define MOUNTED_COMMAND	"./resources/scripts/usb-mounted.sh"
 #define MOUNT_COMMAND		"./resources/scripts/usb-mount.sh"
 #define UMOUNT_COMMAND	"./resources/scripts/usb-umount.sh"
+
+#define SYSTEM_DUMP(x) while (0) { printf("USBManager Return Status: %d", x); }
 
 namespace jlwuit {
 
@@ -43,12 +46,12 @@ USBManager::USBManager():
 	_mounted = false;
 	_running = false;
 	
-	system(UMOUNT_COMMAND);
+	SYSTEM_DUMP(system(UMOUNT_COMMAND));
 }
 
 USBManager::~USBManager()
 {
-	system(UMOUNT_COMMAND);
+	SYSTEM_DUMP(system(UMOUNT_COMMAND));
 }
 
 USBManager * USBManager::GetInstance()
@@ -129,7 +132,7 @@ void USBManager::Run()
 		if (_mounted == true) {
 			_mounted = false;
 
-			system(UMOUNT_COMMAND);
+			SYSTEM_DUMP(system(UMOUNT_COMMAND));
 
 			DispatchUSBStatusEvent(new USBStatusEvent(LET_REMOVE_USB, ""));
 		}
@@ -162,7 +165,7 @@ void USBManager::Run()
 	} while(_running == true);
 	
 _run_exit:
-	system(UMOUNT_COMMAND);
+	SYSTEM_DUMP(system(UMOUNT_COMMAND));
 }
 
 }

@@ -99,7 +99,9 @@ SRC_LWUIT	= \
 						rootcontainer.o\
 						scene.o\
 						screen.o\
+						sequenceimageanimation.o\
 						slidetransition.o\
+						staticimageanimation.o\
 						style.o\
 						styleevent.o\
 						stylelistener.o\

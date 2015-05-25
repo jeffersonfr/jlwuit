@@ -17,25 +17,76 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "transition.h"
+#include "groupanimation.h"
 
 namespace jlwuit {
 
-Transition::Transition():
-	Animation()
+GroupAnimation::GroupAnimation()
 {
 }
 
-Transition::~Transition()
+GroupAnimation::~GroupAnimation()
 {
 }
 
-bool Transition::Animate()
+void AddAnimation(Animation *animation)
 {
+	std::vector<Animation *>::iterator i = std::find(_animations.begin(), _animations.end(), animation);
+
+	if (i == _animations.end()) {
+		_animtions.push_back(animation);
+	}
+}
+
+void Remove(Animation *animation)
+{
+	std::vector<Animation *>::iterator i = std::find(_animations.begin(), _animations.end(), animation);
+
+	if (i != _animations.end()) {
+		_animtions.erase(animation);
+	}
+}
+
+void RemoveAll()
+{
+	_animations.clear();
+}
+
+void Reset()
+{
+	for (std::vector<Animation *>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
+		Animation *animation = (*i);
+
+		animation->Reset();
+	}
+}
+
+std::vector<Animation *> & GetAnimations()
+{
+	return _animations;
+}
+
+bool GroupAnimation::Animate()
+{
+	for (std::vector<Animation *>::iterator i=_animations.begin(); i!=_animations.end(); i++) {
+		Animation *animation = (*i);
+
+		animation->Animate();
+	}
+
 	return false;
 }
 
-void Transition::Paint(Component *cmp, Graphics *g)
+void GroupAnimation::SetAnimationDelay(int delay)
+{
+}
+
+int GroupAnimation::GetAnimationDelay()
+{
+	return -1;
+}
+
+void GroupAnimation::Paint(Graphics *g)
 {
 }
 
