@@ -21,54 +21,25 @@
 #define LWUIT_VIDEOPLAYERIMPL_H
 
 #include "player.h"
-
-#include "jimage.h"
+#include "jplayer.h"
+#include "jplayerlistener.h"
 
 #include <directfb.h>
 
 namespace jlwuit {
 
-class VideoComponentImpl;
-
-class VideoPlayerImpl : public jlwuit::Player, public jthread::Thread {
+class VideoPlayerImpl : public jlwuit::Player, public jmedia::PlayerListener {
 
 	public:
 		/** \brief */
-		IDirectFBVideoProvider *_provider;
-		/** \brief */
-		IDirectFBEventBuffer *_events;
-		/** \brief */
-		jthread::Mutex _mutex;
-		/** \brief */
-		std::string _file;
+		jmedia::Player *_player;
 		/** \brief */
 		jlwuit::Control *_video_size;
 		/** \brief */
 		jlwuit::Control *_video_format;
 		/** \brief */
-		VideoComponentImpl *_component;
-		/** \brief */
-		double _aspect;
-		/** \brief */
-		double _decode_rate;
-		/** \brief */
-		bool _is_paused;
-		/** \brief */
-		bool _is_closed;
-		/** \brief */
-		bool _is_loop;
-		/** \brief */
-		bool _has_audio;
-		/** \brief */
-		bool _has_video;
+		jlwuit::Component *_component;
 
-	private:
-		/**
-		 * \brief
-		 *
-		 */
-		static void Callback(void *ctx);
-		
 	public:
 		/**
 		 * \brief
@@ -146,32 +117,43 @@ class VideoPlayerImpl : public jlwuit::Player, public jthread::Thread {
 		 * \brief
 		 *
 		 */
-		virtual double GetDecodeRate();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetDecodeRate(double rate);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual Component * GetVisualComponent();
 
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Run();
-		
 		/*
 		 * \brief
 		 *
 		 */
 		virtual void DispatchPlayerEvent(PlayerEvent *event);
 		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void MediaStarted(jmedia::PlayerEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void MediaResumed(jmedia::PlayerEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void MediaPaused(jmedia::PlayerEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void MediaStopped(jmedia::PlayerEvent *event);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void MediaFinished(jmedia::PlayerEvent *event);
 };
 
 }

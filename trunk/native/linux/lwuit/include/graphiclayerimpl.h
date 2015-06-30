@@ -24,20 +24,32 @@
 #include "layerimpl.h"
 #include "jcondition.h"
 #include "jthread.h"
+#include "jwindow.h"
 
 namespace jlwuit {
 
 class Scene;
 
-class GraphicLayerImpl : public LayerImpl, public Component, public jthread::Thread {
+class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup, public jthread::Thread {
 
 	private:
+		/** \brief */
+		RootContainer *_root_container;
+		/** \brief */
+		jgui::Window *_window;
+		/** \brief */
 		std::vector<Scene *> _scenes;
+		/** \brief */
 		jthread::Mutex _mutex;
+		/** \brief */
 		jthread::Mutex _optirun_mutex;
+		/** \brief */
 		jthread::Condition _sem;
+		/** \brief */
 		jlwuit::lwuit_region_t dirty;
+		/** \brief */
 		Image *_buffer;
+		/** \brief */
 		bool _refresh;
 
 	private:
@@ -65,6 +77,42 @@ class GraphicLayerImpl : public LayerImpl, public Component, public jthread::Thr
 		 *
 		 */
 		virtual ~GraphicLayerImpl();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual RootContainer * GetContainer();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsEnabled();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetEnabled(bool b);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetBounds(int x, int y, int w, int h);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual struct lwuit_region_t GetBounds();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual LayerSetup * GetLayerSetup();
 
 		/**
 		 * \brief

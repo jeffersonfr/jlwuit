@@ -77,13 +77,13 @@ class ISDTVPlayerImpl : public jlwuit::Player {
 		 * \brief
 		 *
 		 */
-		virtual void SetMediaTime(uint64_t i);
+		virtual uint64_t GetMediaTime();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual uint64_t GetMediaTime();
+		virtual uint64_t GetCurrentTime();
 
 		/**
 		 * \brief
@@ -103,18 +103,6 @@ class ISDTVPlayerImpl : public jlwuit::Player {
 		 */
 		virtual bool IsLoop();
 		
-		/**
-		 * \brief
-		 *
-		 */
-		virtual double GetDecodeRate();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetDecodeRate(double rate);
-
 };
 
 }

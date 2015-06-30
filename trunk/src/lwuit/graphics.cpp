@@ -76,27 +76,9 @@ void Graphics::SetCompositeFlags(lwuit_composite_flags_t t)
 {
 }
 
-void Graphics::SetDrawingFlags(lwuit_drawing_flags_t t)
-{
-}
-
-void Graphics::SetBlittingFlags(lwuit_blitting_flags_t t)
-{
-}
-
 lwuit_composite_flags_t Graphics::GetCompositeFlags()
 {
-	return LCF_NONE;
-}
-
-lwuit_drawing_flags_t Graphics::GetDrawingFlags()
-{
-	return LDF_NOFX;
-}
-
-lwuit_blitting_flags_t Graphics::GetBlittingFlags()
-{
-	return LBF_NOFX;
+	return LCF_SRC_OVER;
 }
 
 void Graphics::Clear()
@@ -128,15 +110,6 @@ Color Graphics::GetColor()
 void Graphics::SetColor(Color color)
 {
 } 
-
-void Graphics::SetHints(lwuit_hints_t hints)
-{
-}
-
-lwuit_hints_t Graphics::GetHints()
-{
-	return LHT_NONE;
-}
 
 void Graphics::SetPen(lwuit_pen_t pen)
 {
@@ -299,7 +272,7 @@ uint32_t Graphics::GetRGB(int xp, int yp, uint32_t pixel)
 	return 0x00000000;
 }
 
-void Graphics::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp, int scansize)
+void Graphics::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)
 {
 }
 
@@ -307,7 +280,7 @@ void Graphics::SetRGB(uint32_t argb, int xp, int yp)
 {
 }
 
-void Graphics::SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp, int scanline) 
+void Graphics::SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp) 
 {
 }
 

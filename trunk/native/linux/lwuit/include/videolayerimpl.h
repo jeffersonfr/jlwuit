@@ -21,30 +21,19 @@
 #define VIDEOLAYERIMPL_H
 
 #include "layerimpl.h"
-
-#include "jimage.h"
+#include "jplayermanager.h"
 
 #include <directfb.h>
 
 namespace jlwuit {
 
-class VideoLayerImpl : public LayerImpl {
+class VideoLayerImpl : public LayerImpl, public LayerSetup {
 
 	private:
 		/** \brief */
-		IDirectFBVideoProvider *_provider;
-		/** \brief */
-		jthread::Mutex _mutex;
-		/** \brief */
-		std::string _file;
+		jmedia::Player *_player;
 
 	private:
-		/**
-		 * \brief
-		 *
-		 */
-		static void Callback(void *ctx);
-		
 		/**
 		 * \brief
 		 *
@@ -83,28 +72,46 @@ class VideoLayerImpl : public LayerImpl {
 		virtual void Stop();
 
 		/**
-		 * \brief
+		 * \brief Gets current media time.
 		 *
 		 */
-		virtual void SetDecodeRate(double rate);
+		virtual uint64_t GetCurrentTime();
+
+		/**
+		 * \brief Gets full media time.
+		 *
+		 */
+		virtual uint64_t GetMediaTime();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual double GetDecodeRate();
+		virtual bool IsEnabled();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void SetMediaTime(int64_t time);
+		virtual void SetEnabled(bool b);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual int64_t GetMediaTime();
+		virtual void SetBounds(int x, int y, int w, int h);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual struct lwuit_region_t GetBounds();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual LayerSetup * GetLayerSetup();
 
 };
 

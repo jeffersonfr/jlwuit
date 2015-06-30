@@ -34,42 +34,18 @@ namespace jlwuit {
  *
  */
 enum lwuit_composite_flags_t {
-	LCF_NONE			= 0x0001,	// fs: sa fd: 1.0-sa (defaults)
-	LCF_CLEAR			= 0x0002,	// fs: 0.0 fd: 0.0
-	LCF_SRC				= 0x0004,	// fs: 1.0 fd: 0.0
-	LCF_DST				= 0x0008,	// fs: 1.0 fd: 0.0
-	LCF_SRC_OVER	= 0x0010,	// fs: 1.0 fd: 1.0-sa
-	LCF_DST_OVER	= 0x0020,	// fs: 1.0-da fd: 1.0
-	LCF_SRC_IN		= 0x0040,	// fs: da fd: 0.0
-	LCF_DST_IN		= 0x0080,	// fs: 0.0 fd: sa
-	LCF_SRC_OUT		= 0x0100,	// fs: 1.0-da fd: 0.0
+	LCF_CLEAR			= 0x0001,	// fs: 0.0 fd: 0.0
+	LCF_SRC				= 0x0002,	// fs: 1.0 fd: 0.0
+	LCF_SRC_OVER	= 0x0004,	// fs: 1.0 fd: 1.0-sa
+	LCF_SRC_IN		= 0x0008,	// fs: da fd: 0.0
+	LCF_SRC_OUT		= 0x0010,	// fs: 1.0-da fd: 0.0
+	LCF_SRC_ATOP	= 0x0020,	// fs: da fd: 1.0-sa
+	LCF_DST				= 0x0040,	// fs: 1.0 fd: 0.0
+	LCF_DST_OVER	= 0x0080,	// fs: 1.0-da fd: 1.0
+	LCF_DST_IN		= 0x0100,	// fs: 0.0 fd: sa
 	LCF_DST_OUT		= 0x0200,	// fs: 0.0 fd: 1.0-sa
-	LCF_SRC_ATOP	= 0x0400,	// fs: da fd: 1.0-sa
-	LCF_DST_ATOP	= 0x0800,	// fs: 1.0-da fd: sa
-	LCF_ADD				= 0x1000,	// fs: 1.0 fd: 1.0
-	LCF_XOR				= 0x2000	// fs: 1.0-da fd: 1.0-sa 
-};
-
-/**
- * \brief
- *
- */
-enum lwuit_drawing_flags_t {
-	LDF_NOFX		= 0x01,
-	LDF_BLEND		= 0x02,
-	LDF_XOR			= 0x04
-};
-
-/**
- * \brief
- *
- */
-enum lwuit_blitting_flags_t {
-	LBF_NOFX					= 0x01,
-	LBF_ALPHACHANNEL	= 0x02,
-	LBF_COLORALPHA		= 0x04,
-	LBF_COLORIZE			= 0x08,
-	LBF_XOR						= 0x80
+	LCF_DST_ATOP	= 0x0400,	// fs: 1.0-da fd: sa
+	LCF_XOR				= 0x0800	// fs: 1.0-da fd: 1.0-sa 
 };
 
 /**
@@ -204,31 +180,7 @@ class Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void SetDrawingFlags(lwuit_drawing_flags_t t);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetBlittingFlags(lwuit_blitting_flags_t t);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual lwuit_composite_flags_t GetCompositeFlags();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_drawing_flags_t GetDrawingFlags();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_blitting_flags_t GetBlittingFlags();
 
 		/**
 		 * \brief
@@ -271,18 +223,6 @@ class Graphics {
 		 *
 		 */
 		virtual void SetColor(Color color);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetHints(lwuit_hints_t hints);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_hints_t GetHints();
 
 		/**
 		 * \brief
@@ -504,7 +444,7 @@ class Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp, int scansize);
+		virtual void GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp);
 
 		/**
 		 * \brief
@@ -516,7 +456,7 @@ class Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp, int scanline);
+		virtual void SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp);
 
 };
 

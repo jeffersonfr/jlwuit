@@ -264,7 +264,7 @@ class SlideComponent : public jlwuit::Component {
 					rlimit = climit,
 					llimit = climit;
 
-			if (rlimit > (_images.size()-_index-1)) {
+			if (rlimit > ((int)_images.size()-_index-1)) {
 				rlimit = _images.size()-_index-1;
 			}
 

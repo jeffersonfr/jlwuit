@@ -63,10 +63,11 @@ void FadeTransition::Paint(Component *cmp, Graphics *g)
 
 	cmp->Paint(buffer->GetGraphics());
 	
-	g->SetBlittingFlags(jlwuit::LBF_COLORALPHA);
-	g->SetColor(Color(0x00, 0x00, 0x00, _alpha));
-	g->DrawImage(buffer, cmp->GetX(), cmp->GetY());
+	Image *image = buffer->Blend(_alpha/255.0);
 
+	g->DrawImage(image, cmp->GetX(), cmp->GetY());
+
+	delete image;
 	delete buffer;
 }
 

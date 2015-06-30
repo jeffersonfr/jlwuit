@@ -24,24 +24,34 @@
 namespace jlwuit {
 
 BackgroundLayerImpl::BackgroundLayerImpl():
-	LayerImpl("background", 1920, 1080)
+	LayerImpl("background")
 {
+	jgui::jsize_t screen = jgui::GFXHandler::GetInstance()->GetScreenSize();
+
 	_image = NULL;
 
 	_red = 0x00;
 	_green = 0x00;
 	_blue = 0x00;
+
+	_window = new jgui::Window(0, 0, screen.width, screen.height);
+
+	_window->SetBorder(jgui::JCB_EMPTY);
+	_window->SetUndecorated(true);
+	_window->SetBackgroundColor(jgui::Color::Black);
 }
 
 BackgroundLayerImpl::~BackgroundLayerImpl()
 {
+	if (_window != NULL) {
+		delete _window;
+		_window = NULL;
+	}
 }
 
 void BackgroundLayerImpl::Initialize()
 {
-	if (_window != NULL) {
-		_window->Show();
-	}
+	_window->Show();
 
 	SetImage("resources/images/background.png");
 }
@@ -74,11 +84,60 @@ void BackgroundLayerImpl::SetImage(std::string image)
 	Repaint();
 }
 
+bool BackgroundLayerImpl::IsEnabled()
+{
+	return _window->IsVisible();
+}
+
+void BackgroundLayerImpl::SetEnabled(bool b)
+{
+	return _window->SetVisible(b);
+}
+
 std::string BackgroundLayerImpl::GetImage()
 {
 	return _image_file;
 }
 	
+LayerSetup * BackgroundLayerImpl::GetLayerSetup()
+{
+	return this;
+}
+
+void BackgroundLayerImpl::SetBounds(int x, int y, int w, int h)
+{
+	// _window->SetBounds(x, y, w, h);
+}
+
+struct lwuit_region_t BackgroundLayerImpl::GetBounds()
+{
+	jgui::jregion_t bounds = _window->GetVisibleBounds();
+
+	struct lwuit_region_t t;
+
+	t.x = bounds.x;
+	t.y = bounds.y;
+	t.width = bounds.width;
+	t.height = bounds.height;
+	
+	return t;
+}
+
+void BackgroundLayerImpl::Repaint(jgui::Component *cmp)
+{
+	jgui::Graphics *g = _window->GetGraphics();
+
+	if (g == NULL) {
+		return;
+	}
+
+	g->Reset();
+
+	Paint(g);
+
+	g->Flip();
+}
+
 void BackgroundLayerImpl::Paint(jgui::Graphics *g)
 {
 	LayerSetup *setup = GetLayerSetup();
@@ -92,16 +151,17 @@ void BackgroundLayerImpl::Paint(jgui::Graphics *g)
 
 	// INFO:: clear video region
 	jlwuit::Layer *layer = jlwuit::Device::GetDefaultScreen()->GetLayerByID("video");
-	lwuit_region_t vrect = layer->GetLayerSetup()->GetBounds();
-	lwuit_size_t vscale = layer->GetLayerSetup()->GetScreenSize(),
-		bscale = GetLayerSetup()->GetScreenSize();
 
-	double sx = (double)bscale.width/(double)vscale.width,
-		sy = (double)bscale.height/(double)bscale.height;
-	int rx = (int)(vrect.x*sx),
-		ry = (int)(vrect.y*sy),
-		rw = (int)(vrect.width*sx),
-		rh = (int)(vrect.height*sy);
+	if (layer == NULL) {
+		return;
+	}
+
+	lwuit_region_t vrect = layer->GetLayerSetup()->GetBounds();
+
+	int rx = (int)(vrect.x),
+		ry = (int)(vrect.y),
+		rw = (int)(vrect.width),
+		rh = (int)(vrect.height);
 
 	g->Clear(rx, ry, rw, rh);
 }

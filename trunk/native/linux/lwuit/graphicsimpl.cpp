@@ -48,8 +48,6 @@ void GraphicsImpl::Reset()
 	_native_graphics->Reset();
 	
 	SetCompositeFlags(jlwuit::LCF_SRC_OVER);
-	SetDrawingFlags(jlwuit::LDF_BLEND);
-	SetBlittingFlags(jlwuit::LBF_ALPHACHANNEL);
 }
 
 void GraphicsImpl::Translate(int x, int y)
@@ -100,9 +98,7 @@ void GraphicsImpl::SetCompositeFlags(lwuit_composite_flags_t t)
 {
 	_composite_flags = t;
 
-	if (t == LCF_NONE) {
-		_native_graphics->SetCompositeFlags(jgui::JCF_NONE);
-	} else if (t == LCF_CLEAR) {
+	if (t == LCF_CLEAR) {
 		_native_graphics->SetCompositeFlags(jgui::JCF_CLEAR);
 	} else if (t == LCF_SRC) {
 		_native_graphics->SetCompositeFlags(jgui::JCF_SRC);
@@ -124,56 +120,14 @@ void GraphicsImpl::SetCompositeFlags(lwuit_composite_flags_t t)
 		_native_graphics->SetCompositeFlags(jgui::JCF_SRC_ATOP);
 	} else if (t == LCF_DST_ATOP) {
 		_native_graphics->SetCompositeFlags(jgui::JCF_DST_ATOP);
-	} else if (t == LCF_ADD) {
-		_native_graphics->SetCompositeFlags(jgui::JCF_ADD);
 	} else if (t == LCF_XOR) {
 		_native_graphics->SetCompositeFlags(jgui::JCF_XOR);
-	}
-}
-
-void GraphicsImpl::SetDrawingFlags(lwuit_drawing_flags_t t)
-{
-	_drawing_flags = t;
-
-	if (t == LDF_NOFX) {
-		_native_graphics->SetDrawingFlags(jgui::JDF_NOFX);
-	} else if (t == LDF_BLEND) {
-		_native_graphics->SetDrawingFlags(jgui::JDF_BLEND);
-	} else if (t == LDF_XOR) {
-		_native_graphics->SetDrawingFlags(jgui::JDF_XOR);
-	}
-}
-
-void GraphicsImpl::SetBlittingFlags(lwuit_blitting_flags_t t)
-{
-	_blitting_flags = t;
-
-	if (t == LBF_NOFX) {
-		_native_graphics->SetBlittingFlags(jgui::JBF_NOFX);
-	} else if (t == LBF_ALPHACHANNEL) {
-		_native_graphics->SetBlittingFlags(jgui::JBF_ALPHACHANNEL);
-	} else if (t == LBF_COLORALPHA) {
-		_native_graphics->SetBlittingFlags(jgui::JBF_COLORALPHA);
-	} else if (t == LBF_COLORIZE) {
-		_native_graphics->SetBlittingFlags(jgui::JBF_COLORIZE);
-	} else if (t == LBF_XOR) {
-		_native_graphics->SetBlittingFlags(jgui::JBF_XOR);
 	}
 }
 
 lwuit_composite_flags_t GraphicsImpl::GetCompositeFlags()
 {
 	return _composite_flags;
-}
-
-lwuit_drawing_flags_t GraphicsImpl::GetDrawingFlags()
-{
-	return _drawing_flags;
-}
-
-lwuit_blitting_flags_t GraphicsImpl::GetBlittingFlags()
-{
-	return _blitting_flags;
 }
 
 void GraphicsImpl::Clear()
@@ -452,22 +406,46 @@ void GraphicsImpl::DrawString(std::string text, int xp, int yp, int wp, int hp, 
 
 bool GraphicsImpl::DrawImage(std::string img, int xp, int yp)
 {
-	return _native_graphics->DrawImage(img, xp, yp);
+	jgui::Image *image = jgui::Image::CreateImage(img);
+
+	bool b = _native_graphics->DrawImage(image, xp, yp);
+
+	delete image;
+
+	return b;
 }
 
 bool GraphicsImpl::DrawImage(std::string img, int xp, int yp, int wp, int hp)
 {
-	return _native_graphics->DrawImage(img, xp, yp, wp, hp);
+	jgui::Image *image = jgui::Image::CreateImage(img);
+
+	bool b = _native_graphics->DrawImage(image, xp, yp, wp, hp);
+
+	delete image;
+
+	return b;
 }
 
 bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp, int xp, int yp)
 {
-	return _native_graphics->DrawImage(img, sxp, syp, swp, shp, xp, yp);
+	jgui::Image *image = jgui::Image::CreateImage(img);
+
+	bool b = _native_graphics->DrawImage(image, sxp, syp, swp, shp, xp, yp);
+
+	delete image;
+
+	return b;
 }
 
 bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp, int xp, int yp, int wp, int hp)
 {
-	return _native_graphics->DrawImage(img, sxp, syp, swp, shp, xp, yp, wp, hp);
+	jgui::Image *image = jgui::Image::CreateImage(img);
+
+	bool b = _native_graphics->DrawImage(image, sxp, syp, swp, shp, xp, yp, wp, hp);
+
+	delete image;
+
+	return b;
 }
 
 bool GraphicsImpl::DrawImage(Image *img, int xp, int yp)
@@ -519,9 +497,9 @@ uint32_t GraphicsImpl::GetRGB(int xp, int yp, uint32_t pixel)
 	return _native_graphics->GetRGB(xp, yp, pixel);
 }
 
-void GraphicsImpl::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp, int scansize)
+void GraphicsImpl::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)
 {
-	_native_graphics->GetRGB(rgb, xp, yp, wp, hp, scansize);
+	_native_graphics->GetRGBArray(rgb, xp, yp, wp, hp);
 }
 
 void GraphicsImpl::SetRGB(uint32_t rgb, int xp, int yp) 
@@ -529,9 +507,9 @@ void GraphicsImpl::SetRGB(uint32_t rgb, int xp, int yp)
 	_native_graphics->SetRGB(rgb, xp, yp);
 }
 
-void GraphicsImpl::SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp, int scanline) 
+void GraphicsImpl::SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp) 
 {
-	_native_graphics->SetRGB(rgb, xp, yp, wp, hp, scanline);
+	_native_graphics->SetRGBArray(rgb, xp, yp, wp, hp);
 }
 
 }

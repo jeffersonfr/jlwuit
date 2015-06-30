@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define BOX_NUMS	64
+#define BOX_NUMS 	64
 #define BOX_STEP	32
 #define BOX_SIZE	540
 

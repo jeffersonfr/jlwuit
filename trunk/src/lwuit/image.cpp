@@ -71,7 +71,17 @@ Image * Image::Scale(int wp, int hp)
 	return NULL;
 }
 
-Image * Image::SubImage(int xp, int yp, int wp, int hp)
+Image * Image::Crop(int xp, int yp, int wp, int hp)
+{
+	return NULL;
+}
+
+Image * Image::Blend(double alpha)
+{
+	return NULL;
+}
+
+Image * Image::Rotate(double degrees)
 {
 	return NULL;
 }

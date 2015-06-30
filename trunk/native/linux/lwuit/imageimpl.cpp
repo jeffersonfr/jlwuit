@@ -32,7 +32,7 @@ ImageImpl::ImageImpl(jgui::Image *image)
 	}
 
 	_native_image = image;
-	_native_image->GetGraphics()->SetWorkingScreenSize(DEFAULT_SCALE_WIDTH, DEFAULT_SCALE_HEIGHT);
+
 	_graphics = new GraphicsImpl(_native_image->GetGraphics());
 }
 
@@ -57,14 +57,24 @@ Image * ImageImpl::Rotate(double radians, bool resize)
 	return new ImageImpl(_native_image->Rotate(radians, resize));
 }
 
-Image * ImageImpl::SubImage(int xp, int yp, int wp, int hp)
+Image * ImageImpl::Crop(int xp, int yp, int wp, int hp)
 {
-	return new ImageImpl(_native_image->SubImage(xp, yp, wp, hp));
+	return new ImageImpl(_native_image->Crop(xp, yp, wp, hp));
+}
+
+Image * ImageImpl::Blend(double alpha)
+{
+	return new ImageImpl(_native_image->Blend(alpha));
+}
+
+Image * ImageImpl::Rotate(double degrees)
+{
+	return new ImageImpl(_native_image->Rotate(degrees));
 }
 
 void ImageImpl::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)
 {
-	_native_image->GetRGB(rgb, xp, yp, wp, hp);
+	_native_image->GetRGBArray(rgb, xp, yp, wp, hp);
 }
 
 lwuit_pixelformat_t ImageImpl::GetPixelFormat()

@@ -50,18 +50,6 @@ class LayerSetup {
 		 * \brief
 		 *
 		 */
-		virtual void SetScreenSize(int w, int h);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetScreenSize(lwuit_size_t size);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual void SetBounds(int x, int y, int w, int h);
 
 		/**
@@ -99,12 +87,6 @@ class LayerSetup {
 		 *
 		 */
 		virtual void SetSize(struct lwuit_size_t size);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_size_t GetScreenSize();
 
 		/**
 		 * \brief

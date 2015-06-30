@@ -37,8 +37,6 @@ class GraphicsImpl : public Graphics {
 		jgui::Graphics *_native_graphics;
 		jlwuit::Font *_font;
 		jlwuit::lwuit_composite_flags_t _composite_flags;
-		jlwuit::lwuit_drawing_flags_t _drawing_flags;
-		jlwuit::lwuit_blitting_flags_t _blitting_flags;
 
 	public:
 		/**
@@ -105,31 +103,7 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void SetDrawingFlags(lwuit_drawing_flags_t t);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetBlittingFlags(lwuit_blitting_flags_t t);
-
-		/**
-		 * \brief
-		 *
-		 */
 		virtual lwuit_composite_flags_t GetCompositeFlags();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_drawing_flags_t GetDrawingFlags();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual lwuit_blitting_flags_t GetBlittingFlags();
 
 		/**
 		 * \brief
@@ -393,7 +367,7 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp, int scansize);
+		virtual void GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp);
 
 		/**
 		 * \brief
@@ -405,7 +379,7 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp, int scanline); 
+		virtual void SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp); 
 };
 
 }
