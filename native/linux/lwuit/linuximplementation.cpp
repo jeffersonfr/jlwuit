@@ -105,7 +105,16 @@ Font * LinuxImplementation::CreateFont(std::string name, lwuit_font_attributes_t
 
 bool LinuxImplementation::GetImageSize(std::string img, int *width, int *height)
 {
-	return jgui::Image::GetImageSize(img, width, height);
+	jgui::jsize_t isize = jgui::Image::GetImageSize(img);
+
+	(*width) = isize.width;
+	(*height) = isize.height;
+
+	if (isize.width > 0 && isize.height > 0) {
+		return true;
+	}
+
+	return false;
 }
 
 Image * LinuxImplementation::CreateImage(int width, int height, lwuit_pixelformat_t pixelformat)
@@ -181,7 +190,7 @@ Image * LinuxImplementation::CreateImage(int width, int height, lwuit_pixelforma
 			t = jgui::JPF_VYU;
 		}
 
-		return new ImageImpl(jgui::Image::CreateImage(width, height, t));
+		return new ImageImpl(jgui::Image::CreateImage(t, width, height));
 	} catch (Exception &e) {
 	}
 
@@ -230,7 +239,7 @@ Image * LinuxImplementation::CreateImage(Image *image)
 	Image *clone = NULL;
 
 	try {
-		clone = new ImageImpl(jgui::Image::CreateImage(size.width, size.height));
+		clone = new ImageImpl(jgui::Image::CreateImage(jgui::JPF_ARGB, size.width, size.height));
 
 		clone->GetGraphics()->DrawImage(image, 0, 0);
 	} catch (Exception &e) {

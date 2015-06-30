@@ -17,11 +17,9 @@ NATIVE_LWUIT 	+= \
 					 eventmanagerimpl.o\
 					 fontimpl.o\
 					 graphiclayerimpl.o\
-					 systemlayerimpl.o\
 					 graphicsimpl.o\
 					 imageimpl.o\
 					 layerimpl.o\
-					 layersetupimpl.o\
 					 linuximplementation.o\
 					 screenimpl.o\
 					 videolayerimpl.o\

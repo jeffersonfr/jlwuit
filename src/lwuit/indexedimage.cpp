@@ -668,7 +668,7 @@ Image * IndexedImage::Scale(int wp, int hp)
 
 Image * IndexedImage::SubImage(int xp, int yp, int wp, int hp)
 {
-	return _image->SubImage(xp, yp, wp, hp);
+	return _image->Crop(xp, yp, wp, hp);
 }
 
 void IndexedImage::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)

@@ -18,34 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "layerimpl.h"
-#include "layersetupimpl.h"
-
 #include "jautolock.h"
+#include "jgfxhandler.h"
 
 #include <algorithm>
 
 namespace jlwuit {
 
-LayerImpl::LayerImpl(std::string id, int width, int height):
+LayerImpl::LayerImpl(std::string id):
 	Layer(id)
 {
-	_root_container = NULL;
-
-	_window = new jgui::Window(0, 0, width, height, width, height);
-
-	_window->SetBorder(jgui::JCB_EMPTY);
-	_window->SetUndecorated(true);
-	_window->SetBackgroundColor(jgui::Color::Black);
-
-	_setup = new LayerSetupImpl(_window);
 }
 
 LayerImpl::~LayerImpl()
 {
-	if (_window != NULL) {
-		delete _window;
-		_window = NULL;
-	}
 }
 
 void LayerImpl::Initialize()
@@ -54,42 +40,15 @@ void LayerImpl::Initialize()
 
 RootContainer * LayerImpl::GetContainer()
 {
-	return _root_container;
-}
-
-bool LayerImpl::IsEnabled()
-{
-	return _window->IsVisible();
-}
-
-void LayerImpl::SetEnabled(bool b)
-{
-	_window->SetVisible(b);
+	return NULL;
 }
 
 void LayerImpl::Repaint(jgui::Component *cmp)
 {
-	jgui::Graphics *g = _window->GetGraphics();
-
-	if (g == NULL) {
-		return;
-	}
-
-	g->Reset();
-	g->SetWorkingScreenSize(_window->GetWorkingScreenSize());
-
-	Paint(g);
-
-	g->Flip();
 }
 
 void LayerImpl::Paint(jgui::Graphics *g)
 {
-}
-
-LayerSetup * LayerImpl::GetLayerSetup()
-{
-	return _setup;
 }
 
 }

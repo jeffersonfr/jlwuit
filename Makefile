@@ -84,6 +84,7 @@ SRC_LWUIT	= \
 						flowlayout.o\
 						font.o\
 						graphics.o\
+						groupanimation.o\
 						gridbaglayout.o\
 						gridlayout.o\
 						image.o\

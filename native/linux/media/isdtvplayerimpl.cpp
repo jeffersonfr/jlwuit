@@ -98,14 +98,14 @@ void ISDTVPlayerImpl::Close()
 {
 }
 
-void ISDTVPlayerImpl::SetMediaTime(uint64_t time)
-{
-	impl->SetMediaTime(time);
-}
-
 uint64_t ISDTVPlayerImpl::GetMediaTime()
 {
 	return impl->GetMediaTime();
+}
+
+uint64_t ISDTVPlayerImpl::GetCurrentTime()
+{
+	return impl->GetCurrentTime();
 }
 
 void ISDTVPlayerImpl::SetLoop(bool b)
@@ -120,16 +120,6 @@ bool ISDTVPlayerImpl::IsPlaying()
 bool ISDTVPlayerImpl::IsLoop()
 {
 	return false;
-}
-
-void ISDTVPlayerImpl::SetDecodeRate(double rate)
-{
-	impl->SetDecodeRate(rate);
-}
-
-double ISDTVPlayerImpl::GetDecodeRate()
-{
-	return impl->GetDecodeRate();
 }
 
 }

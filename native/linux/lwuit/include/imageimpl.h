@@ -105,7 +105,19 @@ class ImageImpl : public Image {
 		 * \brief
 		 *
 		 */
-		virtual Image * SubImage(int xp, int yp, int wp, int hp);
+		virtual Image * Crop(int xp, int yp, int wp, int hp);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Image * Blend(double alpha);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual Image * Rotate(double degrees);
 
 		/**
 		 * \brief

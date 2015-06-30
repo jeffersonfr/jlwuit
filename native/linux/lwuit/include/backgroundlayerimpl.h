@@ -22,19 +22,26 @@
 
 #include "color.h"
 #include "layerimpl.h"
-
 #include "jimage.h"
+#include "jwindow.h"
 
 namespace jlwuit {
 
-class BackgroundLayerImpl : public LayerImpl {
+class BackgroundLayerImpl : public LayerImpl, public LayerSetup {
 
 	private:
+		/** \brief */
+		jgui::Window *_window;
+		/** \brief */
 		jgui::Image *_image;
+		/** \brief */
 		std::string _image_file;
-		int _red,
-				_green,
-				_blue;
+		/** \brief */
+		int _red;
+		/** \brief */
+		int _green;
+		/** \brief */
+		int _blue;
 
 	private:
 		/**
@@ -42,12 +49,6 @@ class BackgroundLayerImpl : public LayerImpl {
 		 *
 		 */
 		virtual void Initialize();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void Paint(jgui::Graphics *g);
 
 	public:
 		/**
@@ -85,6 +86,48 @@ class BackgroundLayerImpl : public LayerImpl {
 		 *
 		 */
 		virtual std::string GetImage();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual bool IsEnabled();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetEnabled(bool b);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void SetBounds(int x, int y, int w, int h);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual struct lwuit_region_t GetBounds();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual LayerSetup * GetLayerSetup();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Paint(jgui::Graphics *g);
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Repaint(jgui::Component *cmp = NULL);
 
 };
 

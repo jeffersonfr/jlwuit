@@ -134,22 +134,6 @@ class Player {
 		virtual bool IsLoop();
 		
 		/**
-		 * \brief Set a decode rate to this player.
-		 *
-		 * \param rate
-		 *
-		 */
-		virtual double GetDecodeRate();
-
-		/**
-		 * \brief Set a decode rate to this player.
-		 *
-		 * \param rate
-		 *
-		 */
-		virtual void SetDecodeRate(double rate);
-
-		/**
 		 * \brief Returns a list with all controls associated with this player.
 		 *
 		 * \return controls

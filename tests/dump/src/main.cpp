@@ -68,7 +68,7 @@ class Dump : public jlwuit::Component {
 			jlwuit::lwuit_size_t size = _off->GetSize();
 			uint32_t *rgb = NULL;
 
-			g->GetRGB(&rgb, 0, 0, size.width, size.height, size.width);
+			g->GetRGB(&rgb, 0, 0, size.width, size.height);
 			io->Encode(rgb, size.width, size.height);
 
 			return true;

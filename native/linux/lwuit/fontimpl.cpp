@@ -55,7 +55,7 @@ int FontImpl::GetSize()
 
 int FontImpl::GetLineSize()
 {
-	return _native_font->GetLineSize();
+	return _native_font->GetSize()+2;
 }
 
 int FontImpl::GetAscender()
@@ -70,7 +70,7 @@ int FontImpl::GetDescender()
 
 int FontImpl::GetMaxAdvanced()
 {
-	return _native_font->GetMaxAdvance();
+	return _native_font->GetMaxAdvanceWidth();
 }
 
 int FontImpl::GetLeading()

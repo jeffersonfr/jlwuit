@@ -29,19 +29,14 @@
 
 namespace jlwuit {
 
-class LayerImpl : public Layer {
-
-	protected:
-		jgui::Window *_window;
-		LayerSetup *_setup;
-		RootContainer *_root_container;
+class LayerImpl : public Layer{
 
 	public:
 		/**
 		 * \brief Constructor.
 		 *
 		 */
-		LayerImpl(std::string id, int width, int height);
+		LayerImpl(std::string id);
 
 		/**
 		 * \brief
@@ -59,25 +54,7 @@ class LayerImpl : public Layer {
 		 * \brief
 		 *
 		 */
-		RootContainer * GetContainer();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual bool IsEnabled();
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual void SetEnabled(bool b);
-
-		/**
-		 * \brief
-		 *
-		 */
-		virtual LayerSetup * GetLayerSetup();
+		virtual RootContainer * GetContainer();
 
 		/**
 		 * \brief

@@ -21,29 +21,29 @@
 #include "imageimpl.h"
 #include "jgfxhandler.h"
 #include "preferences.h"
+#include "device.h"
+#include "backgroundlayerimpl.h"
 #include "jautolock.h"
 
 namespace jlwuit {
 
 VideoLayerImpl::VideoLayerImpl():
-	LayerImpl("video", DEFAULT_SCALE_WIDTH, DEFAULT_SCALE_HEIGHT)
+	LayerImpl("video")
 {
-	_provider = NULL;
+	_player = NULL;
 }
 
 VideoLayerImpl::~VideoLayerImpl()
 {
-	if (_provider != NULL) {
-		_provider->Release(_provider);
+	if (_player != NULL) {
+		_player->Stop();
+
+		delete _player;
 	}
 }
 
 void VideoLayerImpl::Initialize()
 {
-	if (_window != NULL) {
-		_window->Show();
-	}
-
 	jlwuit::Document *ds = jlwuit::Preferences::Create("system");
 	jlwuit::Element *es = ds->GetElementByIndex(0);
 	jlwuit::Document *dc = jlwuit::Preferences::Create("channels");
@@ -58,120 +58,73 @@ void VideoLayerImpl::Initialize()
 	}
 }
 
-void VideoLayerImpl::Callback(void *ctx)
-{
-	reinterpret_cast<VideoLayerImpl *>(ctx)->Repaint();
-}
-
 void VideoLayerImpl::SetFile(std::string file)
 {
-	jthread::AutoLock lock(&_mutex);
+	jmedia::PlayerManager::SetHint(jmedia::JPH_LIGHTWEIGHT, false);
 
-	_file = file;
+	_player = jmedia::PlayerManager::CreatePlayer(file);
 
-	IDirectFB *directfb = (IDirectFB *)jgui::GFXHandler::GetInstance()->GetGraphicEngine();
+	jgui::Component *cmp = _player->GetVisualComponent();
 
-	if (directfb->CreateVideoProvider(directfb, _file.c_str(), &_provider) != DFB_OK) {
-		_provider = NULL;
-
-		return;
-	}
-		
-	IDirectFBDisplayLayer *layer = NULL;
-	IDirectFBWindow *window = NULL;
-	IDirectFBSurface *surface = NULL;
-	DFBSurfaceDescription sdsc;
-	DFBWindowDescription desc;
-
-	desc.flags = (DFBWindowDescriptionFlags)(DWDESC_POSX | DWDESC_POSY | DWDESC_WIDTH | DWDESC_HEIGHT | DWDESC_STACKING);
-	desc.stacking = DWSC_LOWER;
-	desc.posx = 0;
-	desc.posy = 0;
-	desc.width = jgui::GFXHandler::GetInstance()->GetScreenWidth();
-	desc.height = jgui::GFXHandler::GetInstance()->GetScreenHeight();
-
-	_provider->GetSurfaceDescription(_provider, &sdsc);
-
-	if (sdsc.flags & DSDESC_CAPS) {
-		desc.flags = (DFBWindowDescriptionFlags)(desc.flags | DWDESC_SURFACE_CAPS);
-		desc.surface_caps = sdsc.caps;
-	}
-
-	directfb->GetDisplayLayer(directfb, DLID_PRIMARY, &layer);
-	layer->CreateWindow(layer, &desc, &window);
-	window->GetSurface(window, &surface);
-	window->SetOpacity(window, 0xff);
-
-	// TODO:: delete previous native window
-
-	_window->SetNativeWindow(window);
+	cmp->SetVisible(true);
 }
 
 void VideoLayerImpl::Play() 
 {
-	jthread::AutoLock lock(&_mutex);
-
-	if (_provider != NULL) {
-		IDirectFBSurface *surface = (IDirectFBSurface *)_window->GetGraphics()->GetNativeSurface();
-
-		_provider->PlayTo(_provider, surface, NULL, VideoLayerImpl::Callback, (void *)this);
-
-		usleep(500000);
-	}
+	_player->Play();
 }
 
 void VideoLayerImpl::Stop() 
 {
-	jthread::AutoLock lock(&_mutex);
-
-	if (_provider != NULL) {
-		_provider->Stop(_provider);
-		_window->Repaint();
-	}
+	_player->Stop();
 }
 
-void VideoLayerImpl::SetDecodeRate(double rate)
+uint64_t VideoLayerImpl::GetCurrentTime()
 {
-	jthread::AutoLock lock(&_mutex);
-
-	if (_provider != NULL) {
-		_provider->SetSpeed(_provider, rate);
-	}
+	return _player->GetCurrentTime();
 }
 
-double VideoLayerImpl::GetDecodeRate()
+uint64_t VideoLayerImpl::GetMediaTime()
 {
-	jthread::AutoLock lock(&_mutex);
-
-	double rate = 1.0;
-
-	if (_provider != NULL) {
-		_provider->GetSpeed(_provider, &rate);
-	}
-
-	return rate;
+	return _player->GetMediaTime();
 }
 
-void VideoLayerImpl::SetMediaTime(int64_t time)
+bool VideoLayerImpl::IsEnabled()
 {
-	jthread::AutoLock lock(&_mutex);
-
-	if (_provider != NULL) {
-		_provider->SeekTo(_provider, time/1000LL);
-	}
+	return _player->GetVisualComponent()->IsVisible();
 }
 
-int64_t VideoLayerImpl::GetMediaTime()
+void VideoLayerImpl::SetEnabled(bool b)
 {
-	jthread::AutoLock lock(&_mutex);
+	_player->GetVisualComponent()->SetVisible(b);
+}
 
-	double time = 0.0;
+void VideoLayerImpl::SetBounds(int x, int y, int w, int h)
+{
+	Layer *layer = jlwuit::Device::GetDefaultScreen()->GetLayerByID("background");
 
-	if (_provider != NULL) {
-		_provider->GetPos(_provider, &time);
-	}
+	_player->GetVisualComponent()->SetBounds(x, y, w, h);
 
-	return time*1000LL;
+	dynamic_cast<BackgroundLayerImpl *>(layer)->Repaint();
+}
+
+struct lwuit_region_t VideoLayerImpl::GetBounds()
+{
+	jgui::jregion_t bounds = _player->GetVisualComponent()->GetVisibleBounds();
+
+	struct lwuit_region_t t;
+
+	t.x = bounds.x;
+	t.y = bounds.y;
+	t.width = bounds.width;
+	t.height = bounds.height;
+	
+	return t;
+}
+
+LayerSetup * VideoLayerImpl::GetLayerSetup()
+{
+	return this;
 }
 
 };

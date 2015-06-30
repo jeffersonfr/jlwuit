@@ -284,7 +284,7 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int x, in
 
 	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
 
-	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	g->SetCompositeFlags(jlwuit::LCF_SRC_OVER);
 	g->DrawImage(image, x, y);
 	g->SetCompositeFlags(t);
 }
@@ -299,7 +299,7 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int x, in
 
 	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
 
-	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	g->SetCompositeFlags(jlwuit::LCF_SRC_OVER);
 	g->DrawImage(image, x, y, w, h);
 	g->SetCompositeFlags(t);
 }
@@ -314,7 +314,7 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, i
 
 	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
 
-	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	g->SetCompositeFlags(jlwuit::LCF_SRC_OVER);
 	g->DrawImage(image, sx, sy, sw, sh, x, y);
 	g->SetCompositeFlags(t);
 }
@@ -329,7 +329,7 @@ void LookAndFeel::DrawImage(jlwuit::Graphics *g, std::string image_id, int sx, i
 
 	jlwuit::lwuit_composite_flags_t t = g->GetCompositeFlags();
 
-	g->SetCompositeFlags(jlwuit::LCF_NONE);
+	g->SetCompositeFlags(jlwuit::LCF_SRC_OVER);
 	g->DrawImage(image, sx, sy, sw, sh, x, y, w, h);
 	g->SetCompositeFlags(t);
 }

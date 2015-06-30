@@ -22,7 +22,6 @@
 #include "backgroundlayerimpl.h"
 #include "videolayerimpl.h"
 #include "graphiclayerimpl.h"
-#include "systemlayerimpl.h"
 
 namespace jlwuit {
 

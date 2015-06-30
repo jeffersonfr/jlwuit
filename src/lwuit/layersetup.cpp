@@ -29,78 +29,66 @@ LayerSetup::~LayerSetup()
 {
 }
 
-void LayerSetup::SetScreenSize(int w, int h)
-{
-}
-
-void LayerSetup::SetScreenSize(lwuit_size_t size)
-{
-}
-
 void LayerSetup::SetBounds(int x, int y, int w, int h)
 {
 }
 
 void LayerSetup::SetBounds(struct lwuit_point_t point, struct lwuit_size_t size)
 {
+	SetBounds(point.x, point.y, size.width, size.height);
 }
 
 void LayerSetup::SetBounds(struct lwuit_region_t region)
 {
+	SetBounds(region.x, region.y, region.width, region.height);
 }
 
 void LayerSetup::SetLocation(int x, int y)
 {
+	SetBounds(x, y, GetWidth(), GetHeight());
 }
 
 void LayerSetup::SetLocation(struct lwuit_point_t point)
 {
+	SetLocation(point.x, point.y);
 }
 
 void LayerSetup::SetSize(int w, int h)
 {
+	SetBounds(GetX(), GetY(), w, h);
 }
 
 void LayerSetup::SetSize(struct lwuit_size_t size)
 {
-}
-
-lwuit_size_t LayerSetup::GetScreenSize()
-{
-	struct lwuit_size_t t;
-
-	t.width = -1;
-	t.height = -1;
-
-	return t;
+	SetBounds(GetX(), GetY(), size.width, size.height);
 }
 
 int LayerSetup::GetX()
 {
-	return -1;
+	return GetBounds().x;
 }
 
 int LayerSetup::GetY()
 {
-	return -1;
+	return GetBounds().x;
 }
 
 int LayerSetup::GetWidth()
 {
-	return -1;
+	return GetBounds().width;
 }
 
 int LayerSetup::GetHeight()
 {
-	return -1;
+	return GetBounds().height;
 }
 
 struct lwuit_point_t LayerSetup::GetLocation()
 {
 	struct lwuit_point_t t;
 
-	t.x = -1;
-	t.y = -1;
+	t.x = GetBounds().x;
+	t.y = GetBounds().y;
 
 	return t;
 }
@@ -109,8 +97,8 @@ struct lwuit_size_t LayerSetup::GetSize()
 {
 	struct lwuit_size_t t;
 
-	t.width = -1;
-	t.height = -1;
+	t.width = GetBounds().width;
+	t.height = GetBounds().height;
 
 	return t;
 }

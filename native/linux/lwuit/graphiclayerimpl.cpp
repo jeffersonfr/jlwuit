@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "graphiclayerimpl.h"
-#include "scene.h"
 #include "imageimpl.h"
+#include "scene.h"
 
 namespace jlwuit {
 
@@ -53,38 +53,80 @@ class RootContainerImpl : public RootContainer {
 };
 
 GraphicLayerImpl::GraphicLayerImpl():
-	LayerImpl("graphics", DEFAULT_SCALE_WIDTH, DEFAULT_SCALE_HEIGHT)
+	LayerImpl("graphics")
 {
+	jgui::jsize_t screen = jgui::GFXHandler::GetInstance()->GetScreenSize();
+
 	_refresh = false;
 
-	LayerSetup *setup = GetLayerSetup();
-	int w = setup->GetWidth(),
-			h = setup->GetHeight();
+	_window = new jgui::Window(0, 0, screen.width, screen.height);
 
-	_root_container = new RootContainerImpl(this, this, 0, 0, w, h);
-	_buffer = new ImageImpl(jgui::Image::CreateImage(w, h, jgui::JPF_ARGB, w, h));
+	_window->SetBorder(jgui::JCB_EMPTY);
+	_window->SetUndecorated(true);
+	_window->SetBackgroundColor(jgui::Color::Black);
+
+	_root_container = new RootContainerImpl(this, this, 0, 0, screen.width, screen.height);
+	_buffer = new ImageImpl(jgui::Image::CreateImage(jgui::JPF_ARGB, screen.width, screen.height));
 }
 
 GraphicLayerImpl::~GraphicLayerImpl()
 {
+	if (_window != NULL) {
+		delete _window;
+		_window = NULL;
+	}
 }
 
 void GraphicLayerImpl::Initialize()
 {
-	if (_window != NULL) {
-		_window->Show();
-	}
-
 	_window->Show();
 
 	_ng = _window->GetGraphics();
 	_ni = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
 	_lg = _buffer->GetGraphics();
 
-	_ng->SetBlittingFlags(jgui::JBF_NOFX);
 	_ng->Clear();
 
 	Start();
+}
+
+RootContainer * GraphicLayerImpl::GetContainer()
+{
+	return _root_container;
+}
+
+bool GraphicLayerImpl::IsEnabled()
+{
+	return _window->IsVisible();
+}
+
+void GraphicLayerImpl::SetEnabled(bool b)
+{
+	_window->SetVisible(b);
+}
+
+void GraphicLayerImpl::SetBounds(int x, int y, int w, int h)
+{
+	// _window->SetBounds(x, y, w, h);
+}
+
+struct lwuit_region_t GraphicLayerImpl::GetBounds()
+{
+	jgui::jregion_t bounds = _window->GetVisibleBounds();
+
+	struct lwuit_region_t t;
+
+	t.x = bounds.x;
+	t.y = bounds.y;
+	t.width = bounds.width;
+	t.height = bounds.height;
+	
+	return t;
+}
+
+LayerSetup * GraphicLayerImpl::GetLayerSetup()
+{
+	return this;
 }
 
 void GraphicLayerImpl::Run()
@@ -110,6 +152,7 @@ void GraphicLayerImpl::Run()
 		}
 
 		_mutex.Unlock();
+		_ng->SetCompositeFlags(jgui::JCF_SRC);
 		_ng->DrawImage(_ni, 0, 0);
 		_ng->Flip();
 		_optirun_mutex.Unlock();

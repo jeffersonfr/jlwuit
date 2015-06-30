@@ -94,15 +94,6 @@ bool Player::IsLoop()
 	return false;
 }
 
-double Player::GetDecodeRate()
-{
-	return 0.0;
-}
-
-void Player::SetDecodeRate(double rate)
-{
-}
-
 std::vector<Control *> & Player::GetControls()
 {
 	return _controls;
