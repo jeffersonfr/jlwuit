@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "fontimpl.h"
 
+#include "strings.h"
+
 namespace jlwuit {
 
 FontImpl::FontImpl(std::string name, lwuit_font_attributes_t attributes, int size):
@@ -35,7 +37,21 @@ FontImpl::~FontImpl()
 
 bool FontImpl::SetEncoding(std::string code)
 {
-	return _native_font->SetEncoding(code);
+	jgui::jfont_encoding_t t = jgui::JFE_ISO_8859_1;
+
+	if (strncasecmp(code.c_str(), "utf-8", 3) == 0) {
+		t = jgui::JFE_UTF8;
+	} else if (
+			strncasecmp(code.c_str(), "latin-1", 3) == 0 ||
+			strncasecmp(code.c_str(), "iso-8859-1", 3) == 0) {
+		t = jgui::JFE_ISO_8859_1;
+	} else {
+		return false;
+	}
+
+	_native_font->SetEncoding(t);
+
+	return true;
 }
 
 lwuit_font_attributes_t FontImpl::GetAttributes()
