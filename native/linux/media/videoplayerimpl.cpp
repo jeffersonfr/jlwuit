@@ -27,6 +27,7 @@
 #include "jvolumecontrol.h"
 #include "jvideosizecontrol.h"
 #include "jvideoformatcontrol.h"
+#include "jvideodevicecontrol.h"
 #include "jgfxhandler.h"
 #include "jplayermanager.h"
 #include "jautolock.h"
@@ -251,147 +252,63 @@ class VideoSizeControlImpl : public VideoSizeControl {
 
 };
 
-class VideoFormatControlImpl : public VideoFormatControl {
+class VideoDeviceControlImpl : public jmedia::VideoDeviceControl {
 	
 	private:
-		jmedia::VideoFormatControl *_control;
+		jmedia::VideoDeviceControl *_control;
 
 	public:
-		VideoFormatControlImpl(VideoPlayerImpl *impl):
-			VideoFormatControl()
+		VideoDeviceControlImpl(VideoPlayerImpl *impl):
+			VideoDeviceControl()
 		{
-			jmedia::Control *control = impl->_player->GetControl("video.size");
-
-			if (control != NULL) {
-				_control = dynamic_cast<jmedia::VideoFormatControl *>(control);
-			}
+			_control = dynamic_cast<jmedia::VideoDeviceControl *>(impl->_player->GetControl("video.device"));
 		}
 
-		virtual ~VideoFormatControlImpl()
+		virtual ~VideoDeviceControlImpl()
 		{
 		}
 
-		virtual void SetAspectRatio(lwuit_aspect_ratio_t t)
-		{
-		}
-
-		virtual void SetContentMode(lwuit_video_mode_t t)
-		{
-		}
-
-		virtual void SetVideoFormatHD(lwuit_hd_video_format_t vf)
-		{
-		}
-
-		virtual void SetVideoFormatSD(lwuit_sd_video_format_t vf)
-		{
-		}
-
-		virtual void SetContrast(int value)
+		virtual std::vector<jmedia::jvideo_control_t> & GetControls()
 		{
 			if (_control != NULL) {
-				_control->SetContrast(value);
+				return _control->GetControls();
 			}
+
+			return jmedia::VideoDeviceControl::GetControls();
 		}
 
-		virtual void SetSaturation(int value)
+		virtual bool HasControl(jmedia::jvideo_control_t id)
 		{
 			if (_control != NULL) {
-				_control->SetSaturation(value);
+				return _control->HasControl(id);
 			}
+			
+			return false;
 		}
 
-		virtual void SetHUE(int value)
+		virtual int GetValue(jmedia::jvideo_control_t id)
 		{
 			if (_control != NULL) {
-				_control->SetHUE(value);
+				return _control->GetValue(id);
 			}
+			
+			return 0;
 		}
 
-		virtual void SetBrightness(int value)
+		virtual bool SetValue(jmedia::jvideo_control_t id, int value)
 		{
 			if (_control != NULL) {
-				_control->SetBrightness(value);
-			}
-		}
-
-		virtual void SetSharpness(int value)
-		{
-		}
-
-		virtual lwuit_aspect_ratio_t GetAspectRatio()
-		{
-			/*
-			double aspect = _player->_aspect;
-
-			if (aspect == (1.0/1.0)) {
-				return LAR_1x1;
-			} else if (aspect == (2.0/3.0)) {
-				return LAR_2x3;
-			} else if (aspect == (4.0/3.0)) {
-				return LAR_4x3;
-			} else if (aspect == (16.0/9.0)) {
-				return LAR_16x9;
-			}
-			*/
-
-			return LAR_16x9;
-		}
-
-		virtual lwuit_video_mode_t GetContentMode()
-		{
-			return LVM_FULL;
-		}
-
-		virtual lwuit_hd_video_format_t GetVideoFormatHD()
-		{
-			return LHVF_1080p;
-		}
-
-		virtual lwuit_sd_video_format_t GetVideoFormatSD()
-		{
-			return LSVF_PAL_M;
-		}
-
-		virtual int GetContrast()
-		{
-			if (_control != NULL) {
-				return _control->GetContrast();
+				return _control->SetValue(id, value);
 			}
 
 			return 0;
 		}
 
-		virtual int GetSaturation()
+		virtual void Reset(jmedia::jvideo_control_t id)
 		{
 			if (_control != NULL) {
-				return _control->GetSaturation();
+				return _control->Reset(id);
 			}
-
-			return 0;
-		}
-
-		virtual int GetHUE()
-		{
-			if (_control != NULL) {
-				return _control->GetHUE();
-			}
-
-			return 0;
-		}
-
-		virtual int GetBrightness()
-		{
-			if (_control != NULL) {
-				return _control->GetBrightness();
-			}
-
-			return 0;
-		}
-
-		virtual int GetSharpness()
-		{
-			return 0;
 		}
 
 };
