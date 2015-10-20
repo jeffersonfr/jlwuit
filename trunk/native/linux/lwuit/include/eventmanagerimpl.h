@@ -41,9 +41,6 @@ class EventManagerImpl : public EventManager, public jgui::KeyListener, public j
 		};
 
 	private:
-		static EventManagerImpl *_instance;
-
-	private:
 		std::map<lwuit_key_symbol_t, event_t *> _events;
 		lwuit_point_t _last_mouse_location;
 		uint64_t _last_mouse_move;

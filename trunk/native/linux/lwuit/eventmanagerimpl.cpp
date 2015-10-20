@@ -31,15 +31,10 @@ EventManagerImpl::EventManagerImpl()
 	_last_mouse_move = 0LL;
 	_last_mouse_location.x = 0LL;
 	_last_mouse_location.y = 0LL;
-
-	jgui::InputManager::GetInstance()->RegisterKeyListener(this);
-	jgui::InputManager::GetInstance()->RegisterMouseListener(this);
 }
 
 EventManagerImpl::~EventManagerImpl()
 {
-	jgui::InputManager::GetInstance()->RemoveKeyListener(this);
-	jgui::InputManager::GetInstance()->RemoveMouseListener(this);
 }
 
 lwuit_key_modifiers_t EventManagerImpl::TranslateKeyModifiers(jgui::jkeyevent_modifiers_t modifiers)
