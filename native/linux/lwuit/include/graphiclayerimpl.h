@@ -20,6 +20,8 @@
 #ifndef GRAPHICLAYERIMPL_H
 #define GRAPHICLAYERIMPL_H
 
+#include "eventmanagerimpl.h"
+
 #include "component.h"
 #include "layerimpl.h"
 #include "jcondition.h"
@@ -39,6 +41,8 @@ class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup, 
 		jgui::Window *_window;
 		/** \brief */
 		std::vector<Scene *> _scenes;
+		/** \brief */
+		EventManagerImpl *_eventmanager;
 		/** \brief */
 		jthread::Mutex _mutex;
 		/** \brief */
@@ -83,6 +87,12 @@ class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup, 
 		 *
 		 */
 		virtual RootContainer * GetContainer();
+
+		/**
+		 * \brief
+		 *
+		 */
+		virtual EventManager * GetEventManager();
 
 		/**
 		 * \brief

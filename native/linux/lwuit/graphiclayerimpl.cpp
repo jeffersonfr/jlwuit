@@ -67,6 +67,11 @@ GraphicLayerImpl::GraphicLayerImpl():
 
 	_root_container = new RootContainerImpl(this, this, 0, 0, screen.width, screen.height);
 	_buffer = new ImageImpl(jgui::Image::CreateImage(jgui::JPF_ARGB, screen.width, screen.height));
+
+	_eventmanager = new EventManagerImpl();
+
+	_window->GetInputManager()->RegisterKeyListener(_eventmanager);
+	_window->GetInputManager()->RegisterMouseListener(_eventmanager);
 }
 
 GraphicLayerImpl::~GraphicLayerImpl()
@@ -93,6 +98,11 @@ void GraphicLayerImpl::Initialize()
 RootContainer * GraphicLayerImpl::GetContainer()
 {
 	return _root_container;
+}
+
+EventManager * GraphicLayerImpl::GetEventManager()
+{
+	return _eventmanager;
 }
 
 bool GraphicLayerImpl::IsEnabled()

@@ -19,7 +19,6 @@
  ***************************************************************************/
 #include "linuximplementation.h"
 #include "deviceimpl.h"
-#include "eventmanagerimpl.h"
 #include "imageimpl.h"
 #include "fontimpl.h"
 #include "backgroundlayerimpl.h"
@@ -36,8 +35,6 @@ namespace jlwuit {
 LinuxImplementation::LinuxImplementation()
 {
 	_is_initialized = false;
-
-	_eventmanager = NULL;
 }
 
 LinuxImplementation::~LinuxImplementation()
@@ -55,8 +52,6 @@ void LinuxImplementation::Initialize()
 	Device::AddDevice(device);
 
 	device->Initialize();
-
-	_eventmanager = new EventManagerImpl();
 
 	_is_initialized = true;
 }
@@ -78,9 +73,6 @@ void LinuxImplementation::Deinitialize()
 		device = NULL;
 	}
 
-	delete _eventmanager;
-	_eventmanager = NULL;
-
 	_is_initialized = false;
 }
 
@@ -95,7 +87,9 @@ RootContainer * LinuxImplementation::GetContainer(Layer *layer)
 
 EventManager * LinuxImplementation::GetEventManager()
 {
-	return _eventmanager;
+	GraphicLayerImpl *impl = dynamic_cast<GraphicLayerImpl *>(Device::GetDefaultScreen()->GetLayerByID("graphics"));
+
+	return impl->GetEventManager();
 }
 
 Font * LinuxImplementation::CreateFont(std::string name, lwuit_font_attributes_t attributes, int height)
