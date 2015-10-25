@@ -59,11 +59,13 @@ GraphicLayerImpl::GraphicLayerImpl():
 
 	_refresh = false;
 
+	_theme.SetColor("window.bg", jgui::Color::Black);
+	_theme.SetBorder("window", jgui::JCB_EMPTY);
+
 	_window = new jgui::Window(0, 0, screen.width, screen.height);
 
-	_window->SetBorder(jgui::JCB_EMPTY);
+	_window->SetTheme(&_theme);
 	_window->SetUndecorated(true);
-	_window->SetBackgroundColor(jgui::Color::Black);
 
 	_root_container = new RootContainerImpl(this, this, 0, 0, screen.width, screen.height);
 	_buffer = new ImageImpl(jgui::Image::CreateImage(jgui::JPF_ARGB, screen.width, screen.height));

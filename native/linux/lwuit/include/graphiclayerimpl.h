@@ -54,6 +54,8 @@ class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup, 
 		/** \brief */
 		Image *_buffer;
 		/** \brief */
+		jgui::Theme _theme;
+		/** \brief */
 		bool _refresh;
 
 	private:

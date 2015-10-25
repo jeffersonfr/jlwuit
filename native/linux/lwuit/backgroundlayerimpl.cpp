@@ -34,11 +34,13 @@ BackgroundLayerImpl::BackgroundLayerImpl():
 	_green = 0x00;
 	_blue = 0x00;
 
+	_theme.SetColor("window.bg", jgui::Color::Black);
+	_theme.SetBorder("window", jgui::JCB_EMPTY);
+
 	_window = new jgui::Window(0, 0, screen.width, screen.height);
 
-	_window->SetBorder(jgui::JCB_EMPTY);
+	_window->SetTheme(&_theme);
 	_window->SetUndecorated(true);
-	_window->SetBackgroundColor(jgui::Color::Black);
 }
 
 BackgroundLayerImpl::~BackgroundLayerImpl()
