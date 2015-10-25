@@ -35,6 +35,8 @@ class BackgroundLayerImpl : public LayerImpl, public LayerSetup {
 		/** \brief */
 		jgui::Image *_image;
 		/** \brief */
+		jgui::Theme _theme;
+		/** \brief */
 		std::string _image_file;
 		/** \brief */
 		int _red;
