@@ -132,10 +132,12 @@ void Preferences::Store(Document *document)
 
 	std::string path = PREFERENCES_PATH(document->GetName());
 
-	jio::File file(path);
-	file.Remove();
+	jio::File *file = jio::File::OpenFile(path);
+	
+	file->Remove();
 
 	jio::FileOutputStream fos(path);
+
 	fos.Write(o.str().c_str(), o.str().size());
 	fos.Flush();
 }
