@@ -19,11 +19,9 @@
  ***************************************************************************/
 #include "videolayerimpl.h"
 #include "imageimpl.h"
-#include "jgfxhandler.h"
 #include "preferences.h"
 #include "device.h"
 #include "backgroundlayerimpl.h"
-#include "jautolock.h"
 
 namespace jlwuit {
 

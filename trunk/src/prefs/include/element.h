@@ -20,7 +20,7 @@
 #ifndef LWUIT_PREFERENCENODE_H
 #define LWUIT_PREFERENCENODE_H
 
-#include "jparammapper.h"
+#include "jcommon/jparammapper.h"
 
 #include <string>
 #include <map>

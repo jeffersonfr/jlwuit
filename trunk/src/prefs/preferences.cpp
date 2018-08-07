@@ -18,8 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "preferences.h"
-#include "jfileoutputstream.h"
-#include "jxmlparser.h"
+
+#include "jcommon/jxmlparser.h"
+#include "jio/jfileoutputstream.h"
 
 #include <iostream>
 #include <sstream>

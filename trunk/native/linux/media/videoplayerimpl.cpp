@@ -24,21 +24,21 @@
 #include "volumecontrol.h"
 #include "mediaexception.h"
 #include "imageimpl.h"
-#include "jvolumecontrol.h"
-#include "jvideosizecontrol.h"
-#include "jvideoformatcontrol.h"
-#include "jvideodevicecontrol.h"
-#include "jgfxhandler.h"
-#include "jplayermanager.h"
-#include "jautolock.h"
-#include "jframegrabberlistener.h"
+
+#include "jgui/jbufferedimage.h"
+#include "jmedia/jvolumecontrol.h"
+#include "jmedia/jvideosizecontrol.h"
+#include "jmedia/jvideoformatcontrol.h"
+#include "jmedia/jvideodevicecontrol.h"
+#include "jmedia/jplayermanager.h"
+#include "jevent/jframegrabberlistener.h"
 
 namespace jlwuit {
 
-class VideoComponentImpl : public jlwuit::Component, public jmedia::FrameGrabberListener {
+class VideoComponentImpl : public jlwuit::Component, public jevent::FrameGrabberListener {
 
 	public:
-		jthread::Mutex _mutex;
+		std::mutex _mutex;
 		jgui::Image *_image;
 		jlwuit::ImageImpl *_buffer;
 		jlwuit::lwuit_region_t _src;
@@ -47,10 +47,10 @@ class VideoComponentImpl : public jlwuit::Component, public jmedia::FrameGrabber
 
 	public:
 		VideoComponentImpl(int x, int y, int w, int h):
-			jlwuit::Component(x, y, w, h),
-			_mutex(jthread::JMT_RECURSIVE)
+			jlwuit::Component(x, y, w, h)
+			// TODOO:: _mutex(jthread::JMT_RECURSIVE)
 		{
-			_image = jgui::Image::CreateImage(jgui::JPF_ARGB, w, h);
+			_image = new jgui::BufferedImage(jgui::JPF_ARGB, w, h);
 			_buffer = new jlwuit::ImageImpl(_image);
 
 			_src.x = 0;
@@ -70,7 +70,7 @@ class VideoComponentImpl : public jlwuit::Component, public jmedia::FrameGrabber
 
 		virtual ~VideoComponentImpl()
 		{
-			_mutex.Lock();
+			_mutex.lock();
 
 			if (_buffer != NULL) {
 				delete _buffer;
@@ -82,42 +82,45 @@ class VideoComponentImpl : public jlwuit::Component, public jmedia::FrameGrabber
 				_image = NULL;
 			}
 
-			_mutex.Unlock();
+			_mutex.unlock();
 		}
 
-		virtual void FrameGrabbed(jmedia::FrameGrabberEvent *event)
+		virtual void FrameGrabbed(jevent::FrameGrabberEvent *event)
 		{
-			jgui::Image *image = event->GetFrame();
+			jgui::Image *image = reinterpret_cast<jgui::Image *>(event->GetSource());
 			
-			_mutex.Lock();
+			_mutex.lock();
 
+      jgui::jsize_t size = image->GetSize();
 			uint32_t *ptr = NULL;
 
-			image->GetGraphics()->GetRGBArray(&ptr, 0, 0, image->GetWidth(), image->GetHeight());
-			_image->GetGraphics()->SetRGBArray(ptr, 0, 0, image->GetWidth(), image->GetHeight());
+			image->GetGraphics()->GetRGBArray(&ptr, 0, 0, size.width, size.height);
+			_image->GetGraphics()->SetRGBArray(ptr, 0, 0, size.width, size.height);
 
 			delete [] ptr;
 			
-			_mutex.Unlock();
+			_mutex.unlock();
 		}
 
 		virtual void Paint(jlwuit::Graphics *g)
 		{
 			jlwuit::Component::Paint(g);
 
-			_mutex.Lock();
+			_mutex.lock();
+
+      jlwuit::lwuit_size_t size = GetSize();
 
 			if (_diff == false) {
-				g->DrawImage(_buffer, 0, 0, GetWidth(), GetHeight());
+				g->DrawImage(_buffer, 0, 0, size.width, size.height);
 			} else {
 				jlwuit::lwuit_region_t clip = g->GetClip();
 
-				g->SetClip(0, 0, GetWidth(), GetHeight());
+				g->SetClip(0, 0, size.width, size.height);
 				g->DrawImage(_buffer, _src.x, _src.y, _src.width, _src.height, _dst.x, _dst.y, _dst.width, _dst.height);
 				g->SetClip(clip.x, clip.y, clip.width, clip.height);
 			}
 
-			_mutex.Unlock();
+			_mutex.unlock();
 		}
 
 };
@@ -320,8 +323,9 @@ VideoPlayerImpl::VideoPlayerImpl(std::string file)
 	_player = jmedia::PlayerManager::CreatePlayer(file);
 
 	jgui::Component *cmp = _player->GetVisualComponent();
+  jgui::jsize_t size = cmp->GetSize();
 
-	VideoComponentImpl *impl = new VideoComponentImpl(0, 0, cmp->GetWidth(), cmp->GetHeight());
+	VideoComponentImpl *impl = new VideoComponentImpl(0, 0, size.width, size.height);
 
 	_player->RegisterFrameGrabberListener(impl);
 
@@ -428,27 +432,27 @@ void VideoPlayerImpl::DispatchPlayerEvent(PlayerEvent *event)
 	delete event;
 }
 
-void VideoPlayerImpl::MediaStarted(jmedia::PlayerEvent *event)
+void VideoPlayerImpl::MediaStarted(jevent::PlayerEvent *event)
 {
 	DispatchPlayerEvent(new PlayerEvent(this, LPE_STARTED));
 }
 
-void VideoPlayerImpl::MediaResumed(jmedia::PlayerEvent *event)
+void VideoPlayerImpl::MediaResumed(jevent::PlayerEvent *event)
 {
 	DispatchPlayerEvent(new PlayerEvent(this, LPE_RESUMED));
 }
 
-void VideoPlayerImpl::MediaPaused(jmedia::PlayerEvent *event)
+void VideoPlayerImpl::MediaPaused(jevent::PlayerEvent *event)
 {
 	DispatchPlayerEvent(new PlayerEvent(this, LPE_PAUSED));
 }
 
-void VideoPlayerImpl::MediaStopped(jmedia::PlayerEvent *event)
+void VideoPlayerImpl::MediaStopped(jevent::PlayerEvent *event)
 {
 	DispatchPlayerEvent(new PlayerEvent(this, LPE_STOPPED));
 }
 
-void VideoPlayerImpl::MediaFinished(jmedia::PlayerEvent *event)
+void VideoPlayerImpl::MediaFinished(jevent::PlayerEvent *event)
 {
 	DispatchPlayerEvent(new PlayerEvent(this, LPE_FINISHED));
 }

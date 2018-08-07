@@ -36,15 +36,17 @@ Dialog::Dialog(Component *cmp):
 	
 	_root->RegisterDialog(this);
 
-	_timer.Start();
+	// TODO:: _timer.Start();
 }
 
 Dialog::~Dialog()
 {
+  /* TODO::
 	jthread::TimerTask::Cancel();
 
 	_timer.RemoveSchedule(this);
 	_timer.Stop();
+  */
 	
 	_root->UnregisterDialog(this);
 }
@@ -60,10 +62,10 @@ void Dialog::Show()
 	
 	_root->Repaint();
 	
-	_timer.RemoveSchedule(this);
+	// TODO:: _timer.RemoveSchedule(this);
 
 	if (_timeout > 0) {
-		_timer.Schedule(this, _timeout*1000LL, true);
+		// TODO:: _timer.Schedule(this, _timeout*1000LL, true);
 	}
 }
 

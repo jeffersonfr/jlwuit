@@ -23,13 +23,13 @@
 #include "layer.h"
 #include "rootcontainer.h"
 
-#include "jwindow.h"
+#include "jgui/jcomponent.h"
 
 #include <vector>
 
 namespace jlwuit {
 
-class LayerImpl : public Layer{
+class LayerImpl : public Layer {
 
 	public:
 		/**

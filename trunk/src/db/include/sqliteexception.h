@@ -20,7 +20,7 @@
 #ifndef LWUIT_SQLITEEXCEPTION_H
 #define LWUIT_SQLITEEXCEPTION_H
 
-#include "jruntimeexception.h"
+#include "jexception/jruntimeexception.h"
 
 #include <stdexcept>
 #include <string>
@@ -35,7 +35,7 @@ class SQLiteConnection;
  *
  * \author Jeff Ferr
  */
-class SQLiteException : public jcommon::RuntimeException{
+class SQLiteException : public jexception::RuntimeException {
 
 	private:
 

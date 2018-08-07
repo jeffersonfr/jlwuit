@@ -60,6 +60,7 @@ int ImageIO::GetCompressionLevel()
 
 bool ImageIO::Encode(uint32_t *rgb, int width, int height)
 {
+  /*
 	png_byte color_type = PNG_COLOR_TYPE_RGBA;
 	png_byte bit_depth = 8;
 
@@ -152,6 +153,7 @@ bool ImageIO::Encode(uint32_t *rgb, int width, int height)
 	free(row_pointers);
 
 	fclose(fp);
+  */
 
 	return true;
 }

@@ -20,7 +20,8 @@
 #include "playermanager.h"
 #include "isdtvplayerimpl.h"
 #include "videoplayerimpl.h"
-#include "jurl.h"
+
+#include "jnetwork/jurl.h"
 
 namespace jlwuit {
 
@@ -34,7 +35,7 @@ PlayerManager::~PlayerManager()
 
 Player * PlayerManager::CreatePlayer(std::string url) throw (MediaException)
 {
-	jcommon::URL jurl(url);
+	jnetwork::URL jurl(url);
 
 	if (jurl.GetProtocol() == "isdtv") {
 		return new ISDTVPlayerImpl();

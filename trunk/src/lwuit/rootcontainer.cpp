@@ -52,7 +52,7 @@ void RootContainer::RegisterDialog(Dialog *dialog)
 		return;
 	}
 
-	jthread::AutoLock lock(&_dialogs_mutex);
+  std::unique_lock<std::mutex> lock(_dialogs_mutex);
 
 	std::vector<Dialog *>::iterator i = std::find(_dialogs.begin(), _dialogs.end(), dialog);
 
@@ -67,7 +67,7 @@ void RootContainer::UnregisterDialog(Dialog *dialog)
 		return;
 	}
 
-	jthread::AutoLock lock(&_dialogs_mutex);
+  std::unique_lock<std::mutex> lock(_dialogs_mutex);
 
 	std::vector<Dialog *>::iterator i = std::find(_dialogs.begin(), _dialogs.end(), dialog);
 
@@ -78,7 +78,7 @@ void RootContainer::UnregisterDialog(Dialog *dialog)
 
 void RootContainer::PaintDialogs(Graphics *g)
 {
-	jthread::AutoLock lock(&_dialogs_mutex);
+  std::unique_lock<std::mutex> lock(_dialogs_mutex);
 
 	struct lwuit_region_t clip = g->GetClip();
 

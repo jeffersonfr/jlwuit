@@ -23,8 +23,13 @@
 #include "implementation.h"
 #include "fadetransition.h"
 #include "exception.h"
-#include "jstringtokenizer.h"
-#include "jstringutils.h"
+
+#include "jcommon/jstringtokenizer.h"
+#include "jcommon/jstringutils.h"
+
+#include <string>
+#include <vector>
+#include <mutex>
 
 #include <stdio.h>
 
@@ -36,7 +41,7 @@
 	}																			\
 
 #define DISPATCH_MOUSE_EVENT(method) 																																		\
-	jthread::AutoLock lock(&_container_mutex); 																														\
+  std::unique_lock<std::mutex> lock(_container_mutex);                                                  \
 																																																				\
 	for (std::vector<Component *>::reverse_iterator i=_components.rbegin(); i!=_components.rend(); i++) {	\
 		Component *cmp = (*i);																																							\
@@ -48,7 +53,7 @@
 
 namespace jlwuit {
 
-jthread::Mutex _mutex;
+std::mutex _mutex;
 
 Scene::Scene(int x, int y, int w, int h):
 	Component(x, y, w, h)
@@ -69,7 +74,6 @@ Scene::Scene(int x, int y, int w, int h):
 
 Scene::~Scene()
 {
-	jthread::AutoLock lock(&_mutex); 																														\
 	if (_activity != NULL) {
 		_activity->Finalize();
 
@@ -89,7 +93,6 @@ Scene::~Scene()
 	if (_transition_out != NULL) {
 		delete _transition_out;
 	}
-
 }
 
 void Scene::Initialize()
@@ -104,23 +107,27 @@ void Scene::InitImpl()
 {
 	Implementation::GetInstance()->GetEventManager()->RegisterUserEventListener(this);
 		
+  /* TODO::
 	_timer.Schedule(this, (uint64_t)0LL, GetAnimationDelay()*1000LL, true);
 	_timer.Start();
+  */
 }
 
 void Scene::DeinitImpl()
 {
 	Implementation::GetInstance()->GetEventManager()->RemoveUserEventListener(this);
 	
+  /* TODO::
 	jthread::TimerTask::Cancel();
 	
 	_timer.RemoveSchedule(this);
 	_timer.Stop();
+  */
 }
 
 void Scene::Run() 
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	if (Animate() == true) {
 		Repaint();
@@ -129,7 +136,7 @@ void Scene::Run()
 
 void Scene::StartActivity(Scene *scene)
 {
-	jthread::AutoLock lock(&_mutex); 
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	if (scene == NULL) {
 		return;
@@ -159,12 +166,12 @@ void Scene::SendToLayer(std::string layer)
 
 void Scene::SetAnimationDelay(int ms)
 {
-	jthread::TimerTask::SetDelay(ms*1000LL);
+	// TODO:: jthread::TimerTask::SetDelay(ms*1000LL);
 }
 
 int Scene::GetAnimationDelay()
 {
-	return jthread::TimerTask::GetDelay()/1000LL;
+	return 0; // TODO:: jthread::TimerTask::GetDelay()/1000LL;
 }
 
 void Scene::SetTransitionIn(Transition *transition)
@@ -197,7 +204,7 @@ Transition * Scene::GetTransitionOut()
 
 void Scene::Show()
 {
-	jthread::AutoLock lock(&_mutex); 																														\
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	InitImpl();
 	SetVisible(true);
@@ -210,7 +217,7 @@ void Scene::Hide()
 
 bool Scene::OnKeyDown(UserEvent *event)
 {
-	jthread::AutoLock lock(&_mutex); 																														\
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	if (_activity != NULL) {
 		if (event->GetKeySymbol() == LKS_BACK) {
@@ -303,7 +310,7 @@ bool Scene::OnMouseClick(UserEvent *event)
 
 bool Scene::OnMouseMove(UserEvent *event)
 {
-	jthread::AutoLock lock(&_container_mutex); 																														\
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	if (_activity != NULL) {
 		return _activity->OnMouseMove(event);

@@ -22,8 +22,9 @@
 
 #include "usbstatuslistener.h"
 
-#include "jthread.h"
-#include "jmutex.h"
+#include <vector>
+#include <thread>
+#include <mutex>
 
 namespace jlwuit {
 
@@ -32,7 +33,7 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class USBManager : public jthread::Thread {
+class USBManager {
 
 	private:
 		/** \brief */
@@ -42,7 +43,9 @@ class USBManager : public jthread::Thread {
 		/** \brief */
 		std::vector<USBStatusListener *> _status_listeners;
 		/** \brief */
-		jthread::Mutex _mutex;
+    std::thread _thread;
+		/** \brief */
+		std::mutex _mutex;
 		/** \brief */
 		bool _mounted;
 		/** \brief */
@@ -85,6 +88,12 @@ class USBManager : public jthread::Thread {
 		 *
 		 */
 		void DispatchUSBStatusEvent(USBStatusEvent *event);
+		
+		/**
+		 * \brief
+		 *
+		 */
+		virtual void Start();
 		
 		/**
 		 * \brief

@@ -24,15 +24,15 @@
 
 #include "eventmanager.h"
 
-#include "jkeylistener.h"
-#include "jmouselistener.h"
+#include "jevent/jkeylistener.h"
+#include "jevent/jmouselistener.h"
 
 #include <vector>
 #include <map>
 
 namespace jlwuit {
 
-class EventManagerImpl : public EventManager, public jgui::KeyListener, public jgui::MouseListener {
+class EventManagerImpl : public EventManager, public jevent::KeyListener, public jevent::MouseListener {
 
 	private:
 		struct event_t {
@@ -50,55 +50,55 @@ class EventManagerImpl : public EventManager, public jgui::KeyListener, public j
 		 * \brief
 		 *
 		 */
-		lwuit_key_modifiers_t TranslateKeyModifiers(jgui::jkeyevent_modifiers_t modifiers);
+		lwuit_key_modifiers_t TranslateKeyModifiers(jevent::jkeyevent_modifiers_t modifiers);
 
 		/**
 		 * \brief
 		 *
 		 */
-		lwuit_key_symbol_t TranslateKeySymbol(jgui::jkeyevent_symbol_t symbol);
+		lwuit_key_symbol_t TranslateKeySymbol(jevent::jkeyevent_symbol_t symbol);
 
 		/**
 		 * \brief
 		 *
 		 */
-		lwuit_mouse_button_t TranslateMouseButton(jgui::jmouseevent_button_t button);
+		lwuit_mouse_button_t TranslateMouseButton(jevent::jmouseevent_button_t button);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool KeyPressed(jgui::KeyEvent *event);
+		virtual bool KeyPressed(jevent::KeyEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool KeyReleased(jgui::KeyEvent *event);
+		virtual bool KeyReleased(jevent::KeyEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool MousePressed(jgui::MouseEvent *event);
+		virtual bool MousePressed(jevent::MouseEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool MouseReleased(jgui::MouseEvent *event);
+		virtual bool MouseReleased(jevent::MouseEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool MouseMoved(jgui::MouseEvent *event);
+		virtual bool MouseMoved(jevent::MouseEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual bool MouseWheel(jgui::MouseEvent *event);
+		virtual bool MouseWheel(jevent::MouseEvent *event);
 		
 		/**
 		 * \brief

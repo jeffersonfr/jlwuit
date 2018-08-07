@@ -20,7 +20,7 @@
 #ifndef LWUIT_ATTRIBUTES_H
 #define LWUIT_ATTRIBUTES_H
 
-#include "jparammapper.h"
+#include "jcommon/jparammapper.h"
 
 #include <string>
 

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "filtergroup.h"
-#include "jautolock.h"
 
 #include <algorithm>
 
@@ -30,14 +29,14 @@ FilterGroup::FilterGroup()
 
 FilterGroup::~FilterGroup()
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	_filters.clear();
 }
 
 void FilterGroup::AddFilter(Filter *codec)
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	if (std::find(_filters.begin(), _filters.end(), codec) == _filters.end()) {
 		_filters.push_back(codec);
@@ -46,7 +45,7 @@ void FilterGroup::AddFilter(Filter *codec)
 
 void FilterGroup::RemoveFilter(Filter *codec)
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	std::vector<Filter *>::iterator i = std::find(_filters.begin(), _filters.end(), codec);
 
@@ -57,14 +56,14 @@ void FilterGroup::RemoveFilter(Filter *codec)
 
 void FilterGroup::RemoveAllFilters()
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	_filters.clear();
 }
 
 bool FilterGroup::Transform(uint8_t *data, int width, int height)
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	for (std::vector<Filter *>::iterator i=_filters.begin(); i!=_filters.end(); i++) {
 		(*i)->Transform(data, width, height);

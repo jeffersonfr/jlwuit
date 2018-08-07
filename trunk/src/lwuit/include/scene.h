@@ -24,9 +24,10 @@
 #include "lookandfeel.h"
 #include "transition.h"
 
-#include "jtimer.h"
+#include "jcommon/jtimer.h"
 
 #include <vector>
+#include <mutex>
 
 namespace jlwuit {
 
@@ -35,11 +36,11 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Scene : public Component, public jthread::TimerTask {
+class Scene : public Component { // TODO::, public jthread::TimerTask {
 
 	private:
 		/** \brief */
-		jthread::Mutex _input_mutex;
+		std::mutex _input_mutex;
 		/** \brief */
 		Scene *_activity;
 		/** \brief */
@@ -53,7 +54,7 @@ class Scene : public Component, public jthread::TimerTask {
 		/** \brief */
 		Transition *_default_transition_out;
 		/** \brief */
-		jthread::Timer _timer;
+		// TODO:: jthread::Timer _timer;
 
 	private:
 		/**

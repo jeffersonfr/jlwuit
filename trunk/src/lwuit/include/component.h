@@ -27,9 +27,8 @@
 #include "animation.h"
 #include "usereventlistener.h"
 
-#include "jthread.h"
-
 #include <vector>
+#include <mutex>
 
 namespace jlwuit {
 
@@ -79,7 +78,7 @@ class Component : public UserEventListener, public Animation {
 
 	protected:
 		std::vector<Component *> _components;
-		jthread::Mutex _container_mutex;
+		std::mutex _container_mutex;
 		Component *_focus;
 		Style *_style;
 		Layout *_layout;

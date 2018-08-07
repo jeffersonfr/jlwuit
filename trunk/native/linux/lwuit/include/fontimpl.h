@@ -22,7 +22,7 @@
 
 #include "font.h"
 
-#include "jfont.h"
+#include "jgui/jfont.h"
 
 namespace jlwuit {
 

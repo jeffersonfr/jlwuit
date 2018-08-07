@@ -22,7 +22,7 @@
 
 #include "graphics.h"
 
-#include "jgraphics.h"
+#include "jgui/jgraphics.h"
 
 namespace jlwuit {
 
