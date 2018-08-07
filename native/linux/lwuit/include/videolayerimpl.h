@@ -21,9 +21,8 @@
 #define VIDEOLAYERIMPL_H
 
 #include "layerimpl.h"
-#include "jplayermanager.h"
 
-#include <directfb.h>
+#include "jmedia/jplayermanager.h"
 
 namespace jlwuit {
 

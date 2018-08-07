@@ -21,14 +21,13 @@
 #define LWUIT_VIDEOPLAYERIMPL_H
 
 #include "player.h"
-#include "jplayer.h"
-#include "jplayerlistener.h"
 
-#include <directfb.h>
+#include "jmedia/jplayer.h"
+#include "jevent/jplayerlistener.h"
 
 namespace jlwuit {
 
-class VideoPlayerImpl : public jlwuit::Player, public jmedia::PlayerListener {
+class VideoPlayerImpl : public jlwuit::Player, public jevent::PlayerListener {
 
 	public:
 		/** \brief */
@@ -129,31 +128,31 @@ class VideoPlayerImpl : public jlwuit::Player, public jmedia::PlayerListener {
 		 * \brief
 		 *
 		 */
-		virtual void MediaStarted(jmedia::PlayerEvent *event);
+		virtual void MediaStarted(jevent::PlayerEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MediaResumed(jmedia::PlayerEvent *event);
+		virtual void MediaResumed(jevent::PlayerEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MediaPaused(jmedia::PlayerEvent *event);
+		virtual void MediaPaused(jevent::PlayerEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MediaStopped(jmedia::PlayerEvent *event);
+		virtual void MediaStopped(jevent::PlayerEvent *event);
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void MediaFinished(jmedia::PlayerEvent *event);
+		virtual void MediaFinished(jevent::PlayerEvent *event);
 };
 
 }

@@ -21,6 +21,8 @@
 #include "imageimpl.h"
 #include "scene.h"
 
+#include "jgui/jbufferedimage.h"
+
 namespace jlwuit {
 
 jgui::Graphics *_ng = NULL;
@@ -55,12 +57,12 @@ class RootContainerImpl : public RootContainer {
 GraphicLayerImpl::GraphicLayerImpl():
 	LayerImpl("graphics")
 {
-	jgui::jsize_t screen = jgui::GFXHandler::GetInstance()->GetScreenSize();
+	jgui::jsize_t screen = {1920, 1080}; // TODO:: jgui::GFXHandler::GetInstance()->GetScreenSize();
 
 	_refresh = false;
 
-	_theme.SetColor("window.bg", jgui::Color::Black);
-	_theme.SetBorder("window", jgui::JCB_EMPTY);
+	_theme.SetIntegerParam("window.bg", jgui::Color::Black);
+	_theme.SetIntegerParam("window.border.type", jgui::JCB_EMPTY);
 
 	_window = new jgui::Window(0, 0, screen.width, screen.height);
 
@@ -68,12 +70,13 @@ GraphicLayerImpl::GraphicLayerImpl():
 	_window->SetUndecorated(true);
 
 	_root_container = new RootContainerImpl(this, this, 0, 0, screen.width, screen.height);
-	_buffer = new ImageImpl(jgui::Image::CreateImage(jgui::JPF_ARGB, screen.width, screen.height));
+	_buffer = new ImageImpl(new jgui::BufferedImage(jgui::JPF_ARGB, screen.width, screen.height));
 
 	_eventmanager = new EventManagerImpl();
 
-	_window->GetInputManager()->RegisterKeyListener(_eventmanager);
-	_window->GetInputManager()->RegisterMouseListener(_eventmanager);
+  // TODO::
+	// _window->GetInputManager()->RegisterKeyListener(_eventmanager);
+	// _window->GetInputManager()->RegisterMouseListener(_eventmanager);
 }
 
 GraphicLayerImpl::~GraphicLayerImpl()
@@ -82,19 +85,21 @@ GraphicLayerImpl::~GraphicLayerImpl()
 		delete _window;
 		_window = NULL;
 	}
+  
+  _thread.join();
 }
 
 void GraphicLayerImpl::Initialize()
 {
-	_window->Show();
+	// TODO:: _window->Show();
 
-	_ng = _window->GetGraphics();
+	// TODO:: _ng = _window->GetGraphics();
 	_ni = dynamic_cast<ImageImpl *>(_buffer)->_native_image;
 	_lg = _buffer->GetGraphics();
 
 	_ng->Clear();
 
-	Start();
+  _thread = std::thread(&GraphicLayerImpl::Run, this);
 }
 
 RootContainer * GraphicLayerImpl::GetContainer()
@@ -144,36 +149,37 @@ LayerSetup * GraphicLayerImpl::GetLayerSetup()
 void GraphicLayerImpl::Run()
 {
 	while (true) {
-		_mutex.Lock();
+    {
+      std::unique_lock<std::mutex> lock(_mutex);
 
-		while (_refresh == false) {
-			_sem.Wait(&_mutex);
-		}
+      while (_refresh == false) {
+        _sem.wait(lock);
+      }
 
-		_refresh = false;
+      _refresh = false;
 
-		_optirun_mutex.Lock();
-		
-		_lg->Reset();
-		_lg->Clear();
+      _optirun_mutex.lock();
 
-		if (_root_container->IsVisible() == true) {
-			_root_container->InvalidateAll();
-			_root_container->Paint(_lg);
-			_root_container->RevalidateAll();
-		}
+      _lg->Reset();
+      _lg->Clear();
 
-		_mutex.Unlock();
+      if (_root_container->IsVisible() == true) {
+        _root_container->InvalidateAll();
+        _root_container->Paint(_lg);
+        _root_container->RevalidateAll();
+      }
+    }
+
 		_ng->SetCompositeFlags(jgui::JCF_SRC);
 		_ng->DrawImage(_ni, 0, 0);
-		_ng->Flip();
-		_optirun_mutex.Unlock();
+		// TODO:: _ng->Flip();
+		_optirun_mutex.unlock();
 	}
 }
 
 void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 {
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	if (_refresh == true) {
 		return;
@@ -184,7 +190,7 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 		lwuit_point_t location = cmp->GetAbsoluteLocation();
 		lwuit_size_t size = cmp->GetSize();
 
-		jthread::AutoLock lock(&_optirun_mutex);
+    std::unique_lock<std::mutex> lock(_optirun_mutex);
 
 		Component *parent = cmp,
 			*last_parent = parent;
@@ -227,14 +233,14 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 		}
 
 		_ng->DrawImage(_ni, location.x, location.y, size.width, size.height, location.x, location.y);
-		_ng->Flip(location.x, location.y, size.width, size.height);
+		// TODO:: _ng->Flip(location.x, location.y, size.width, size.height);
 
 		return;
 	}
 
 	_refresh = true;
 
-	_sem.Notify();
+	_sem.notify_all();
 }
 
 }

@@ -18,9 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "element.h"
-#include "jstringutils.h"
-#include "jfile.h"
-#include "jruntimeexception.h"
+
+#include "jcommon/jstringutils.h"
+#include "jio/jfile.h"
+#include "jexception/jruntimeexception.h"
 
 #include <iostream>
 #include <sstream>

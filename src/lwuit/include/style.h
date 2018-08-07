@@ -23,7 +23,8 @@
 #include "color.h"
 #include "stylelistener.h"
 #include "image.h"
-#include "jparammapper.h"
+
+#include "jcommon/jparammapper.h"
 
 #include <vector>
 
@@ -37,11 +38,15 @@ namespace jlwuit {
 class Style : public jcommon::ParamMapper {
 
 	private:
-		std::vector<StyleListener *> _style_listeners;
-		Image *_bg_image;
-		struct lwuit_margin_t _padding,
+		std::vector<StyleListener *> 
+      _style_listeners;
+		Image 
+      *_bg_image;
+		struct lwuit_margin_t 
+      _padding,
 			_margin;
-		bool _is_modified,
+		bool 
+      _is_modified,
 			_is_scale_image;
 
 	public:

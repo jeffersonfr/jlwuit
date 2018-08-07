@@ -23,8 +23,7 @@
 #include "exception.h"
 #include "lookandfeel.h"
 
-#include "jstringutils.h"
-#include "jautolock.h"
+#include "jcommon/jstringutils.h"
 
 #include <algorithm>
 
@@ -117,7 +116,7 @@ void Component::Revalidate()
 
 void Component::InvalidateAll()
 {
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	for (std::vector<jlwuit::Component *>::iterator i=_components.begin(); i!=_components.end(); i++) {
 		(*i)->InvalidateAll();
@@ -128,7 +127,7 @@ void Component::InvalidateAll()
 
 void Component::RevalidateAll()
 {
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	for (std::vector<jlwuit::Component *>::iterator i=_components.begin(); i!=_components.end(); i++) {
 		(*i)->RevalidateAll();
@@ -751,7 +750,7 @@ bool Component::OnMouseOut(UserEvent *event)
 
 void Component::Paint(Graphics *g)
 {
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	struct lwuit_region_t clip = g->GetClip();
 
@@ -852,7 +851,7 @@ void Component::Add(Component *c, int index)
 		throw Exception("Adding own container");
 	}
 
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	if (std::find(_components.begin(), _components.end(), c) == _components.end()) {
 		_components.insert(_components.begin()+index, c);
@@ -922,7 +921,7 @@ void Component::Add(Component *c, std::string align)
 
 void Component::Remove(Component *c)
 {
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	Component *container = dynamic_cast<Component *>(c);
 
@@ -991,12 +990,11 @@ void Component::RemoveAll()
 		}
 	}
 
+  _container_mutex.lock();
 
-	{
-		jthread::AutoLock lock(&_container_mutex);
+  _components.clear();
 
-		_components.clear();
-	}
+  _container_mutex.unlock();
 
 	Repaint();
 }
@@ -1060,9 +1058,9 @@ Component * Component::GetFocusOwner()
 
 void Component::RaiseComponentToTop(Component *c)
 {
-	jthread::AutoLock lock(&_container_mutex);
-
 	bool b = false;
+
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	for (std::vector<Component *>::iterator i=_components.begin(); i!=_components.end(); i++) {
 		if (c == (*i)) {
@@ -1081,9 +1079,9 @@ void Component::RaiseComponentToTop(Component *c)
 
 void Component::LowerComponentToBottom(Component *c)
 {
-	jthread::AutoLock lock(&_container_mutex);
-
 	bool b = false;
+
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	for (std::vector<Component *>::iterator i=_components.begin(); i!=_components.end(); i++) {
 		if (c == (*i)) {
@@ -1102,7 +1100,7 @@ void Component::LowerComponentToBottom(Component *c)
 
 void Component::PutComponentATop(Component *c, Component *c1)
 {
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	std::vector<Component *>::iterator i;
 
@@ -1117,7 +1115,7 @@ void Component::PutComponentATop(Component *c, Component *c1)
 
 void Component::PutComponentBelow(Component *c, Component *c1)
 {
-	jthread::AutoLock lock(&_container_mutex);
+  std::unique_lock<std::mutex> lock(_container_mutex);
 
 	std::vector<Component *>::iterator i;
 

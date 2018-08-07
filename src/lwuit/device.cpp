@@ -19,15 +19,14 @@
  ***************************************************************************/
 #include "device.h"
 
-#include "jautolock.h"
-
 #include <algorithm>
+#include <mutex>
 
 namespace jlwuit {
 
 std::vector<Device *> Device::_devices;
 
-jthread::Mutex _device_mutex;
+std::mutex _device_mutex;
 
 Device::Device()
 {
@@ -39,14 +38,14 @@ Device::~Device()
 
 std::vector<Device *> Device::GetDevices()
 {
-	jthread::AutoLock lock(&_device_mutex);
+  std::unique_lock<std::mutex> lock(_device_mutex);
 
 	return _devices;
 }
 
 void Device::AddDevice(Device *device)
 {
-	jthread::AutoLock lock(&_device_mutex);
+  std::unique_lock<std::mutex> lock(_device_mutex);
 
 	if (device == NULL) {
 		return;
@@ -59,7 +58,7 @@ void Device::AddDevice(Device *device)
 
 void Device::RemoveDevice(Device *device)
 {
-	jthread::AutoLock lock(&_device_mutex);
+  std::unique_lock<std::mutex> lock(_device_mutex);
 
 	if (device == NULL) {
 		return;
@@ -74,7 +73,7 @@ void Device::RemoveDevice(Device *device)
 
 Screen * Device::GetDefaultScreen()
 {
-	jthread::AutoLock lock(&_device_mutex);
+  std::unique_lock<std::mutex> lock(_device_mutex);
 
 	Device *device = (*_devices.begin());
 

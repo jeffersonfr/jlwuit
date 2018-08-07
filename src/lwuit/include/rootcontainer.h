@@ -23,7 +23,7 @@
 #include "component.h"
 #include "userevent.h"
 
-#include "jtimer.h"
+#include <mutex>
 
 namespace jlwuit {
 
@@ -44,7 +44,7 @@ class RootContainer : public Component {
 		/** \brief */
 		std::vector<Dialog *> _dialogs;
 		/** \brief */
-		jthread::Mutex _dialogs_mutex;
+		std::mutex _dialogs_mutex;
 
 	private:
 		/**

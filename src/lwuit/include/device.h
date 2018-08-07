@@ -22,8 +22,6 @@
 
 #include "screen.h"
 
-#include "jmutex.h"
-
 namespace jlwuit {
 
 /**

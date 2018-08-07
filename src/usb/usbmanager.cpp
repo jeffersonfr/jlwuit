@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "usbmanager.h"
-#include "jautolock.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -40,8 +39,7 @@ namespace jlwuit {
 
 USBManager *USBManager::_instance = NULL;
 
-USBManager::USBManager(): 
-	jthread::Thread()
+USBManager::USBManager()
 {
 	_mounted = false;
 	_running = false;
@@ -69,7 +67,7 @@ void USBManager::RegisterUSBStatusListener(USBStatusListener *listener)
 		return;
 	}
 
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	std::vector<USBStatusListener *>::iterator i = std::find(_status_listeners.begin(), _status_listeners.end(), listener);
 
@@ -84,7 +82,7 @@ void USBManager::RemoveUSBStatusListener(USBStatusListener *listener)
 		return;
 	}
 
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	std::vector<USBStatusListener *>::iterator i = std::find(_status_listeners.begin(), _status_listeners.end(), listener);
 
@@ -99,7 +97,7 @@ void USBManager::DispatchUSBStatusEvent(USBStatusEvent *event)
 		return;
 	}
 
-	jthread::AutoLock lock(&_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
 
 	for (std::vector<USBStatusListener *>::iterator i=_status_listeners.begin(); i!=_status_listeners.end(); i++) {
 		USBStatusListener *listener = (*i);
@@ -114,12 +112,29 @@ void USBManager::DispatchUSBStatusEvent(USBStatusEvent *event)
 	delete event;
 }
 
+void USBManager::Start()
+{
+  if (_running == true) {
+    return;
+  }
+
+	_running = false;
+	
+  _thread = std::thread(&USBManager::Run, this);
+
+	// DispatchUSBStatusEvent(new USBStatusEvent(LET_REMOVE_USB, ""));
+}
+
 void USBManager::Stop()
 {
+  if (_running == false) {
+    return;
+  }
+
 	_mounted = false;
 	_running = false;
 	
-	WaitThread();
+  _thread.join();
 
 	DispatchUSBStatusEvent(new USBStatusEvent(LET_REMOVE_USB, ""));
 }

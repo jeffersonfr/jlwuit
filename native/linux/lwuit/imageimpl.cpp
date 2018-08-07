@@ -21,7 +21,7 @@
 #include "graphicsimpl.h"
 #include "exception.h"
 
-#include "jimage.h"
+#include "jgui/jimage.h"
 
 namespace jlwuit {
 

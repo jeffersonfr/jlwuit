@@ -22,9 +22,7 @@
 #include "fontimpl.h"
 #include "exception.h"
 
-#include "jgfxhandler.h"
-
-#include <directfb.h>
+#include "jgui/jbufferedimage.h"
 
 namespace jlwuit {
 
@@ -214,7 +212,7 @@ void GraphicsImpl::Clear(int xp, int yp, int wp, int hp)
 
 void GraphicsImpl::Sync()
 {
-	_native_graphics->Flip();
+	// TODO:: _native_graphics->Flip();
 }
 
 jlwuit::Font * GraphicsImpl::GetFont()
@@ -409,7 +407,7 @@ void GraphicsImpl::DrawString(std::string text, int xp, int yp, int wp, int hp, 
 
 bool GraphicsImpl::DrawImage(std::string img, int xp, int yp)
 {
-	jgui::Image *image = jgui::Image::CreateImage(img);
+	jgui::Image *image = new jgui::BufferedImage(img);
 
 	bool b = _native_graphics->DrawImage(image, xp, yp);
 
@@ -420,7 +418,7 @@ bool GraphicsImpl::DrawImage(std::string img, int xp, int yp)
 
 bool GraphicsImpl::DrawImage(std::string img, int xp, int yp, int wp, int hp)
 {
-	jgui::Image *image = jgui::Image::CreateImage(img);
+	jgui::Image *image = new jgui::BufferedImage(img);
 
 	bool b = _native_graphics->DrawImage(image, xp, yp, wp, hp);
 
@@ -431,7 +429,7 @@ bool GraphicsImpl::DrawImage(std::string img, int xp, int yp, int wp, int hp)
 
 bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp, int xp, int yp)
 {
-	jgui::Image *image = jgui::Image::CreateImage(img);
+	jgui::Image *image = new jgui::BufferedImage(img);
 
 	bool b = _native_graphics->DrawImage(image, sxp, syp, swp, shp, xp, yp);
 
@@ -442,7 +440,7 @@ bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp
 
 bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp, int xp, int yp, int wp, int hp)
 {
-	jgui::Image *image = jgui::Image::CreateImage(img);
+	jgui::Image *image = new jgui::BufferedImage(img);
 
 	bool b = _native_graphics->DrawImage(image, sxp, syp, swp, shp, xp, yp, wp, hp);
 

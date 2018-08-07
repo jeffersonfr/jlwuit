@@ -21,9 +21,9 @@
 #define LWUIT_FILTERGROUP_H
 
 #include "filter.h"
-#include "jmutex.h"
 
 #include <vector>
+#include <mutex>
 
 namespace jlwuit {
 
@@ -38,7 +38,7 @@ class FilterGroup : public Filter {
 		/** \brief */
 		std::vector<Filter *> _filters;
 		/** \brief */
-		jthread::Mutex _mutex;
+    std::mutex _mutex;
 
 	public:
 		/**

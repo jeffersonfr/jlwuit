@@ -21,7 +21,8 @@
 #include "device.h"
 #include "style.h"
 #include "lookandfeel.h"
-#include "jstringtokenizer.h"
+
+#include "jcommon/jstringtokenizer.h"
 
 #include <map>
 

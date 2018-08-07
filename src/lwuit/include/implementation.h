@@ -22,7 +22,7 @@
 
 #include "defines.h"
 
-#include "jmutex.h"
+#include <string>
 
 namespace jlwuit {
 

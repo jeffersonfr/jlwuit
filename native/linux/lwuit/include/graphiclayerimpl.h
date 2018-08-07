@@ -21,18 +21,20 @@
 #define GRAPHICLAYERIMPL_H
 
 #include "eventmanagerimpl.h"
-
 #include "component.h"
 #include "layerimpl.h"
-#include "jcondition.h"
-#include "jthread.h"
-#include "jwindow.h"
+
+#include "jgui/jwindow.h"
+
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 namespace jlwuit {
 
 class Scene;
 
-class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup, public jthread::Thread {
+class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup {
 
 	private:
 		/** \brief */
@@ -44,11 +46,13 @@ class GraphicLayerImpl : public LayerImpl, public Component, public LayerSetup, 
 		/** \brief */
 		EventManagerImpl *_eventmanager;
 		/** \brief */
-		jthread::Mutex _mutex;
+    std::thread _thread;
 		/** \brief */
-		jthread::Mutex _optirun_mutex;
+		std::mutex _mutex;
 		/** \brief */
-		jthread::Condition _sem;
+		std::mutex _optirun_mutex;
+		/** \brief */
+		std::condition_variable _sem;
 		/** \brief */
 		jlwuit::lwuit_region_t dirty;
 		/** \brief */

@@ -22,7 +22,7 @@
 
 #include "image.h"
 
-#include "jimage.h"
+#include "jgui/jimage.h"
 
 #include <stdint.h>
 #include <string.h>

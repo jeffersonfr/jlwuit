@@ -22,7 +22,7 @@
 
 #include "implementation.h"
 
-#include "jmutex.h"
+#include <mutex>
 
 #include <map>
 
@@ -41,7 +41,7 @@ class Font;
 class LinuxImplementation : public jlwuit::Implementation {
 
 	private:
-		jthread::Mutex _mutex;
+		std::mutex _mutex;
 		EventManager *_eventmanager;
 		bool _is_initialized;
 

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "layerimpl.h"
-#include "jautolock.h"
-#include "jgfxhandler.h"
 
 #include <algorithm>
 

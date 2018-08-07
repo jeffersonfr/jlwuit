@@ -21,12 +21,14 @@
 #include "videolayerimpl.h"
 #include "device.h"
 
+#include "jgui/jbufferedimage.h"
+
 namespace jlwuit {
 
 BackgroundLayerImpl::BackgroundLayerImpl():
 	LayerImpl("background")
 {
-	jgui::jsize_t screen = jgui::GFXHandler::GetInstance()->GetScreenSize();
+	jgui::jsize_t screen = {1920, 1080}; // TODO:: jgui::GFXHandler::GetInstance()->GetScreenSize();
 
 	_image = NULL;
 
@@ -34,8 +36,8 @@ BackgroundLayerImpl::BackgroundLayerImpl():
 	_green = 0x00;
 	_blue = 0x00;
 
-	_theme.SetColor("window.bg", jgui::Color::Black);
-	_theme.SetBorder("window", jgui::JCB_EMPTY);
+	_theme.SetIntegerParam("window.bg", jgui::Color::Black);
+	_theme.SetIntegerParam("window.border.type", jgui::JCB_EMPTY);
 
 	_window = new jgui::Window(0, 0, screen.width, screen.height);
 
@@ -53,7 +55,7 @@ BackgroundLayerImpl::~BackgroundLayerImpl()
 
 void BackgroundLayerImpl::Initialize()
 {
-	_window->Show();
+	// TODO:: _window->Show();
 
 	SetImage("resources/images/background.png");
 }
@@ -81,7 +83,7 @@ void BackgroundLayerImpl::SetImage(std::string image)
 		_image = NULL;
 	}
 
-	_image = jgui::Image::CreateImage(image);
+	_image = new jgui::BufferedImage(image);
 
 	Repaint();
 }
@@ -127,7 +129,7 @@ struct lwuit_region_t BackgroundLayerImpl::GetBounds()
 
 void BackgroundLayerImpl::Repaint(jgui::Component *cmp)
 {
-	jgui::Graphics *g = _window->GetGraphics();
+	jgui::Graphics *g = NULL; // TODO:: _window->GetGraphics();
 
 	if (g == NULL) {
 		return;
@@ -137,7 +139,7 @@ void BackgroundLayerImpl::Repaint(jgui::Component *cmp)
 
 	Paint(g);
 
-	g->Flip();
+	// TODO:: g->Flip();
 }
 
 void BackgroundLayerImpl::Paint(jgui::Graphics *g)

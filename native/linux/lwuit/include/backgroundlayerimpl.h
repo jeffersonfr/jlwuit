@@ -22,8 +22,9 @@
 
 #include "color.h"
 #include "layerimpl.h"
-#include "jimage.h"
-#include "jwindow.h"
+
+#include "jgui/jimage.h"
+#include "jgui/jwindow.h"
 
 namespace jlwuit {
 

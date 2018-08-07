@@ -28,11 +28,13 @@ FontImpl::FontImpl(std::string name, lwuit_font_attributes_t attributes, int siz
 {
 	_attributes = attributes;
 
-	_native_font = jgui::Font::CreateFont(name, jgui::JFA_NORMAL, size);
+	_native_font = new jgui::Font(name, jgui::JFA_NORMAL, size);
 }
 
 FontImpl::~FontImpl()
 {
+  delete _native_font;
+  _native_font = NULL;
 }
 
 bool FontImpl::SetEncoding(std::string code)

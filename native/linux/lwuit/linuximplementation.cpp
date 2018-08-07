@@ -26,7 +26,8 @@
 #include "graphiclayerimpl.h"
 #include "scene.h"
 #include "exception.h"
-#include "jimage.h"
+
+#include "jgui/jbufferedimage.h"
 
 #include <stdlib.h>
 
@@ -99,10 +100,13 @@ Font * LinuxImplementation::CreateFont(std::string name, lwuit_font_attributes_t
 
 bool LinuxImplementation::GetImageSize(std::string img, int *width, int *height)
 {
-	jgui::jsize_t isize = jgui::Image::GetImageSize(img);
+  jgui::Image *itmp = new jgui::BufferedImage(img);
+	jgui::jsize_t isize = itmp->GetSize();
 
 	(*width) = isize.width;
 	(*height) = isize.height;
+
+  delete itmp;
 
 	if (isize.width > 0 && isize.height > 0) {
 		return true;
@@ -184,7 +188,7 @@ Image * LinuxImplementation::CreateImage(int width, int height, lwuit_pixelforma
 			t = jgui::JPF_VYU;
 		}
 
-		return new ImageImpl(jgui::Image::CreateImage(t, width, height));
+		return new ImageImpl(new jgui::BufferedImage(t, width, height));
 	} catch (Exception &e) {
 	}
 
@@ -193,20 +197,24 @@ Image * LinuxImplementation::CreateImage(int width, int height, lwuit_pixelforma
 
 Image * LinuxImplementation::CreateImage(uint32_t *data, int width, int height)
 {
+  /* TODO::
 	try {
-		return new ImageImpl(jgui::Image::CreateImage(data, width, height));
+		return new ImageImpl(new jgui::BufferedImage(data, width, height));
 	} catch (Exception &e) {
 	}
+  */
 
 	return NULL;
 }
 
 Image * LinuxImplementation::CreateImage(char *data, int size)
 {
+  /* TODO::
 	try {
-		return new ImageImpl(jgui::Image::CreateImage(data, size));
+		return new ImageImpl(new jgui::BufferedImage(data, size));
 	} catch (Exception &e) {
 	}
+  */
 
 	return NULL;
 }
@@ -214,7 +222,7 @@ Image * LinuxImplementation::CreateImage(char *data, int size)
 Image * LinuxImplementation::CreateImage(std::string file)
 {
 	try {
-		jgui::Image *image = jgui::Image::CreateImage(file);
+		jgui::Image *image = new jgui::BufferedImage(file);
 
 		return new ImageImpl(image);
 	} catch (Exception &e) {
@@ -233,7 +241,7 @@ Image * LinuxImplementation::CreateImage(Image *image)
 	Image *clone = NULL;
 
 	try {
-		clone = new ImageImpl(jgui::Image::CreateImage(jgui::JPF_ARGB, size.width, size.height));
+		clone = new ImageImpl(new jgui::BufferedImage(jgui::JPF_ARGB, size.width, size.height));
 
 		clone->GetGraphics()->DrawImage(image, 0, 0);
 	} catch (Exception &e) {
@@ -263,12 +271,12 @@ void LinuxImplementation::UnregisterScene(Scene *scene)
 
 void LinuxImplementation::Lock()
 {
-	_mutex.Lock();
+	_mutex.lock();
 }
 
 void LinuxImplementation::Unlock()
 {
-	_mutex.Unlock();
+	_mutex.unlock();
 }
 
 }

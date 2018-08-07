@@ -18,8 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "state.h"
-#include "jstringtokenizer.h"
-#include "jstringutils.h"
+
+#include "jcommon/jstringtokenizer.h"
+#include "jcommon/jstringutils.h"
 
 #include <stdio.h>
 

@@ -21,7 +21,8 @@
 #define LWUIT_DIALOG_H
 
 #include "rootcontainer.h"
-#include "jtimer.h"
+
+#include "jcommon/jtimer.h"
 
 #include <string>
 
@@ -32,13 +33,13 @@ namespace jlwuit {
  *
  * \author Jeff Ferr
  */
-class Dialog : public Component, public jthread::TimerTask {
+class Dialog : public Component { // TODO::, public jcommon::TimerTask {
 
 	private:
 		/** \brief */
 		RootContainer *_root;
 		/** \brief */
-		jthread::Timer _timer;
+		// TODO:: jcommon::Timer _timer;
 		/** \brief */
 		int _timeout;
 
