@@ -28,7 +28,7 @@ namespace jlwuit {
 BackgroundLayerImpl::BackgroundLayerImpl():
 	LayerImpl("background")
 {
-	jgui::jsize_t screen = {1920, 1080}; // TODO:: jgui::GFXHandler::GetInstance()->GetScreenSize();
+	jgui::jsize_t<int> screen = {1920, 1080}; // TODO:: jgui::GFXHandler::GetInstance()->GetScreenSize();
 
 	_image = NULL;
 
@@ -147,10 +147,10 @@ void BackgroundLayerImpl::Paint(jgui::Graphics *g)
 	LayerSetup *setup = GetLayerSetup();
 
 	if (_image != NULL) {
-		g->DrawImage(_image, 0, 0, setup->GetWidth(), setup->GetHeight());
+		g->DrawImage(_image, {0, 0, setup->GetWidth(), setup->GetHeight()});
 	} else {
-		g->SetColor(_red, _green, _blue);
-		g->FillRectangle(0, 0, setup->GetWidth(), setup->GetHeight());
+		g->SetColor({_red, _green, _blue, 0xff});
+		g->FillRectangle({0, 0, setup->GetWidth(), setup->GetHeight()});
 	}
 
 	// INFO:: clear video region
@@ -162,12 +162,13 @@ void BackgroundLayerImpl::Paint(jgui::Graphics *g)
 
 	lwuit_region_t vrect = layer->GetLayerSetup()->GetBounds();
 
-	int rx = (int)(vrect.x),
+	int 
+    rx = (int)(vrect.x),
 		ry = (int)(vrect.y),
 		rw = (int)(vrect.width),
 		rh = (int)(vrect.height);
 
-	g->Clear(rx, ry, rw, rh);
+	g->Clear({rx, ry, rw, rh});
 }
 
 }

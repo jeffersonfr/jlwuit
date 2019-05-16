@@ -33,7 +33,7 @@ PlayerManager::~PlayerManager()
 {
 }
 
-Player * PlayerManager::CreatePlayer(std::string url) throw (MediaException)
+Player * PlayerManager::CreatePlayer(std::string url)
 {
 	jnetwork::URL jurl(url);
 

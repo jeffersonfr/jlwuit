@@ -367,7 +367,7 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
-		virtual void GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp);
+		virtual void GetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp);
 
 		/**
 		 * \brief

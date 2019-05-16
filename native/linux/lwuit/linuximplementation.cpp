@@ -188,7 +188,7 @@ Image * LinuxImplementation::CreateImage(int width, int height, lwuit_pixelforma
 			t = jgui::JPF_VYU;
 		}
 
-		return new ImageImpl(new jgui::BufferedImage(t, width, height));
+		return new ImageImpl(new jgui::BufferedImage(t, {width, height}));
 	} catch (Exception &e) {
 	}
 
@@ -241,7 +241,7 @@ Image * LinuxImplementation::CreateImage(Image *image)
 	Image *clone = NULL;
 
 	try {
-		clone = new ImageImpl(new jgui::BufferedImage(jgui::JPF_ARGB, size.width, size.height));
+		clone = new ImageImpl(new jgui::BufferedImage(jgui::JPF_ARGB, {size.width, size.height}));
 
 		clone->GetGraphics()->DrawImage(image, 0, 0);
 	} catch (Exception &e) {

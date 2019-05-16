@@ -50,12 +50,12 @@ void GraphicsImpl::Reset()
 
 void GraphicsImpl::Translate(int x, int y)
 {
-	_native_graphics->Translate(x, y);
+	_native_graphics->Translate({x, y});
 }
 
 lwuit_point_t GraphicsImpl::Translate()
 {
-	jgui::jpoint_t jt = _native_graphics->Translate();
+	jgui::jpoint_t<int> jt = _native_graphics->Translate();
 	lwuit_point_t lt;
 
 	lt.x = jt.x;
@@ -66,12 +66,12 @@ lwuit_point_t GraphicsImpl::Translate()
 
 void GraphicsImpl::ClipRect(int xp, int yp, int wp, int hp)
 {
-	_native_graphics->ClipRect(xp, yp, wp, hp);
+	_native_graphics->ClipRect({xp, yp, wp, hp});
 }
 
 void GraphicsImpl::SetClip(int xp, int yp, int wp, int hp)
 {
-	_native_graphics->SetClip(xp, yp, wp, hp);
+	_native_graphics->SetClip({xp, yp, wp, hp});
 }
 
 lwuit_region_t GraphicsImpl::GetClip()
@@ -207,7 +207,7 @@ lwuit_pen_t GraphicsImpl::GetPen()
 
 void GraphicsImpl::Clear(int xp, int yp, int wp, int hp)
 {
-	_native_graphics->Clear(xp, yp, wp, hp);
+	_native_graphics->Clear({xp, yp, wp, hp});
 }
 
 void GraphicsImpl::Sync()
@@ -243,121 +243,119 @@ void GraphicsImpl::SetColor(Color color)
 
 void GraphicsImpl::DrawLine(int xp, int yp, int xf, int yf)
 {
-	_native_graphics->DrawLine(xp, yp, xf, yf);
+	_native_graphics->DrawLine({{xp, yp}, {xf, yf}});
 }
 
 void GraphicsImpl::FillRectangle(int xp, int yp, int wp, int hp)
 {
-	_native_graphics->FillRectangle(xp, yp, wp, hp);
+	_native_graphics->FillRectangle({xp, yp, wp, hp});
 }
 
 void GraphicsImpl::DrawRectangle(int xp, int yp, int wp, int hp)
 {
-	_native_graphics->DrawRectangle(xp, yp, wp, hp);
+	_native_graphics->DrawRectangle({xp, yp, wp, hp});
 }
 
 void GraphicsImpl::FillBevelRectangle(int xp, int yp, int wp, int hp, int dx, int dy)
 {
-	_native_graphics->FillBevelRectangle(xp, yp, wp, hp, dx, dy);
+	_native_graphics->FillBevelRectangle({xp, yp, wp, hp}, dx, dy);
 }
 
 void GraphicsImpl::DrawBevelRectangle(int xp, int yp, int wp, int hp, int dx, int dy)
 {
-	_native_graphics->DrawBevelRectangle(xp, yp, wp, hp, dx, dy);
+	_native_graphics->DrawBevelRectangle({xp, yp, wp, hp}, dx, dy);
 }
 
 void GraphicsImpl::FillRoundRectangle(int xp, int yp, int wp, int hp, int dx, int dy)
 {
-	_native_graphics->FillRoundRectangle(xp, yp, wp, hp, dx, dy);
+	_native_graphics->FillRoundRectangle({xp, yp, wp, hp}, dx, dy);
 }
 
 void GraphicsImpl::DrawRoundRectangle(int xp, int yp, int wp, int hp, int dx, int dy)
 {
-	_native_graphics->DrawRoundRectangle(xp, yp, wp, hp, dx, dy);
+	_native_graphics->DrawRoundRectangle({xp, yp, wp, hp}, dx, dy);
 }
 
 void GraphicsImpl::FillCircle(int xcp, int ycp, int rp)
 {
-	_native_graphics->FillCircle(xcp, ycp, rp);
+	_native_graphics->FillCircle({xcp, ycp}, rp);
 }
 
 void GraphicsImpl::DrawCircle(int xcp, int ycp, int rp)
 {
-	_native_graphics->DrawCircle(xcp, ycp, rp);
+	_native_graphics->DrawCircle({xcp, ycp}, rp);
 }
 
 void GraphicsImpl::FillEllipse(int xcp, int ycp, int rxp, int ryp)
 {
-	_native_graphics->FillEllipse(xcp, ycp, rxp, ryp);
+	_native_graphics->FillEllipse({xcp, ycp}, {rxp, ryp});
 }
 
 void GraphicsImpl::DrawEllipse(int xcp, int ycp, int rxp, int ryp)
 {
-	_native_graphics->DrawEllipse(xcp, ycp, rxp, ryp);
+	_native_graphics->DrawEllipse({xcp, ycp}, {rxp, ryp});
 }
 
 void GraphicsImpl::FillChord(int xcp, int ycp, int rxp, int ryp, double arc0, double arc1)
 {
-	_native_graphics->FillChord(xcp, ycp, rxp, ryp, arc0, arc1);
+	_native_graphics->FillChord({xcp, ycp}, {rxp, ryp}, arc0, arc1);
 }
 
 void GraphicsImpl::DrawChord(int xcp, int ycp, int rxp, int ryp, double arc0, double arc1)
 {
-	_native_graphics->DrawChord(xcp, ycp, rxp, ryp, arc0, arc1);
+	_native_graphics->DrawChord({xcp, ycp}, {rxp, ryp}, arc0, arc1);
 }
 
 void GraphicsImpl::FillArc(int xcp, int ycp, int rxp, int ryp, double arc0, double arc1)
 {
-	_native_graphics->FillArc(xcp, ycp, rxp, ryp, arc0, arc1);
+	_native_graphics->FillArc({xcp, ycp}, {rxp, ryp}, arc0, arc1);
 }
 
 void GraphicsImpl::DrawArc(int xcp, int ycp, int rxp, int ryp, double arc0, double arc1)
 {
-	_native_graphics->DrawArc(xcp, ycp, rxp, ryp, arc0, arc1);
+	_native_graphics->DrawArc({xcp, ycp}, {rxp, ryp}, arc0, arc1);
 }
 
 void GraphicsImpl::FillPie(int xcp, int ycp, int rxp, int ryp, double arc0, double arc1)
 {
-	_native_graphics->FillPie(xcp, ycp, rxp, ryp, arc0, arc1);
+	_native_graphics->FillPie({xcp, ycp}, {rxp, ryp}, arc0, arc1);
 }
 
 void GraphicsImpl::DrawPie(int xcp, int ycp, int rxp, int ryp, double arc0, double arc1)
 {
-	_native_graphics->DrawPie(xcp, ycp, rxp, ryp, arc0, arc1);
+	_native_graphics->DrawPie({xcp, ycp}, {rxp, ryp}, arc0, arc1);
 }
 
 void GraphicsImpl::FillTriangle(int x1p, int y1p, int x2p, int y2p, int x3p, int y3p)
 {
-	_native_graphics->FillTriangle(x1p, y1p, x2p, y2p, x3p, y3p);
+	_native_graphics->FillTriangle({x1p, y1p}, {x2p, y2p}, {x3p, y3p});
 }
 
 void GraphicsImpl::DrawTriangle(int x1p, int y1p, int x2p, int y2p, int x3p, int y3p)
 {
-	_native_graphics->DrawTriangle(x1p, y1p, x2p, y2p, x3p, y3p);
+	_native_graphics->DrawTriangle({x1p, y1p}, {x2p, y2p}, {x3p, y3p});
 }
 
 void GraphicsImpl::DrawPolygon(int xp, int yp, lwuit_point_t *lp, int npoints, bool closed)
 {
-	jgui::jpoint_t jp[npoints];
+  std::vector<jgui::jpoint_t<int>> jp;
 
 	for (int i=0; i<npoints; i++) {
-		jp[i].x = lp[i].x;
-		jp[i].y = lp[i].y;
+    jp.emplace_back(jgui::jpoint_t<int>{lp[i].x, lp[i].y});
 	}
 
-	_native_graphics->DrawPolygon(xp, yp, jp, npoints, closed);
+	_native_graphics->DrawPolygon({xp, yp}, jp, closed);
 }
 
 void GraphicsImpl::FillPolygon(int xp, int yp, lwuit_point_t *lp, int npoints)
 {
-	jgui::jpoint_t jp[npoints];
+  std::vector<jgui::jpoint_t<int>> jp;
 
 	for (int i=0; i<npoints; i++) {
-		jp[i].x = lp[i].x;
-		jp[i].y = lp[i].y;
+    jp.emplace_back(jgui::jpoint_t<int>{lp[i].x, lp[i].y});
 	}
 
-	_native_graphics->FillPolygon(xp, yp, jp, npoints);
+	_native_graphics->FillPolygon({xp, yp}, jp);
 }
 
 void GraphicsImpl::FillRadialGradient(int xp, int yp, int wp, int hp, Color scolor, Color dcolor)
@@ -367,18 +365,18 @@ void GraphicsImpl::FillRadialGradient(int xp, int yp, int wp, int hp, Color scol
 
 	_native_graphics->SetGradientStop(0.0, scolor.GetARGB());
 	_native_graphics->SetGradientStop(1.0, dcolor.GetARGB());
-	_native_graphics->FillRadialGradient(xp, yp, wp, hp, 0, 0, 0);
+	_native_graphics->FillRadialGradient({xp, yp}, {wp, hp}, {0, 0}, 0);
 	_native_graphics->ResetGradientStop();
 }
 
 void GraphicsImpl::DrawGlyph(int symbol, int xp, int yp)
 {
-	_native_graphics->DrawGlyph(symbol, xp, yp);
+	_native_graphics->DrawGlyph(symbol, {xp, yp});
 }
 
 void GraphicsImpl::DrawString(std::string text, int xp, int yp)
 {
-	_native_graphics->DrawString(text, xp, yp);
+	_native_graphics->DrawString(text, jgui::jpoint_t<int>{xp, yp});
 }
 
 void GraphicsImpl::DrawString(std::string text, int xp, int yp, int wp, int hp, lwuit_horizontal_align_t halign, lwuit_vertical_align_t valign)
@@ -402,14 +400,14 @@ void GraphicsImpl::DrawString(std::string text, int xp, int yp, int wp, int hp, 
 		a2 = jgui::JVA_JUSTIFY;
 	}
 
-	_native_graphics->DrawString(text, xp, yp, wp, hp, a1, a2, false);
+	_native_graphics->DrawString(text, {xp, yp, wp, hp}, a1, a2, false);
 }
 
 bool GraphicsImpl::DrawImage(std::string img, int xp, int yp)
 {
 	jgui::Image *image = new jgui::BufferedImage(img);
 
-	bool b = _native_graphics->DrawImage(image, xp, yp);
+	bool b = _native_graphics->DrawImage(image, jgui::jpoint_t<int>{xp, yp});
 
 	delete image;
 
@@ -420,7 +418,7 @@ bool GraphicsImpl::DrawImage(std::string img, int xp, int yp, int wp, int hp)
 {
 	jgui::Image *image = new jgui::BufferedImage(img);
 
-	bool b = _native_graphics->DrawImage(image, xp, yp, wp, hp);
+	bool b = _native_graphics->DrawImage(image, {xp, yp, wp, hp});
 
 	delete image;
 
@@ -431,7 +429,7 @@ bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp
 {
 	jgui::Image *image = new jgui::BufferedImage(img);
 
-	bool b = _native_graphics->DrawImage(image, sxp, syp, swp, shp, xp, yp);
+	bool b = _native_graphics->DrawImage(image, {sxp, syp, swp, shp}, jgui::jpoint_t<int>{xp, yp});
 
 	delete image;
 
@@ -442,7 +440,7 @@ bool GraphicsImpl::DrawImage(std::string img, int sxp, int syp, int swp, int shp
 {
 	jgui::Image *image = new jgui::BufferedImage(img);
 
-	bool b = _native_graphics->DrawImage(image, sxp, syp, swp, shp, xp, yp, wp, hp);
+	bool b = _native_graphics->DrawImage(image, {sxp, syp, swp, shp}, {xp, yp, wp, hp});
 
 	delete image;
 
@@ -479,7 +477,7 @@ bool GraphicsImpl::DrawImage(Image *img, int sxp, int syp, int swp, int shp, int
 		return false;
 	}
 
-	return _native_graphics->DrawImage(impl->_native_image, sxp, syp, swp, shp, xp, yp);
+	return _native_graphics->DrawImage(impl->_native_image, {sxp, syp, swp, shp}, jgui::jpoint_t<int>{xp, yp});
 }
 
 bool GraphicsImpl::DrawImage(Image *img, int sxp, int syp, int swp, int shp, int xp, int yp, int wp, int hp)
@@ -490,27 +488,27 @@ bool GraphicsImpl::DrawImage(Image *img, int sxp, int syp, int swp, int shp, int
 		return false;
 	}
 
-	return _native_graphics->DrawImage(impl->_native_image, sxp, syp, swp, shp, xp, yp, wp, hp);
+	return _native_graphics->DrawImage(impl->_native_image, {sxp, syp, swp, shp}, {xp, yp, wp, hp});
 }
 
 uint32_t GraphicsImpl::GetRGB(int xp, int yp, uint32_t pixel)
 {
-	return _native_graphics->GetRGB(xp, yp, pixel);
+	return _native_graphics->GetRGB({xp, yp}, pixel);
 }
 
-void GraphicsImpl::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)
+void GraphicsImpl::GetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp)
 {
-	_native_graphics->GetRGBArray(rgb, xp, yp, wp, hp);
+	_native_graphics->GetRGBArray(rgb, {xp, yp, wp, hp});
 }
 
 void GraphicsImpl::SetRGB(uint32_t rgb, int xp, int yp) 
 {
-	_native_graphics->SetRGB(rgb, xp, yp);
+	_native_graphics->SetRGB(rgb, {xp, yp});
 }
 
 void GraphicsImpl::SetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp) 
 {
-	_native_graphics->SetRGBArray(rgb, xp, yp, wp, hp);
+	_native_graphics->SetRGBArray(rgb, {xp, yp, wp, hp});
 }
 
 }

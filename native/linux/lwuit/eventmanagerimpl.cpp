@@ -513,7 +513,7 @@ bool EventManagerImpl::MousePressed(jevent::MouseEvent *event)
 {
   jgui::jpoint_t location = event->GetLocation();
 
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_PRESS, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), location.x, location.y, 0.0, 0.0));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_PRESS, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClicks(), location.x, location.y, 0.0, 0.0));
 
 	return true;
 }
@@ -522,7 +522,7 @@ bool EventManagerImpl::MouseReleased(jevent::MouseEvent *event)
 {
   jgui::jpoint_t location = event->GetLocation();
 
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_RELEASE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), location.x, location.y, 0.0, 0.0));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_RELEASE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClicks(), location.x, location.y, 0.0, 0.0));
 
 	return true;
 }
@@ -536,7 +536,7 @@ bool EventManagerImpl::MouseMoved(jevent::MouseEvent *event)
 		vx = (location.x-_last_mouse_location.x)/mdiff,
 		vy = (location.y-_last_mouse_location.y)/mdiff;
 
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_MOVE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), location.x, location.y, vx, vy));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_MOVE, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClicks(), location.x, location.y, vx, vy));
 
 	_last_mouse_move = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
@@ -550,7 +550,7 @@ bool EventManagerImpl::MouseWheel(jevent::MouseEvent *event)
 {
   jgui::jpoint_t location = event->GetLocation();
 
-	DispatchUserEvent(new UserEvent(LWT_MOUSE_WHEEL, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClickCount(), location.x, location.y, 0.0, 0.0));
+	DispatchUserEvent(new UserEvent(LWT_MOUSE_WHEEL, TranslateMouseButton(event->GetButton()), TranslateMouseButton(event->GetButtons()), event->GetClicks(), location.x, location.y, 0.0, 0.0));
 
 	return true;
 }

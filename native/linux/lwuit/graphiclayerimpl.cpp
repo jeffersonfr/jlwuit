@@ -57,7 +57,7 @@ class RootContainerImpl : public RootContainer {
 GraphicLayerImpl::GraphicLayerImpl():
 	LayerImpl("graphics")
 {
-	jgui::jsize_t screen = {1920, 1080}; // TODO:: jgui::GFXHandler::GetInstance()->GetScreenSize();
+	jgui::jsize_t<int> screen = {1920, 1080}; // TODO:: jgui::GFXHandler::GetInstance()->GetScreenSize();
 
 	_refresh = false;
 
@@ -70,7 +70,7 @@ GraphicLayerImpl::GraphicLayerImpl():
 	_window->SetUndecorated(true);
 
 	_root_container = new RootContainerImpl(this, this, 0, 0, screen.width, screen.height);
-	_buffer = new ImageImpl(new jgui::BufferedImage(jgui::JPF_ARGB, screen.width, screen.height));
+	_buffer = new ImageImpl(new jgui::BufferedImage(jgui::JPF_ARGB, screen));
 
 	_eventmanager = new EventManagerImpl();
 
@@ -171,7 +171,7 @@ void GraphicLayerImpl::Run()
     }
 
 		_ng->SetCompositeFlags(jgui::JCF_SRC);
-		_ng->DrawImage(_ni, 0, 0);
+		_ng->DrawImage(_ni, jgui::jpoint_t<int>{0, 0});
 		// TODO:: _ng->Flip();
 		_optirun_mutex.unlock();
 	}
@@ -232,7 +232,7 @@ void GraphicLayerImpl::Repaint(jlwuit::Component *cmp)
 			parent->Revalidate();
 		}
 
-		_ng->DrawImage(_ni, location.x, location.y, size.width, size.height, location.x, location.y);
+		_ng->DrawImage(_ni, {location.x, location.y, size.width, size.height}, jgui::jpoint_t<int>{location.x, location.y});
 		// TODO:: _ng->Flip(location.x, location.y, size.width, size.height);
 
 		return;

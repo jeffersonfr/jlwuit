@@ -50,7 +50,7 @@ class VideoComponentImpl : public jlwuit::Component, public jevent::FrameGrabber
 			jlwuit::Component(x, y, w, h)
 			// TODOO:: _mutex(jthread::JMT_RECURSIVE)
 		{
-			_image = new jgui::BufferedImage(jgui::JPF_ARGB, w, h);
+			_image = new jgui::BufferedImage(jgui::JPF_ARGB, {w, h});
 			_buffer = new jlwuit::ImageImpl(_image);
 
 			_src.x = 0;
@@ -94,8 +94,8 @@ class VideoComponentImpl : public jlwuit::Component, public jevent::FrameGrabber
       jgui::jsize_t size = image->GetSize();
 			uint32_t *ptr = NULL;
 
-			image->GetGraphics()->GetRGBArray(&ptr, 0, 0, size.width, size.height);
-			_image->GetGraphics()->SetRGBArray(ptr, 0, 0, size.width, size.height);
+			image->GetGraphics()->GetRGBArray(ptr, {0, 0, size.width, size.height});
+			_image->GetGraphics()->SetRGBArray(ptr, {0, 0, size.width, size.height});
 
 			delete [] ptr;
 			
@@ -271,7 +271,7 @@ class VideoDeviceControlImpl : public jmedia::VideoDeviceControl {
 		{
 		}
 
-		virtual std::vector<jmedia::jvideo_control_t> & GetControls()
+		virtual const std::vector<jmedia::jvideo_control_t> & GetControls()
 		{
 			if (_control != NULL) {
 				return _control->GetControls();

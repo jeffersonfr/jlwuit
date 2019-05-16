@@ -49,7 +49,7 @@ Graphics * ImageImpl::GetGraphics()
 
 Image * ImageImpl::Scale(int wp, int hp)
 {
-	return new ImageImpl(_native_image->Scale(wp, hp));
+	return new ImageImpl(_native_image->Scale({wp, hp}));
 }
 
 Image * ImageImpl::Rotate(double radians, bool resize)
@@ -59,7 +59,7 @@ Image * ImageImpl::Rotate(double radians, bool resize)
 
 Image * ImageImpl::Crop(int xp, int yp, int wp, int hp)
 {
-	return new ImageImpl(_native_image->Crop(xp, yp, wp, hp));
+	return new ImageImpl(_native_image->Crop({xp, yp, wp, hp}));
 }
 
 Image * ImageImpl::Blend(double alpha)
@@ -72,9 +72,9 @@ Image * ImageImpl::Rotate(double degrees)
 	return new ImageImpl(_native_image->Rotate(degrees));
 }
 
-void ImageImpl::GetRGB(uint32_t **rgb, int xp, int yp, int wp, int hp)
+void ImageImpl::GetRGB(uint32_t *rgb, int xp, int yp, int wp, int hp)
 {
-	_native_image->GetRGBArray(rgb, xp, yp, wp, hp);
+	_native_image->GetRGBArray(rgb, {xp, yp, wp, hp});
 }
 
 lwuit_pixelformat_t ImageImpl::GetPixelFormat()

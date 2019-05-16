@@ -50,7 +50,7 @@ class PlayerManager {
 		 * \brief 
 		 *
 		 */
-		static Player * CreatePlayer(std::string url) throw (MediaException);
+		static Player * CreatePlayer(std::string url);
 		
 };
 
