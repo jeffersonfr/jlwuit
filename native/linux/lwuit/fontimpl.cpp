@@ -103,16 +103,16 @@ int FontImpl::GetStringWidth(std::string text)
 
 lwuit_region_t FontImpl::GetStringExtends(std::string text)
 {
-	jgui::jregion_t region = _native_font->GetStringExtends(text);
+	jgui::jrect_t region = _native_font->GetStringExtends(text);
 
-	return (lwuit_region_t){region.x, region.y, region.width, region.height};
+	return (lwuit_region_t){region.point.x, region.point.y, region.size.width, region.size.height};
 }
 
 lwuit_region_t FontImpl::GetGlyphExtends(int symbol)
 {
-	jgui::jregion_t region = _native_font->GetGlyphExtends(symbol);
+	jgui::jrect_t region = _native_font->GetGlyphExtends(symbol);
 
-	return (lwuit_region_t){region.x, region.y, region.width, region.height};
+	return (lwuit_region_t){region.point.x, region.point.y, region.size.width, region.size.height};
 }
 
 std::string FontImpl::TruncateString(std::string text, std::string extension, int width)

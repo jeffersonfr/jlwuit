@@ -115,14 +115,14 @@ void BackgroundLayerImpl::SetBounds(int x, int y, int w, int h)
 
 struct lwuit_region_t BackgroundLayerImpl::GetBounds()
 {
-	jgui::jregion_t bounds = _window->GetVisibleBounds();
+	jgui::jrect_t bounds = _window->GetVisibleBounds();
 
 	struct lwuit_region_t t;
 
-	t.x = bounds.x;
-	t.y = bounds.y;
-	t.width = bounds.width;
-	t.height = bounds.height;
+	t.x = bounds.point.x;
+	t.y = bounds.point.y;
+	t.width = bounds.size.width;
+	t.height = bounds.size.height;
 	
 	return t;
 }

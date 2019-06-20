@@ -76,13 +76,13 @@ void GraphicsImpl::SetClip(int xp, int yp, int wp, int hp)
 
 lwuit_region_t GraphicsImpl::GetClip()
 {
-	jgui::jregion_t jt = _native_graphics->GetClip();
+	jgui::jrect_t jt = _native_graphics->GetClip();
 	lwuit_region_t lt;
 
-	lt.x = jt.x;
-	lt.y = jt.y;
-	lt.width = jt.width;
-	lt.height = jt.height;
+	lt.x = jt.point.x;
+	lt.y = jt.point.y;
+	lt.width = jt.size.width;
+	lt.height = jt.size.height;
 
 	return lt;
 }
@@ -243,7 +243,7 @@ void GraphicsImpl::SetColor(Color color)
 
 void GraphicsImpl::DrawLine(int xp, int yp, int xf, int yf)
 {
-	_native_graphics->DrawLine({{xp, yp}, {xf, yf}});
+	_native_graphics->DrawLine({xp, yp}, {xf, yf});
 }
 
 void GraphicsImpl::FillRectangle(int xp, int yp, int wp, int hp)

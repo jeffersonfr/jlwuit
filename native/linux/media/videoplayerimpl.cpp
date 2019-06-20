@@ -226,12 +226,12 @@ class VideoSizeControlImpl : public VideoSizeControl {
 			lwuit_region_t t;
 
 			if (_control != NULL) {
-				jgui::jregion_t src = _control->GetSource();
+				jgui::jrect_t src = _control->GetSource();
 
-				t.x = src.x;
-				t.y = src.y;
-				t.width = src.width;
-				t.height = src.height;
+				t.x = src.point.x;
+				t.y = src.point.y;
+				t.width = src.size.width;
+				t.height = src.size.height;
 			}
 
 			return t;
@@ -242,12 +242,12 @@ class VideoSizeControlImpl : public VideoSizeControl {
 			lwuit_region_t t;
 
 			if (_control != NULL) {
-				jgui::jregion_t src = _control->GetDestination();
+				jgui::jrect_t src = _control->GetDestination();
 
-				t.x = src.x;
-				t.y = src.y;
-				t.width = src.width;
-				t.height = src.height;
+				t.x = src.point.x;
+				t.y = src.point.y;
+				t.width = src.size.width;
+				t.height = src.size.height;
 			}
 
 			return t;
