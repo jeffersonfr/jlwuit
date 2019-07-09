@@ -231,14 +231,14 @@ void GraphicsImpl::SetFont(jlwuit::Font *font)
 	}
 } 
 
-Color GraphicsImpl::GetColor()
+jgui::jcolor_t<float> GraphicsImpl::GetColor()
 {
-	return Color(_native_graphics->GetColor().GetARGB());
+	return _native_graphics->GetColor();
 } 
 
-void GraphicsImpl::SetColor(Color color)
+void GraphicsImpl::SetColor(jgui::jcolor_t<float> color)
 {
-	_native_graphics->SetColor(color.GetARGB());
+	_native_graphics->SetColor(color);
 } 
 
 void GraphicsImpl::DrawLine(int xp, int yp, int xf, int yf)
@@ -360,11 +360,12 @@ void GraphicsImpl::FillPolygon(int xp, int yp, lwuit_point_t *lp, int npoints)
 
 void GraphicsImpl::FillRadialGradient(int xp, int yp, int wp, int hp, Color scolor, Color dcolor)
 {
-	jgui::Color c1(scolor.GetARGB()),
+	jgui::jcolor_t<float> 
+    c1(scolor.GetARGB()),
 		c2(dcolor.GetARGB());
 
-	_native_graphics->SetGradientStop(0.0, scolor.GetARGB());
-	_native_graphics->SetGradientStop(1.0, dcolor.GetARGB());
+	_native_graphics->SetGradientStop(0.0, uint32_t(c1));
+	_native_graphics->SetGradientStop(1.0, uint32_t(c2));
 	_native_graphics->FillRadialGradient({xp, yp}, {wp, hp}, {0, 0}, 0);
 	_native_graphics->ResetGradientStop();
 }

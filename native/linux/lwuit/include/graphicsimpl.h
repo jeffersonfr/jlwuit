@@ -151,13 +151,13 @@ class GraphicsImpl : public Graphics {
 		 * \brief
 		 *
 		 */
-		virtual Color GetColor();
+		virtual jgui::jcolor_t<float> GetColor();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void SetColor(Color color);
+		virtual void SetColor(jgui::jcolor_t<float> color);
 
 		/**
 		 * \brief

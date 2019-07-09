@@ -23,6 +23,8 @@
 #include "color.h"
 #include "defines.h"
 
+#include "jgui/jcolor.h"
+
 #include <string>
 
 #include <stdint.h>
@@ -216,13 +218,13 @@ class Graphics {
 		 * \brief
 		 *
 		 */
-		virtual Color GetColor();
+		virtual jgui::jcolor_t<float> GetColor();
 
 		/**
 		 * \brief
 		 *
 		 */
-		virtual void SetColor(Color color);
+		virtual void SetColor(jgui::jcolor_t<float> color);
 
 		/**
 		 * \brief

@@ -61,7 +61,7 @@ GraphicLayerImpl::GraphicLayerImpl():
 
 	_refresh = false;
 
-	_theme.SetIntegerParam("window.bg", jgui::Color::Black);
+	_theme.SetIntegerParam("window.bg", uint32_t(jgui::jcolor_name_t::Black));
 	_theme.SetIntegerParam("window.border.type", jgui::JCB_EMPTY);
 
 	_window = new jgui::Window(0, 0, screen.width, screen.height);
