@@ -231,14 +231,14 @@ void GraphicsImpl::SetFont(jlwuit::Font *font)
 	}
 } 
 
-jgui::jcolor_t<float> GraphicsImpl::GetColor()
+Color GraphicsImpl::GetColor()
 {
-	return _native_graphics->GetColor();
+	return Color(uint32_t(_native_graphics->GetColor()));
 } 
 
-void GraphicsImpl::SetColor(jgui::jcolor_t<float> color)
+void GraphicsImpl::SetColor(Color color)
 {
-	_native_graphics->SetColor(color);
+	_native_graphics->SetColor(color.GetARGB());
 } 
 
 void GraphicsImpl::DrawLine(int xp, int yp, int xf, int yf)

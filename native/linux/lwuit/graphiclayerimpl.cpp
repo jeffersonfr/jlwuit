@@ -64,9 +64,9 @@ GraphicLayerImpl::GraphicLayerImpl():
 	_theme.SetIntegerParam("window.bg", uint32_t(jgui::jcolor_name_t::Black));
 	_theme.SetIntegerParam("window.border.type", jgui::JCB_EMPTY);
 
-	_window = new jgui::Window(0, 0, screen.width, screen.height);
+	_window = new jgui::Window({screen.width, screen.height});
 
-	_window->SetTheme(&_theme);
+	_window->SetTheme(_theme);
 	_window->SetUndecorated(true);
 
 	_root_container = new RootContainerImpl(this, this, 0, 0, screen.width, screen.height);

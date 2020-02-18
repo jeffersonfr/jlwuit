@@ -757,7 +757,7 @@ void Component::Paint(Graphics *g)
 	jlwuit::Color bgcolor = _style->GetColor("bg.color");
 
 	if (bgcolor.GetARGB() != 0x00000000) {
-		g->SetColor(bgcolor);
+		g->SetColor(bgcolor.GetARGB());
 		g->FillRectangle(0, 0, GetWidth(), GetHeight());
 	}
 
